@@ -21,9 +21,9 @@ set (DOXYGEN_TAGFILES "qtcore.tags=qthelp://doc.qt.io/qt-5/" CACHE STRING "Doxyg
 set (DOXYGEN_MACRO_EXPANSION "YES")
 set (DOXYGEN_EXPAND_ONLY_PREDEF "YES")
 set (DOXYGEN_PREDEFINED
-    "\"DDEMO_BEGIN_NAMESPACE=namespace Dtk { namespace Demo {\""
-    "\"DDEMO_END_NAMESPACE=}}\""
-    "\"DDEMO_USE_NAMESPACE=using namespace Dtk::Demo;\""
+    "\"DAUDIOMANAGER_BEGIN_NAMESPACE=namespace Dtk { namespace AudioManager {\""
+    "\"DAUDIOMANAGER_END_NAMESPACE=}}\""
+    "\"DAUDIOMANAGER_USE_NAMESPACE=using namespace Dtk::AudioManager;\""
 )
 
 doxygen_add_docs (doxygen
