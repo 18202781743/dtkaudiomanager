@@ -21,7 +21,16 @@ public:
     explicit DPlatformAudioPort(DPlatformAudioCard *card)
         : m_card(card)
     {
-        m_card->addPort(this);
+        if (m_card) {
+            m_card->addPort(this);
+        }
+    }
+    virtual ~DPlatformAudioPort()
+    {
+        if (m_source) {
+            m_source->deleteLater();
+            m_source = nullptr;
+        }
     }
     virtual void setEnabled(const bool enabled) = 0;
     virtual bool isEnabled() const = 0;

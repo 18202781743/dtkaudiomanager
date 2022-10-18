@@ -22,16 +22,6 @@ DAudioDevice::~DAudioDevice()
 
 }
 
-QString DAudioDevice::name() const
-{
-    return QString();
-}
-
-QString DAudioDevice::description() const
-{
-    return QString();
-}
-
 DAudioInputDevice::DAudioInputDevice(DAudioCard *parent)
     : DAudioDevice (parent)
 {
@@ -41,7 +31,10 @@ DAudioInputDevice::DAudioInputDevice(DAudioCard *parent)
 DAudioInputDevice::DAudioInputDevice(DPlatformAudioInputDevice *d)
     : d(d)
 {
+    Q_ASSERT(d);
 
+    connect(d, &DPlatformAudioInputDevice::muteChanged, this, &DAudioInputDevice::muteChanged);
+    connect(d, &DPlatformAudioInputDevice::fadeChanged, this, &DAudioInputDevice::fadeChanged);
 }
 
 bool DAudioInputDevice::mute() const
@@ -79,6 +72,16 @@ double DAudioInputDevice::baseVolume() const
     return d->baseVolume();
 }
 
+QString DAudioInputDevice::name() const
+{
+    return d->name();
+}
+
+QString DAudioInputDevice::description() const
+{
+    return d->description();
+}
+
 void DAudioInputDevice::setMute(bool mute)
 {
     d->setMute(mute);
@@ -108,7 +111,10 @@ DAudioOutputDevice::DAudioOutputDevice(DAudioCard *parent)
 DAudioOutputDevice::DAudioOutputDevice(DPlatformAudioOutputDevice *d)
     : d(d)
 {
+    Q_ASSERT(d);
 
+    connect(d, &DPlatformAudioOutputDevice::muteChanged, this, &DAudioOutputDevice::muteChanged);
+    connect(d, &DPlatformAudioOutputDevice::fadeChanged, this, &DAudioOutputDevice::fadeChanged);
 }
 
 bool DAudioOutputDevice::mute() const
@@ -144,6 +150,16 @@ bool DAudioOutputDevice::supportFade() const
 double DAudioOutputDevice::baseVolume() const
 {
     return d->baseVolume();
+}
+
+QString DAudioOutputDevice::name() const
+{
+    return d->name();
+}
+
+QString DAudioOutputDevice::description() const
+{
+    return d->description();
 }
 
 void DAudioOutputDevice::setMute(bool mute)

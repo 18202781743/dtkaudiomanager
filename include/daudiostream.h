@@ -36,7 +36,7 @@ public:
     virtual bool supportFade() const = 0;
     virtual double meterVolume() const = 0;
 
-    QString card() const;
+    virtual QString card() const = 0;
 
 public Q_SLOTS:
     virtual void setMute(bool mute) = 0;
@@ -78,6 +78,7 @@ public:
     virtual bool supportFade() const override;
     virtual double meterVolume() const override;
 
+    virtual QString card() const override;
 public Q_SLOTS:
     virtual void setMute(bool mute) override;
     virtual void setFade(double fade) override;
@@ -85,7 +86,7 @@ public Q_SLOTS:
     virtual void setBalance(double balance) override;
 
 private:
-    Q_DISABLE_COPY(DAudioInputStream)
+    DPlatformAudioInputStream *d = nullptr;
 };
 
 class DPlatformAudioOutputStream;
@@ -105,6 +106,7 @@ public:
     virtual bool supportFade() const override;
     virtual double meterVolume() const override;
 
+    virtual QString card() const override;
 public Q_SLOTS:
     virtual void setMute(bool mute) override;
     virtual void setFade(double fade) override;
@@ -112,6 +114,6 @@ public Q_SLOTS:
     virtual void setBalance(double balance) override;
 
 private:
-    Q_DISABLE_COPY(DAudioOutputStream)
+    DPlatformAudioOutputStream *d = nullptr;
 };
 DAUDIOMANAGER_END_NAMESPACE

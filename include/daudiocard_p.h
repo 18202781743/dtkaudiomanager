@@ -18,7 +18,14 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioCard : public QObject
     Q_OBJECT
 
 public:
-    virtual QList<DAudioPort *> ports() const = 0;
+    virtual ~DPlatformAudioCard()
+    {
+        if  (m_source) {
+            m_source->deleteLater();
+            m_source = nullptr;
+        }
+    }
+
     virtual quint32 index() const { return 0; }
     virtual QString name() const = 0;
 
@@ -34,6 +41,11 @@ public:
             m_source = new DAudioCard(this);
         }
         return m_source;
+    }
+
+    QList<DPlatformAudioPort *> ports() const
+    {
+        return m_ports;
     }
 
 Q_SIGNALS:

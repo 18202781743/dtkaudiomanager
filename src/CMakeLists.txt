@@ -7,6 +7,7 @@ set(BIN_NAME ${CMAKE_PROJECT_NAME})
 file(GLOB_RECURSE INCLUDE_PRIVATE_FILES
     "../include/daudioport_p.h"
     "../include/daudiocard_p.h"
+    "../include/daudiomanager_p.h"
     "../include/daudiodevice_p.h"
     "../include/daudiostream_p.h"
     "../include/daudiofactory_p.h"
@@ -17,15 +18,16 @@ file(GLOB_RECURSE INCLUDE_FILES
     "../include/daudiocard.h"
     "../include/daudiomanager.h"
     "../include/daudiodevice.h"
+    "../include/daudiostream.h"
 )
 file(GLOB_RECURSE SRCS
-    "./*.h"
     "./daudioport.cpp"
     "./daudiocard.cpp"
     "./daudiofactory.cpp"
     "./daudioplugin.cpp"
     "./daudiomanager.cpp"
     "./daudiodevice.cpp"
+    "./daudiostream.cpp"
 )
 
 add_library(${BIN_NAME} SHARED

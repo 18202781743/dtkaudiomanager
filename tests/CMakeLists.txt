@@ -8,42 +8,42 @@ set(BIN_NAME ut-dtkaudiomanager)
 
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-access-control -fno-inline -Wno-pmf-conversions")
 
-include(./dbus/fakeInterface.cmake)
+#include(./dbus/fakeInterface.cmake)
 
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Test)
 file(GLOB_RECURSE INCLUDE_FILES "../include/*.h")
 file(GLOB_RECURSE SRCS
     "../src/*.h"
     "../src/*.cpp"
 )
-file(GLOB_RECURSE TEST_FILES "./*.h" "./*.cpp")
+file(GLOB TEST_FILES
+    "./main.cpp"
+    "./ut-daudiohelpers.hpp"
+    "./ut-daudioport.cpp"
+    "./ut-daudiocard.cpp"
+    "./ut-daudiodevice.cpp"
+    "./ut-daudiostream.cpp"
+)
 
 include_directories(
     "../include"
-    "../src/dbus"
 )
 
 add_executable(${BIN_NAME}
     ${INCLUDE_FILES}
     ${SRCS}
     ${TEST_FILES}
-    ${DFAKE_INTERFACE_DBUS_XML}
 )
-
-find_package(PkgConfig REQUIRED)
-pkg_search_module(RSVG2 REQUIRED librsvg-2.0)
 
 target_include_directories(${BIN_NAME} PUBLIC
     Qt${QT_VERSION_MAJOR}::Core
-    Qt${QT_VERSION_MAJOR}::Gui
     Qt${QT_VERSION_MAJOR}::DBus
-    ${RSVG2_INCLUDE_DIRS}
 )
 
 target_link_libraries(${BIN_NAME} PRIVATE
     Qt${QT_VERSION_MAJOR}::Core
-    Qt${QT_VERSION_MAJOR}::Gui
     Qt${QT_VERSION_MAJOR}::DBus
-    ${RSVG2_LIBRARIES}
+    Qt${QT_VERSION_MAJOR}::Test
     -lpthread
     -lgcov
     -lgtest

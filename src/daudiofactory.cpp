@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#pragma once
-
 #include "daudiofactory_p.h"
 #include "daudioplugin_p.h"
 #include "daudiomanager_p.h"

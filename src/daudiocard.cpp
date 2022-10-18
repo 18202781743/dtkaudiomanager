@@ -15,6 +15,8 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 DAudioCard::DAudioCard(DPlatformAudioCard *d)
     : d(d)
 {
+    Q_ASSERT(d);
+    connect(d, &DPlatformAudioCard::enabledChanged, this, &DAudioCard::enabledChanged);
 }
 
 DAudioCard::~DAudioCard()
@@ -25,7 +27,7 @@ DAudioCard::~DAudioCard()
 QList<DAudioPort *> DAudioCard::ports() const
 {
     QList<DAudioPort *> result;
-    for (auto item : d->m_ports)
+    for (auto item : d->ports())
         result << item->source();
 
     return result;

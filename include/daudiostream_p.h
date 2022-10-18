@@ -25,8 +25,6 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioStream : public QObject
     Q_PROPERTY(double meterVolume READ meterVolume NOTIFY meterVolumeChanged)
     Q_PROPERTY(QString card READ card NOTIFY cardChanged)
 public:
-    explicit DPlatformAudioStream(DAudioDevice *parent = nullptr);
-    virtual ~DPlatformAudioStream() override;
 
     virtual bool mute() const = 0;
     virtual double fade() const = 0;
@@ -37,7 +35,7 @@ public:
     virtual bool supportFade() const = 0;
     virtual double meterVolume() const = 0;
 
-    QString card() const;
+    virtual QString card() const = 0;
 
 public Q_SLOTS:
     virtual void setMute(bool mute) = 0;
@@ -63,7 +61,17 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioInputStream : public DPlatfo
     Q_OBJECT
 
 public:
-    explicit DPlatformAudioInputStream(DPlatformAudioOutputDevice *parent = nullptr);
+    explicit DPlatformAudioInputStream(DPlatformAudioOutputDevice *parent = nullptr)
+    {
+
+    }
+    virtual ~DPlatformAudioInputStream() override
+    {
+        if (m_source) {
+            m_source->deleteLater();
+            m_source = nullptr;
+        }
+    }
 
     DAudioInputStream *source()
     {
@@ -82,7 +90,17 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioOutputStream : public DPlatf
     Q_OBJECT
 
 public:
-    explicit DPlatformAudioOutputStream(DPlatformAudioInputDevice *parent = nullptr);
+    explicit DPlatformAudioOutputStream(DPlatformAudioInputDevice *parent = nullptr)
+    {
+
+    }
+    virtual ~DPlatformAudioOutputStream() override
+    {
+        if (m_source) {
+            m_source->deleteLater();
+            m_source = nullptr;
+        }
+    }
 
     DAudioOutputStream *source()
     {

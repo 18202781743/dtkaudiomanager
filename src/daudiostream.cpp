@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 #include "daudiostream.h"
+#include "daudiostream_p.h"
 #include "daudiodevice.h"
 
 #include <QDebug>
@@ -20,16 +21,14 @@ DAudioStream::~DAudioStream()
 
 }
 
-QString DAudioStream::card() const
-{
-    return QString();
-}
-
 DAudioInputStream::DAudioInputStream(DPlatformAudioInputStream *d, DAudioDevice *parent)
     : DAudioStream (parent)
     , d(d)
 {
+    Q_ASSERT(d);
 
+    connect(d, &DPlatformAudioInputStream::muteChanged, this, &DAudioInputStream::muteChanged);
+    connect(d, &DPlatformAudioInputStream::fadeChanged, this, &DAudioInputStream::fadeChanged);
 }
 
 DAudioInputStream::~DAudioInputStream()
@@ -39,64 +38,72 @@ DAudioInputStream::~DAudioInputStream()
 
 bool DAudioInputStream::mute() const
 {
-    return false;
+    return d->mute();
 }
 
 double DAudioInputStream::fade() const
 {
-    return 0.0;
+    return d->fade();
 }
 
 double DAudioInputStream::volume() const
 {
-    return 0.0;
+    return d->volume();
 }
 
 double DAudioInputStream::balance() const
 {
-    return 0.0;
+    return d->balance();
 }
 
 bool DAudioInputStream::supportBalance() const
 {
-    return false;
+    return d->supportBalance();
 }
 
 bool DAudioInputStream::supportFade() const
 {
-    return false;
+    return d->supportFade();
 }
 
 double DAudioInputStream::meterVolume() const
 {
-    return 0.0;
+    return d->meterVolume();
+}
+
+QString DAudioInputStream::card() const
+{
+    return d->card();
 }
 
 void DAudioInputStream::setMute(bool mute)
 {
-
+    d->setMute(mute);
 }
 
 void DAudioInputStream::setFade(double fade)
 {
-
+    d->setFade(fade);
 }
 
 void DAudioInputStream::setVolume(double volume)
 {
-
+    d->setVolume(volume);
 }
 
 void DAudioInputStream::setBalance(double balance)
 {
-
+    d->setBalance(balance);
 }
 
 DAudioOutputStream::DAudioOutputStream(DPlatformAudioOutputStream *d, DAudioDevice *parent)
     : DAudioStream (parent)
     , d(d)
 {
+    Q_ASSERT(d);
 
+    connect(d, &DPlatformAudioOutputStream::muteChanged, this, &DAudioOutputStream::muteChanged);
+    connect(d, &DPlatformAudioOutputStream::fadeChanged, this, &DAudioOutputStream::fadeChanged);
 }
 
 DAudioOutputStream::~DAudioOutputStream()
@@ -106,56 +113,61 @@ DAudioOutputStream::~DAudioOutputStream()
 
 bool DAudioOutputStream::mute() const
 {
-    return false;
+    return d->mute();
 }
 
 double DAudioOutputStream::fade() const
 {
-    return 0.0;
+    return d->fade();
 }
 
 double DAudioOutputStream::volume() const
 {
-    return 0.0;
+    return d->volume();
 }
 
 double DAudioOutputStream::balance() const
 {
-    return 0.0;
+    return d->balance();
 }
 
 bool DAudioOutputStream::supportBalance() const
 {
-    return false;
+    return d->supportBalance();
 }
 
 bool DAudioOutputStream::supportFade() const
 {
-    return false;
+    return d->supportFade();
 }
 
 double DAudioOutputStream::meterVolume() const
 {
-    return 0.0;
+    return d->meterVolume();
+}
+
+QString DAudioOutputStream::card() const
+{
+    return d->card();
 }
 
 void DAudioOutputStream::setMute(bool mute)
 {
-
+    d->setMute(mute);
 }
 
 void DAudioOutputStream::setFade(double fade)
 {
-
+    d->setFade(fade);
 }
 
 void DAudioOutputStream::setVolume(double volume)
 {
-
+    d->setVolume(volume);
 }
 
 void DAudioOutputStream::setBalance(double balance)
 {
-
+    d->setBalance(balance);
 }
 DAUDIOMANAGER_END_NAMESPACE

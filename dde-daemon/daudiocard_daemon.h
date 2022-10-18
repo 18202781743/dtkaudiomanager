@@ -19,7 +19,6 @@ public:
     explicit DDaemonAudioCard(QObject *parent = nullptr);
     virtual ~DDaemonAudioCard() override;
 
-    QList<DAudioPort *> ports() const override;
     QString name() const override;
 
     bool enabled() const override;

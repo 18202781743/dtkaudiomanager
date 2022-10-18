@@ -21,6 +21,13 @@ public:
         : m_card(card)
     {
     }
+    virtual ~DPlatformAudioInputDevice() override
+    {
+        if (m_source) {
+            m_source->deleteLater();
+            m_source = nullptr;
+        }
+    }
     void setCard(DPlatformAudioCard *card)
     {
         m_card = card;
@@ -84,6 +91,13 @@ public:
     explicit DPlatformAudioOutputDevice(DPlatformAudioCard *card = nullptr)
         : m_card(card)
     {
+    }
+    virtual ~DPlatformAudioOutputDevice() override
+    {
+        if (m_source) {
+            m_source->deleteLater();
+            m_source = nullptr;
+        }
     }
     DAudioOutputDevice *source()
     {

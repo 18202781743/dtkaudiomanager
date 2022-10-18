@@ -13,6 +13,7 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 
 DDaemonInputStream::DDaemonInputStream(const QString &path, DPlatformAudioOutputDevice *parent)
     : DPlatformAudioInputStream (parent)
+    , m_device(parent)
     , m_inter(new DDBusInterface(DDaemonInternal::AudioServiceName, path))
 {
 
@@ -58,6 +59,11 @@ double DDaemonInputStream::meterVolume() const
     return qdbus_cast<bool>(m_inter->property("meterVolume"));
 }
 
+QString DDaemonInputStream::card() const
+{
+
+}
+
 void DDaemonInputStream::setMute(bool mute)
 {
 
@@ -80,6 +86,7 @@ void DDaemonInputStream::setBalance(double balance)
 
 DDaemonOutputStream::DDaemonOutputStream(const QString &path, DPlatformAudioInputDevice *parent)
     : DPlatformAudioOutputStream (parent)
+    , m_device(parent)
     , m_inter(new DDBusInterface(DDaemonInternal::AudioServiceName, path))
 {
 
@@ -123,6 +130,10 @@ bool DDaemonOutputStream::supportFade() const
 double DDaemonOutputStream::meterVolume() const
 {
     return 0.0;
+}
+
+QString DDaemonOutputStream::card() const
+{
 }
 
 void DDaemonOutputStream::setMute(bool mute)

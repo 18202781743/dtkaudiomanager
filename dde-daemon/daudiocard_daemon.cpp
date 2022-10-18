@@ -23,11 +23,6 @@ DDaemonAudioCard::~DDaemonAudioCard()
 
 }
 
-QList<DAudioPort *> DDaemonAudioCard::ports() const
-{
-    return { };
-}
-
 QString DDaemonAudioCard::name() const
 {
     return QString();
