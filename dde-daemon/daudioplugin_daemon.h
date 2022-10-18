@@ -21,10 +21,6 @@ public:
 
 
     virtual DAudioManagerPrivate *createAudioManager() override;
-    virtual QList<DPlatformAudioCard *> cards() override;
-    virtual DPlatformAudioCard *createPlatformAudioCard() override;
-    virtual DPlatformAudioPort *createPlatformAudioPort() override;
-
 };
 
 DAUDIOMANAGER_END_NAMESPACE

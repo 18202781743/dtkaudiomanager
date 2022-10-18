@@ -15,6 +15,8 @@ file(GLOB_RECURSE INCLUDE_FILES
     "./daudioplugin_daemon.h"
     "./daudiomanager_daemon.h"
     "./daudiodevice_daemon.h"
+    "./daudiostream_daemon.h"
+    "./daemonhelpers.hpp"
 )
 file(GLOB_RECURSE SRCS
     "./daudioport_daemon.cpp"
@@ -22,6 +24,7 @@ file(GLOB_RECURSE SRCS
     "./daudioplugin_daemon.cpp"
     "./daudiomanager_daemon.cpp"
     "./daudiodevice_daemon.cpp"
+    "./daudiostream_daemon.cpp"
 )
 
 add_library(${BIN_NAME} SHARED

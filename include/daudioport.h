@@ -19,8 +19,8 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioPort : public QObject
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
 
 public:
+    explicit DAudioPort(DPlatformAudioPort *d);
     virtual ~DAudioPort() override;
-    DAudioPort(DPlatformAudioPort *d);
 
     void setEnabled(const bool enabled);
     bool isEnabled() const;

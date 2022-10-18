@@ -8,6 +8,8 @@
 #include "daudiodevice_daemon.h"
 #include "daudiocard.h"
 #include "daudiodevice.h"
+#include "daudiostream_daemon.h"
+#include "daemonhelpers.hpp"
 
 #include <QDBusAbstractInterface>
 #include <QDBusReply>
@@ -20,7 +22,7 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 
 DDaemonAudioManager::DDaemonAudioManager(QObject *parent)
 {
-    m_inter = new DDBusInterface("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio");
+    m_inter = new DDBusInterface(DDaemonInternal::AudioServiceName, DDaemonInternal::AudioPath);
     if (!m_inter->isValid()) {
         qWarning() << m_inter->lastError();
     }
@@ -35,6 +37,7 @@ DDaemonAudioManager::~DDaemonAudioManager()
 
 void DDaemonAudioManager::reset()
 {
+    m_inter->call("reset");
 }
 
 void DDaemonAudioManager::setReConnectionEnabled(const bool enable)
@@ -121,12 +124,12 @@ void DDaemonAudioManager::updateInputDevice()
     }
 
     QJsonDocument doc = QJsonDocument::fromJson(reply.value().toUtf8());
-    QJsonArray jSources = doc.array();
-    for (auto item : jSources) {
+    QJsonArray root = doc.array();
+    for (auto item : root) {
         const auto &path = item.toString();
 
         DPlatformAudioCard *card = nullptr;
-        DDBusInterface inter("com.deepin.daemon.Audio", path);
+        DDBusInterface inter(DDaemonInternal::AudioServiceName, path);
         const auto cardId = qdbus_cast<quint32>(inter.property("card"));
         for (auto item : m_cards) {
             if (item->index() == cardId) {
@@ -136,6 +139,87 @@ void DDaemonAudioManager::updateInputDevice()
         }
         auto device = new DDaemonAudioInputDevice(path, card);
         m_inputDevices << device;
+    }
+}
+
+void DDaemonAudioManager::updateOutputDevice()
+{
+    const QDBusReply<QString> &reply = m_inter->call("sinks");
+    if (!reply.isValid()) {
+        qWarning() << Q_FUNC_INFO << reply.error();
+        return;
+    }
+
+    QJsonDocument doc = QJsonDocument::fromJson(reply.value().toUtf8());
+    QJsonArray root = doc.array();
+    for (auto item : root) {
+        const auto &path = item.toString();
+
+        DPlatformAudioCard *card = nullptr;
+        DDBusInterface inter(DDaemonInternal::AudioServiceName, path);
+        const auto cardId = qdbus_cast<quint32>(inter.property("card"));
+        for (auto item : m_cards) {
+            if (item->index() == cardId) {
+                card = item;
+                break;
+            }
+        }
+        auto device = new DDaemonAudioOutputDevice(path, card);
+        m_outputDevices << device;
+    }
+}
+
+void DDaemonAudioManager::updateOutputStream()
+{
+    const QDBusReply<QString> &reply = m_inter->call("sourceoutput");
+    if (!reply.isValid()) {
+        qWarning() << Q_FUNC_INFO << reply.error();
+        return;
+    }
+
+    QJsonDocument doc = QJsonDocument::fromJson(reply.value().toUtf8());
+    QJsonArray root = doc.array();
+    for (auto item : root) {
+        const auto &path = item.toString();
+
+        DPlatformAudioInputDevice *device = nullptr;
+        DDBusInterface inter(DDaemonInternal::AudioServiceName, path);
+        const auto sinkIndex = qdbus_cast<quint32>(inter.property("sinkIndex"));
+        for (auto item : m_inputDevices) {
+            if (item->key() == QString::number(sinkIndex)) {
+                device = item;
+                break;
+            }
+        }
+        auto stream = new DDaemonOutputStream(path, device);
+        m_outputStreams << stream;
+    }
+}
+
+void DDaemonAudioManager::updateInputStream()
+{
+    const QDBusReply<QString> &reply = m_inter->call("sinkinput");
+    if (!reply.isValid()) {
+        qWarning() << Q_FUNC_INFO << reply.error();
+        return;
+    }
+
+    QJsonDocument doc = QJsonDocument::fromJson(reply.value().toUtf8());
+    QJsonArray root = doc.array();
+    for (auto item : root) {
+        const auto &path = item.toString();
+
+        DPlatformAudioOutputDevice *device = nullptr;
+        DDBusInterface inter(DDaemonInternal::AudioServiceName, path);
+        const auto sinkIndex = qdbus_cast<quint32>(inter.property("sinkIndex"));
+        for (auto item : m_outputDevices) {
+            if (item->key() == QString::number(sinkIndex)) {
+                device = item;
+                break;
+            }
+        }
+        auto stream = new DDaemonInputStream(path, device);
+        m_inputStreams << stream;
     }
 }
 

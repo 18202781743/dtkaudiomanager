@@ -5,8 +5,6 @@
 #include "daudioplugin_daemon.h"
 
 #include "daudiomanager_daemon.h"
-#include "daudiocard_daemon.h"
-#include "daudioport_daemon.h"
 
 #include <QDebug>
 
@@ -22,20 +20,4 @@ DAudioManagerPrivate *DDaemonAudioPlugin::createAudioManager()
 {
     return new DDaemonAudioManager();
 }
-
-QList<DPlatformAudioCard *> DDaemonAudioPlugin::cards()
-{
-    return {};
-}
-
-DPlatformAudioCard *DDaemonAudioPlugin::createPlatformAudioCard()
-{
-    return new DDaemonAudioCard();
-}
-
-DPlatformAudioPort *DDaemonAudioPlugin::createPlatformAudioPort()
-{
-    return nullptr;
-}
-
 DAUDIOMANAGER_END_NAMESPACE

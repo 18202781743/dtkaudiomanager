@@ -130,28 +130,10 @@ private:
 
 Q_GLOBAL_STATIC(DAudioPluginLoader, loader)
 
-DPlatformAudioPort *DAudioFactory::createPlatformAudioPort()
-{
-    auto plugin = loader->plugin();
-    return plugin ? plugin->createPlatformAudioPort() : nullptr;
-}
-
 DAudioManagerPrivate *DAudioFactory::createAudioManager()
 {
     auto plugin = loader->plugin();
     return plugin ? plugin->createAudioManager() : nullptr;
-}
-
-QList<DPlatformAudioCard *> DAudioFactory::cards()
-{
-    auto plugin = loader->plugin();
-    return plugin ? plugin->cards() : QList<DPlatformAudioCard *>();
-}
-
-DPlatformAudioCard *DAudioFactory::createPlatformAudioCard()
-{
-    auto plugin = loader->plugin();
-    return plugin ? plugin->createPlatformAudioCard() : nullptr;
 }
 
 DAUDIOMANAGER_END_NAMESPACE

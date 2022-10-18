@@ -16,8 +16,5 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioFactory
 {
 public:
     static DAudioManagerPrivate *createAudioManager();
-    static QList<DPlatformAudioCard*> cards();
-    static DPlatformAudioCard *createPlatformAudioCard();
-    static DPlatformAudioPort *createPlatformAudioPort();
 };
 DAUDIOMANAGER_END_NAMESPACE

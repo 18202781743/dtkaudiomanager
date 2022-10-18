@@ -25,8 +25,9 @@ QString DAudioStream::card() const
     return QString();
 }
 
-DAudioInputStream::DAudioInputStream(DAudioDevice *parent)
+DAudioInputStream::DAudioInputStream(DPlatformAudioInputStream *d, DAudioDevice *parent)
     : DAudioStream (parent)
+    , d(d)
 {
 
 }
@@ -91,8 +92,9 @@ void DAudioInputStream::setBalance(double balance)
 
 }
 
-DAudioOutputStream::DAudioOutputStream(DAudioDevice *parent)
+DAudioOutputStream::DAudioOutputStream(DPlatformAudioOutputStream *d, DAudioDevice *parent)
     : DAudioStream (parent)
+    , d(d)
 {
 
 }

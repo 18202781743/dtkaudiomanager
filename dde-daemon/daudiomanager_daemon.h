@@ -42,6 +42,9 @@ Q_SIGNALS:
 private:
     void updateCards();
     void updateInputDevice();
+    void updateOutputDevice();
+    void updateOutputStream();
+    void updateInputStream();
 
 private:
     DDBusInterface *m_inter = nullptr;

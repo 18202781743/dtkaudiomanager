@@ -34,6 +34,9 @@ public:
         return m_source;
     }
 
+    QString key() const { return m_key; }
+    void setKey(const QString &key) { m_key = key; }
+
     virtual bool mute() const = 0;
     virtual double fade() const = 0;
     virtual double volume() const = 0;
@@ -71,12 +74,17 @@ Q_SIGNALS:
 protected:
     DAudioInputDevice *m_source = nullptr;
     DPlatformAudioCard *m_card = nullptr;
+    QString m_key;
 };
 
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioOutputDevice : public QObject
 {
     Q_OBJECT
 public:
+    explicit DPlatformAudioOutputDevice(DPlatformAudioCard *card = nullptr)
+        : m_card(card)
+    {
+    }
     DAudioOutputDevice *source()
     {
         if (!m_source) {
@@ -84,6 +92,9 @@ public:
         }
         return m_source;
     }
+
+    QString key() const { return m_key; }
+    void setKey(const QString &key) { m_key = key; }
 
     virtual bool mute() const = 0;
     virtual double fade() const = 0;
@@ -121,5 +132,7 @@ Q_SIGNALS:
 
 protected:
     DAudioOutputDevice *m_source = nullptr;
+    DPlatformAudioCard *m_card = nullptr;
+    QString m_key;
 };
 DAUDIOMANAGER_END_NAMESPACE

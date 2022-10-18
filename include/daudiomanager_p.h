@@ -8,6 +8,7 @@
 #include "daudiomanager.h"
 #include "daudiocard_p.h"
 #include "daudiodevice_p.h"
+#include "daudiostream_p.h"
 
 #include <QObject>
 
@@ -47,6 +48,8 @@ public:
     QList<DPlatformAudioCard *> m_cards;
     QList<DPlatformAudioInputDevice *> m_inputDevices;
     QList<DPlatformAudioOutputDevice *> m_outputDevices;
+    QList<DPlatformAudioInputStream *> m_inputStreams;
+    QList<DPlatformAudioOutputStream *> m_outputStreams;
 
 };
 DAUDIOMANAGER_END_NAMESPACE

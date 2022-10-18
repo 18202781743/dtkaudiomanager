@@ -62,7 +62,7 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DDaemonAudioOutputDevice : public DPlatfor
 {
     Q_OBJECT
 public:
-    explicit DDaemonAudioOutputDevice(DAudioCard *parent = nullptr);
+    explicit DDaemonAudioOutputDevice(const QString &path, DPlatformAudioCard *parent = nullptr);
     virtual ~DDaemonAudioOutputDevice() override;
 
     virtual bool mute() const override;
@@ -98,5 +98,8 @@ Q_SIGNALS:
 
     void nameChanged(QString name);
     void descriptionChanged(QString description);
+
+private:
+    DDBusInterface *m_inter = nullptr;
 };
 DAUDIOMANAGER_END_NAMESPACE

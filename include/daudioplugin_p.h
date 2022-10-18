@@ -21,9 +21,6 @@ public:
     virtual ~DAudioPlugin();
 
     virtual DAudioManagerPrivate *createAudioManager() = 0;
-    virtual QList<DPlatformAudioCard *> cards() = 0;
-    virtual DPlatformAudioCard *createPlatformAudioCard() = 0;
-    virtual DPlatformAudioPort *createPlatformAudioPort() = 0;
 };
 DAUDIOMANAGER_END_NAMESPACE
 

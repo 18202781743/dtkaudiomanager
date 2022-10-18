@@ -61,13 +61,13 @@ private:
     Q_DECLARE_PRIVATE(DAudioStream)
 };
 
-class DAudioInputStreamPrivate;
+class DPlatformAudioInputStream;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioInputStream : public DAudioStream
 {
     Q_OBJECT
 
 public:
-    explicit DAudioInputStream(DAudioDevice *parent = nullptr);
+    explicit DAudioInputStream(DPlatformAudioInputStream *d, DAudioDevice *parent = nullptr);
     virtual ~DAudioInputStream() override;
 
     virtual bool mute() const override;
@@ -86,16 +86,15 @@ public Q_SLOTS:
 
 private:
     Q_DISABLE_COPY(DAudioInputStream)
-    Q_DECLARE_PRIVATE(DAudioInputStream)
 };
 
-class DAudioOutputStreamPrivate;
+class DPlatformAudioOutputStream;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioOutputStream : public DAudioStream
 {
     Q_OBJECT
 
 public:
-    explicit DAudioOutputStream(DAudioDevice *parent = nullptr);
+    explicit DAudioOutputStream(DPlatformAudioOutputStream *d, DAudioDevice *parent = nullptr);
     virtual ~DAudioOutputStream() override;
 
     virtual bool mute() const override;
@@ -114,6 +113,5 @@ public Q_SLOTS:
 
 private:
     Q_DISABLE_COPY(DAudioOutputStream)
-    Q_DECLARE_PRIVATE(DAudioOutputStream)
 };
 DAUDIOMANAGER_END_NAMESPACE

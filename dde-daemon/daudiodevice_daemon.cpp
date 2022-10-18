@@ -5,6 +5,7 @@
 #include "daudiodevice_daemon.h"
 #include "daudiostream.h"
 #include "daudiocard.h"
+#include "daemonhelpers.hpp"
 
 #include <QDBusAbstractInterface>
 #include <QDBusArgument>
@@ -14,8 +15,10 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 
 DDaemonAudioInputDevice::DDaemonAudioInputDevice(const QString &path, DPlatformAudioCard *card)
     : DPlatformAudioInputDevice (card)
-    , m_inter(new DDBusInterface("com.deepin.daemon.Audio", path))
+    , m_inter(new DDBusInterface(DDaemonInternal::AudioServiceName, path))
 {
+     const auto index = qdbus_cast<quint32>(m_inter->property("SinkIndex"));
+     m_key = QString::number(index);
 }
 
 bool DDaemonAudioInputDevice::mute() const
@@ -71,6 +74,14 @@ void DDaemonAudioInputDevice::setVolume(double volume)
 void DDaemonAudioInputDevice::setBalance(double balance)
 {
 
+}
+
+DDaemonAudioOutputDevice::DDaemonAudioOutputDevice(const QString &path, DPlatformAudioCard *parent)
+    : DPlatformAudioOutputDevice (parent)
+    , m_inter(new DDBusInterface(DDaemonInternal::AudioServiceName, path))
+{
+    const auto index = qdbus_cast<quint32>(m_inter->property("SinkIndex"));
+    m_key = QString::number(index);
 }
 
 bool DDaemonAudioOutputDevice::mute() const

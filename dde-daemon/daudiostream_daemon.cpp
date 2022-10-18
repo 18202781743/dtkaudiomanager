@@ -2,157 +2,144 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#include "daudiostream.h"
+#include "daudiostream_daemon.h"
 #include "daudiodevice.h"
+#include "daemonhelpers.hpp"
 
 #include <QDebug>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 
-DAudioStream::DAudioStream(DAudioDevice *parent)
-    : QObject (parent)
+DDaemonInputStream::DDaemonInputStream(const QString &path, DPlatformAudioOutputDevice *parent)
+    : DPlatformAudioInputStream (parent)
+    , m_inter(new DDBusInterface(DDaemonInternal::AudioServiceName, path))
 {
 
 }
 
-DAudioStream::~DAudioStream()
+DDaemonInputStream::~DDaemonInputStream()
 {
 
 }
 
-QString DAudioStream::card() const
-{
-    return QString();
-}
-
-DAudioInputStream::DAudioInputStream(DAudioDevice *parent)
-    : DAudioStream (parent)
-{
-
-}
-
-DAudioInputStream::~DAudioInputStream()
-{
-
-}
-
-bool DAudioInputStream::mute() const
+bool DDaemonInputStream::mute() const
 {
     return false;
 }
 
-double DAudioInputStream::fade() const
+double DDaemonInputStream::fade() const
 {
     return 0.0;
 }
 
-double DAudioInputStream::volume() const
+double DDaemonInputStream::volume() const
 {
     return 0.0;
 }
 
-double DAudioInputStream::balance() const
+double DDaemonInputStream::balance() const
 {
     return 0.0;
 }
 
-bool DAudioInputStream::supportBalance() const
+bool DDaemonInputStream::supportBalance() const
 {
     return false;
 }
 
-bool DAudioInputStream::supportFade() const
+bool DDaemonInputStream::supportFade() const
 {
     return false;
 }
 
-double DAudioInputStream::meterVolume() const
+double DDaemonInputStream::meterVolume() const
 {
     return 0.0;
 }
 
-void DAudioInputStream::setMute(bool mute)
+void DDaemonInputStream::setMute(bool mute)
 {
 
 }
 
-void DAudioInputStream::setFade(double fade)
+void DDaemonInputStream::setFade(double fade)
 {
 
 }
 
-void DAudioInputStream::setVolume(double volume)
+void DDaemonInputStream::setVolume(double volume)
 {
 
 }
 
-void DAudioInputStream::setBalance(double balance)
+void DDaemonInputStream::setBalance(double balance)
 {
 
 }
 
-DAudioOutputStream::DAudioOutputStream(DAudioDevice *parent)
-    : DAudioStream (parent)
+DDaemonOutputStream::DDaemonOutputStream(const QString &path, DPlatformAudioInputDevice *parent)
+    : DPlatformAudioOutputStream (parent)
+    , m_inter(new DDBusInterface(DDaemonInternal::AudioServiceName, path))
 {
 
 }
 
-DAudioOutputStream::~DAudioOutputStream()
+DDaemonOutputStream::~DDaemonOutputStream()
 {
 
 }
 
-bool DAudioOutputStream::mute() const
+bool DDaemonOutputStream::mute() const
 {
     return false;
 }
 
-double DAudioOutputStream::fade() const
+double DDaemonOutputStream::fade() const
 {
     return 0.0;
 }
 
-double DAudioOutputStream::volume() const
+double DDaemonOutputStream::volume() const
 {
     return 0.0;
 }
 
-double DAudioOutputStream::balance() const
+double DDaemonOutputStream::balance() const
 {
     return 0.0;
 }
 
-bool DAudioOutputStream::supportBalance() const
+bool DDaemonOutputStream::supportBalance() const
 {
     return false;
 }
 
-bool DAudioOutputStream::supportFade() const
+bool DDaemonOutputStream::supportFade() const
 {
     return false;
 }
 
-double DAudioOutputStream::meterVolume() const
+double DDaemonOutputStream::meterVolume() const
 {
     return 0.0;
 }
 
-void DAudioOutputStream::setMute(bool mute)
+void DDaemonOutputStream::setMute(bool mute)
 {
 
 }
 
-void DAudioOutputStream::setFade(double fade)
+void DDaemonOutputStream::setFade(double fade)
 {
 
 }
 
-void DAudioOutputStream::setVolume(double volume)
+void DDaemonOutputStream::setVolume(double volume)
 {
 
 }
 
-void DAudioOutputStream::setBalance(double balance)
+void DDaemonOutputStream::setBalance(double balance)
 {
 
 }

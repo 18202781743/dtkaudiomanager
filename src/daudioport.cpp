@@ -14,6 +14,11 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 DAudioPort::DAudioPort(DPlatformAudioPort *d)
     :d(d)
 {
+    Q_ASSERT(d);
+
+    connect(d, &DPlatformAudioPort::directionChanged, this, &DAudioPort::directionChanged);
+    connect(d, &DPlatformAudioPort::nameChanged, this, &DAudioPort::nameChanged);
+    connect(d, &DPlatformAudioPort::descriptionChanged, this, &DAudioPort::descriptionChanged);
 }
 
 DAudioPort::~DAudioPort()
@@ -43,6 +48,6 @@ QString DAudioPort::name() const
 
 QString DAudioPort::description() const
 {
-    return QString();
+    return d->description();
 }
 DAUDIOMANAGER_END_NAMESPACE
