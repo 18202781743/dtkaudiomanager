@@ -1,0 +1,23 @@
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
+#pragma once
+
+#include "namespace.h"
+
+#include <QObject>
+
+DAUDIOMANAGER_BEGIN_NAMESPACE
+class DPlatformAudioPort;
+class DPlatformAudioCard;
+class DAudioManagerPrivate;
+class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioFactory
+{
+public:
+    static DAudioManagerPrivate *createAudioManager();
+    static QList<DPlatformAudioCard*> cards();
+    static DPlatformAudioCard *createPlatformAudioCard();
+    static DPlatformAudioPort *createPlatformAudioPort();
+};
+DAUDIOMANAGER_END_NAMESPACE

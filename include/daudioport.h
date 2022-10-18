@@ -9,7 +9,7 @@
 #include <QObject>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
-class DAudioPortPrivate;
+class DPlatformAudioPort;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioPort : public QObject
 {
     Q_OBJECT
@@ -19,8 +19,8 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioPort : public QObject
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
 
 public:
-    explicit DAudioPort(QObject *parent = nullptr);
     virtual ~DAudioPort() override;
+    DAudioPort(DPlatformAudioPort *d);
 
     void setEnabled(const bool enabled);
     bool isEnabled() const;
@@ -37,6 +37,7 @@ Q_SIGNALS:
 
 private:
     Q_DISABLE_COPY(DAudioPort)
-    Q_DECLARE_PRIVATE(DAudioPort)
+    friend class DPlatformAudioPort;
+    DPlatformAudioPort *d = nullptr;
 };
 DAUDIOMANAGER_END_NAMESPACE

@@ -2,28 +2,26 @@
 #
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
-set(BIN_NAME ${CMAKE_PROJECT_NAME})
+set(BIN_NAME dtkaudioddedaemon)
 
 file(GLOB_RECURSE INCLUDE_PRIVATE_FILES
     "../include/daudioport_p.h"
     "../include/daudiocard_p.h"
-    "../include/daudiofactory_p.h"
     "../include/daudioplugin_p.h"
 )
 file(GLOB_RECURSE INCLUDE_FILES
-    "../include/daudioport.h"
-    "../include/daudiocard.h"
-    "../include/daudiomanager.h"
-    "../include/daudiodevice.h"
+    "./daudioport_daemon.h"
+    "./daudiocard_daemon.h"
+    "./daudioplugin_daemon.h"
+    "./daudiomanager_daemon.h"
+    "./daudiodevice_daemon.h"
 )
 file(GLOB_RECURSE SRCS
-    "./*.h"
-    "./daudioport.cpp"
-    "./daudiocard.cpp"
-    "./daudiofactory.cpp"
-    "./daudioplugin.cpp"
-    "./daudiomanager.cpp"
-    "./daudiodevice.cpp"
+    "./daudioport_daemon.cpp"
+    "./daudiocard_daemon.cpp"
+    "./daudioplugin_daemon.cpp"
+    "./daudiomanager_daemon.cpp"
+    "./daudiodevice_daemon.cpp"
 )
 
 add_library(${BIN_NAME} SHARED
@@ -33,6 +31,7 @@ add_library(${BIN_NAME} SHARED
 )
 
 include_directories(../include)
+include_directories(../src)
 
 set_target_properties(${BIN_NAME} PROPERTIES
     VERSION ${CMAKE_PROJECT_VERSION}

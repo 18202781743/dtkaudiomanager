@@ -10,14 +10,14 @@
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioPort;
-class DAudioCardPrivate;
+class DPlatformAudioCard;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioCard : public QObject
 {
     Q_OBJECT
 
     Q_PROPERTY(bool enabled READ enabled NOTIFY enabledChanged)
 public:
-    explicit DAudioCard(QObject *parent = nullptr);
+    explicit DAudioCard(DPlatformAudioCard *d);
     virtual ~DAudioCard() override;
 
     QList<DAudioPort *> ports() const;
@@ -28,12 +28,13 @@ public:
 Q_SIGNALS:
     void enabledChanged(bool enabled);
 
-private:
+protected:
     Q_DISABLE_COPY(DAudioCard)
-    Q_DECLARE_PRIVATE(DAudioCard)
+    friend class DPlatformAudioCard;
+    DPlatformAudioCard *d = nullptr;
 };
 
-class DAudioBluetoothCardPrivate;
+class DPlatformAudioBluetoothCard;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioBluetoothCard : public DAudioCard
 {
     Q_OBJECT
@@ -41,7 +42,6 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioBluetoothCard : public DAudioCard
     Q_PROPERTY(QString mode READ mode WRITE setMode NOTIFY modeChanged)
     Q_PROPERTY(QStringList modeOptions READ modeOptions NOTIFY modeOptionsChanged)
 public:
-    explicit DAudioBluetoothCard(QObject *parent = nullptr);
 
     QString mode() const;
     QStringList modeOptions() const;
@@ -55,7 +55,7 @@ Q_SIGNALS:
     void modeOptionsChanged(QStringList modeOptions);
 
 private:
-    Q_DISABLE_COPY(DAudioBluetoothCard)
-    Q_DECLARE_PRIVATE(DAudioBluetoothCard)
+    friend class DPlatformAudioBluetoothCard;
+    DAudioBluetoothCard(DPlatformAudioBluetoothCard *d);
 };
 DAUDIOMANAGER_END_NAMESPACE

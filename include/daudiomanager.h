@@ -60,5 +60,6 @@ Q_SIGNALS:
 private:
     Q_DISABLE_COPY(DAudioManager)
     Q_DECLARE_PRIVATE(DAudioManager)
+    DAudioManagerPrivate *d = nullptr;
 };
 DAUDIOMANAGER_END_NAMESPACE

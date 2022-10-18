@@ -3,16 +3,18 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 #include "daudiocard.h"
+#include "daudiocard_p.h"
+#include "daudioport_p.h"
 #include "daudioport.h"
+#include "daudiofactory_p.h"
 
 #include <QDebug>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 
-DAudioCard::DAudioCard(QObject *parent)
-    : QObject (parent)
+DAudioCard::DAudioCard(DPlatformAudioCard *d)
+    : d(d)
 {
-
 }
 
 DAudioCard::~DAudioCard()
@@ -22,37 +24,40 @@ DAudioCard::~DAudioCard()
 
 QList<DAudioPort *> DAudioCard::ports() const
 {
-    return {};
+    QList<DAudioPort *> result;
+    for (auto item : d->m_ports)
+        result << item->source();
+
+    return result;
 }
 
 QString DAudioCard::name() const
 {
-    return QString();
+    return d->name();
 }
 
 bool DAudioCard::enabled() const
 {
-    return false;
+    return d->enabled();
 }
 
-DAudioBluetoothCard::DAudioBluetoothCard(QObject *parent)
-    : DAudioCard (parent)
+DAudioBluetoothCard::DAudioBluetoothCard(DPlatformAudioBluetoothCard *d)
+    : DAudioCard (d)
 {
-
 }
 
 QString DAudioBluetoothCard::mode() const
 {
-    return QString();
+    return dynamic_cast<DPlatformAudioBluetoothCard *>(d)->mode();
 }
 
 QStringList DAudioBluetoothCard::modeOptions() const
 {
-    return {};
+    return dynamic_cast<DPlatformAudioBluetoothCard *>(d)->modeOptions();
 }
 
 void DAudioBluetoothCard::setMode(QString mode)
 {
-
+    return dynamic_cast<DPlatformAudioBluetoothCard *>(d)->setMode(mode);
 }
 DAUDIOMANAGER_END_NAMESPACE

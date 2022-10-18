@@ -10,7 +10,6 @@
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioCard;
-class DAudioDevicePrivate;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioDevice : public QObject
 {
     Q_OBJECT
@@ -37,8 +36,8 @@ public:
     virtual bool supportFade() const = 0;
     virtual double baseVolume() const = 0;
 
-    QString name() const;
-    QString description() const;
+    virtual QString name() const;
+    virtual QString description() const;
 
 public Q_SLOTS:
     virtual void setMute(bool mute) = 0;
@@ -61,19 +60,16 @@ Q_SIGNALS:
 
     void nameChanged(QString name);
     void descriptionChanged(QString description);
-
-private:
-    Q_DISABLE_COPY(DAudioDevice)
-    Q_DECLARE_PRIVATE(DAudioDevice)
 };
 
-class DAudioInputDevicePrivate;
+class DPlatformAudioInputDevice;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioInputDevice : public DAudioDevice
 {
     Q_OBJECT
 
 public:
-    explicit DAudioInputDevice(DAudioDevice *parent = nullptr);
+    explicit DAudioInputDevice(DAudioCard *parent = nullptr);
+    explicit DAudioInputDevice(DPlatformAudioInputDevice *d);
 
     virtual bool mute() const override;
     virtual double fade() const override;
@@ -91,16 +87,17 @@ public Q_SLOTS:
 
 private:
     Q_DISABLE_COPY(DAudioInputDevice)
-    Q_DECLARE_PRIVATE(DAudioInputDevice)
+    DPlatformAudioInputDevice *d = nullptr;
 };
 
-class DAudioOutputDevicePrivate;
+class DPlatformAudioOutputDevice;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioOutputDevice : public DAudioDevice
 {
     Q_OBJECT
 
 public:
-    explicit DAudioOutputDevice(DAudioDevice *parent = nullptr);
+    explicit DAudioOutputDevice(DAudioCard *parent = nullptr);
+    explicit DAudioOutputDevice(DPlatformAudioOutputDevice *d);
 
     virtual bool mute() const override;
     virtual double fade() const override;
@@ -118,6 +115,6 @@ public Q_SLOTS:
 
 private:
     Q_DISABLE_COPY(DAudioOutputDevice)
-    Q_DECLARE_PRIVATE(DAudioOutputDevice)
+    DPlatformAudioOutputDevice *d = nullptr;
 };
 DAUDIOMANAGER_END_NAMESPACE

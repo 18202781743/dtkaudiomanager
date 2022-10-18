@@ -9,12 +9,12 @@
 
 DAUDIOMANAGER_USE_NAMESPACE
 
-class ut_Demo : public testing::Test
+class ut_DAudioPort : public testing::Test
 {
 public:
     void SetUp() override
     {
-        m_demo = new Demo;
+        m_demo = new DAudioPort;
     }
     void TearDown() override
     {
@@ -22,15 +22,15 @@ public:
         m_demo = nullptr;
     }
 public:
-    Demo *m_demo = nullptr;
+    DAudioPort *m_demo = nullptr;
 };
 
-TEST_F(ut_Demo, add)
+TEST_F(ut_DAudioPort, add)
 {
     EXPECT_EQ(3, m_demo->add(1, 2));
 }
 
-TEST_F(ut_Demo, svg2png)
+TEST_F(ut_DAudioPort, svg2png)
 {
     Stub stub;
     stub.set(rsvg_handle_new_from_file, rsvg_handle_new_from_file_stub);
