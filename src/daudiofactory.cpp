@@ -6,6 +6,7 @@
 
 #include "daudiofactory_p.h"
 #include "daudioplugin_p.h"
+#include "daudiomanager_p.h"
 
 #include <QDebug>
 #include <QCoreApplication>
@@ -18,16 +19,6 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioPluginLoader
 {
 public:
-    void loadMetas()
-    {
-        for (QString fileName : pluginPaths()) {
-            const auto &info = parsePluginInfo(fileName);
-            if (!info.isEmpty()) {
-                m_metas.insert(info, fileName);
-                qDebug() << "load the plugin [" << info << "] successful." << fileName;
-            }
-        }
-    }
 
     QStringList keys() const
     {
@@ -39,26 +30,47 @@ public:
         if (m_plugin)
             return m_plugin;
 
+        if (m_metas.isEmpty())
+            loadMetas();
+
         for (auto key : keys()) {
             auto fileName = m_metas.value(key);
 
             QPluginLoader loader(fileName);
             if (!loader.instance()) {
                 qWarning() << "load the plugin error." << loader.errorString();
-                break;
+                continue;
             }
             m_plugin = qobject_cast<DAudioPlugin *>(loader.instance());
             if (!m_plugin) {
-                qWarning() << "the plugin isn't a IWidgetPlugin." << fileName;
+                qWarning() << "load the the Plugin error." << key << fileName;
+                continue;
+            }
+            if (m_plugin) {
+                qInfo() << "the Audio plugin is [" << key << "]." << fileName;
                 break;
             }
         }
-        return m_plugin;
+        if (!m_plugin) {
+            qWarning() << "load plugin error, Don't exist Audio plugin from " << pluginDirs();
+        }
 
+        return m_plugin;
     }
 
 private:
-    QStringList pluginPaths() const
+    void loadMetas()
+    {
+        for (QString fileName : pluginPaths()) {
+            const auto &info = parsePluginInfo(fileName);
+            if (!info.isEmpty()) {
+                m_metas.insert(info, fileName);
+                qDebug() << "load the plugin [" << info << "] successful." << fileName;
+            }
+        }
+    }
+
+    QStringList pluginDirs() const
     {
         // The same pluginid will be overwritten by later, `DTK_AUDIO_PLUGIN_DIRS` > `./plugins` > `/usr`
         QStringList dirs;
@@ -70,6 +82,12 @@ private:
             std::reverse(list.begin(), list.end());
             dirs << list;
         }
+        return dirs;
+    }
+    QStringList pluginPaths() const
+    {
+        // The same pluginid will be overwritten by later, `DTK_AUDIO_PLUGIN_DIRS` > `./plugins` > `/usr`
+        QStringList dirs = pluginDirs();
 
         qDebug() << "load plugins from those dir:" << dirs;
         QStringList pluginPaths;
@@ -130,10 +148,60 @@ private:
 
 Q_GLOBAL_STATIC(DAudioPluginLoader, loader)
 
+class DNullAudioManager : public DAudioManagerPrivate
+{
+public:
+    explicit DNullAudioManager()
+    {
+        qWarning() << "Don't exist Audio implement.";
+    }
+
+    virtual void reset() override
+    {
+    }
+    virtual void setReConnectionEnabled(const bool enable) override
+    {
+        Q_UNUSED(enable);
+    }
+    virtual void setPort(const QString &card, const QString &portName, const int direction) override
+    {
+        Q_UNUSED(card);
+        Q_UNUSED(portName);
+        Q_UNUSED(direction);
+    }
+    virtual void setPortEnabled(const QString &card, const QString &portName) override
+    {
+        Q_UNUSED(card);
+        Q_UNUSED(portName);
+    }
+    virtual bool increaseVolume() const override
+    {
+        return false;
+    }
+    virtual bool reduceNoise() const override
+    {
+        return false;
+    }
+    virtual bool maxVolume() const override
+    {
+        return false;
+    }
+
+public slots:
+    virtual void setIncreaseVolume(bool increaseVolume) override
+    {
+        Q_UNUSED(increaseVolume);
+    }
+    virtual void setReduceNoise(bool reduceNoise) override
+    {
+        Q_UNUSED(reduceNoise);
+    }
+};
+
 DAudioManagerPrivate *DAudioFactory::createAudioManager()
 {
     auto plugin = loader->plugin();
-    return plugin ? plugin->createAudioManager() : nullptr;
+    return plugin ? plugin->createAudioManager() : new DNullAudioManager();
 }
 
 DAUDIOMANAGER_END_NAMESPACE

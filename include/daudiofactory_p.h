@@ -17,4 +17,5 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioFactory
 public:
     static DAudioManagerPrivate *createAudioManager();
 };
+
 DAUDIOMANAGER_END_NAMESPACE

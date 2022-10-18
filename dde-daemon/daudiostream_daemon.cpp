@@ -6,6 +6,7 @@
 #include "daudiodevice.h"
 #include "daemonhelpers.hpp"
 
+#include <QDBusArgument>
 #include <QDebug>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
@@ -24,37 +25,37 @@ DDaemonInputStream::~DDaemonInputStream()
 
 bool DDaemonInputStream::mute() const
 {
-    return false;
+    return qdbus_cast<bool>(m_inter->property("mute"));
 }
 
 double DDaemonInputStream::fade() const
 {
-    return 0.0;
+    return qdbus_cast<double>(m_inter->property("fade"));
 }
 
 double DDaemonInputStream::volume() const
 {
-    return 0.0;
+    return qdbus_cast<double>(m_inter->property("volume"));
 }
 
 double DDaemonInputStream::balance() const
 {
-    return 0.0;
+    return qdbus_cast<double>(m_inter->property("balance"));
 }
 
 bool DDaemonInputStream::supportBalance() const
 {
-    return false;
+    return qdbus_cast<bool>(m_inter->property("supportBalance"));
 }
 
 bool DDaemonInputStream::supportFade() const
 {
-    return false;
+    return qdbus_cast<bool>(m_inter->property("supportFade"));
 }
 
 double DDaemonInputStream::meterVolume() const
 {
-    return 0.0;
+    return qdbus_cast<bool>(m_inter->property("meterVolume"));
 }
 
 void DDaemonInputStream::setMute(bool mute)

@@ -33,8 +33,8 @@ public:
     virtual bool maxVolume() const = 0;
 
 public Q_SLOTS:
-    void setIncreaseVolume(bool increaseVolume);
-    void setReduceNoise(bool reduceNoise);
+    virtual void setIncreaseVolume(bool increaseVolume);
+    virtual void setReduceNoise(bool reduceNoise);
 
 Q_SIGNALS:
     void deviceAdded(const QString &name, const bool isInputDevice);
