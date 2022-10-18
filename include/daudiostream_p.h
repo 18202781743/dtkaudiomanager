@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "namespace.h"
+#include "dtkaudiomanager_global.h"
 #include "daudiostream.h"
 #include "daudiodevice_p.h"
 
