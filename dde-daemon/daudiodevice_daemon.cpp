@@ -21,6 +21,11 @@ DDaemonAudioInputDevice::DDaemonAudioInputDevice(const QString &path, DPlatformA
      m_key = QString::number(index);
 }
 
+DDaemonAudioInputDevice::~DDaemonAudioInputDevice()
+{
+
+}
+
 bool DDaemonAudioInputDevice::mute() const
 {
     return qdbus_cast<bool>(m_inter->property("mute"));
@@ -38,27 +43,36 @@ double DDaemonAudioInputDevice::volume() const
 
 double DDaemonAudioInputDevice::balance() const
 {
-    return 0.0;
+    return qdbus_cast<double>(m_inter->property("balance"));
 }
 
 bool DDaemonAudioInputDevice::supportBalance() const
 {
-    return false;
+    return qdbus_cast<bool>(m_inter->property("supportBalance"));
 }
 
 bool DDaemonAudioInputDevice::supportFade() const
 {
-    return false;
+    return qdbus_cast<bool>(m_inter->property("supportFade"));
 }
 
 double DDaemonAudioInputDevice::baseVolume() const
 {
-    return 0.0;
+    return qdbus_cast<bool>(m_inter->property("baseVolume"));
+}
+
+QString DDaemonAudioInputDevice::name() const
+{
+    return QString();
+}
+
+QString DDaemonAudioInputDevice::description() const
+{
+    return QString();
 }
 
 void DDaemonAudioInputDevice::setMute(bool mute)
 {
-
 }
 
 void DDaemonAudioInputDevice::setFade(double fade)
@@ -68,12 +82,12 @@ void DDaemonAudioInputDevice::setFade(double fade)
 
 void DDaemonAudioInputDevice::setVolume(double volume)
 {
-
+    m_inter->call("setVolume", volume);
 }
 
 void DDaemonAudioInputDevice::setBalance(double balance)
 {
-
+    m_inter->call("setBalance", balance);
 }
 
 DDaemonAudioOutputDevice::DDaemonAudioOutputDevice(const QString &path, DPlatformAudioCard *parent)
@@ -82,6 +96,11 @@ DDaemonAudioOutputDevice::DDaemonAudioOutputDevice(const QString &path, DPlatfor
 {
     const auto index = qdbus_cast<quint32>(m_inter->property("SinkIndex"));
     m_key = QString::number(index);
+}
+
+DDaemonAudioOutputDevice::~DDaemonAudioOutputDevice()
+{
+
 }
 
 bool DDaemonAudioOutputDevice::mute() const
@@ -117,6 +136,16 @@ bool DDaemonAudioOutputDevice::supportFade() const
 double DDaemonAudioOutputDevice::baseVolume() const
 {
     return 0.0;
+}
+
+QString DDaemonAudioOutputDevice::name() const
+{
+    return QString();
+}
+
+QString DDaemonAudioOutputDevice::description() const
+{
+    return QString();
 }
 
 void DDaemonAudioOutputDevice::setMute(bool mute)

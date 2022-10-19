@@ -4,8 +4,15 @@
 
 #pragma once
 
+#include "dtkaudiomanager_global.h"
 #include <QObject>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
+
+class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioPrivate
+{
+public:
+
+};
 
 DAUDIOMANAGER_END_NAMESPACE

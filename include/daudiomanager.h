@@ -7,12 +7,16 @@
 #include "dtkaudiomanager_global.h"
 
 #include <QObject>
+#include <QSharedPointer>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioCard;
 class DAudioInputDevice;
 class DAudioOutputDevice;
 
+using DAudioCardPtr = QSharedPointer<DAudioCard>;
+using DAudioInputDevicePtr = QSharedPointer<DAudioInputDevice>;
+using DAudioOutputDevicePtr = QSharedPointer<DAudioOutputDevice>;
 class DAudioManagerPrivate;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioManager : public QObject
 {
@@ -23,18 +27,20 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioManager : public QObject
     Q_PROPERTY(bool maxVolume READ maxVolume NOTIFY maxVolumeChanged)
 public:
     explicit DAudioManager(QObject *parent = nullptr);
+    explicit DAudioManager(DAudioManagerPrivate *d, QObject *parent = nullptr);
     virtual ~DAudioManager() override;
 
-    QList<DAudioCard*> cards() const;
-    QList<DAudioCard*> availableCards() const;
-    QList<DAudioInputDevice*> inputDevices() const;
-    QList<DAudioOutputDevice*> outputDevices() const;
-    DAudioInputDevice *defaultInputDevice() const;
-    DAudioOutputDevice *defaultOutputDevice() const;
-    QList<DAudioInputDevice*> availableInputDevices() const;
-    QList<DAudioOutputDevice*> availableOutputDevices() const;
-    DAudioInputDevice *inputDevice(const QString &deviceName) const;
-    DAudioOutputDevice *outputDevice(const QString &deviceName) const;
+    QList<DAudioCardPtr> cards() const;
+    DAudioCardPtr card(const QString &cardName) const;
+    QList<DAudioCardPtr> availableCards() const;
+    QList<DAudioInputDevicePtr> inputDevices() const;
+    QList<DAudioOutputDevicePtr> outputDevices() const;
+    DAudioInputDevicePtr defaultInputDevice() const;
+    DAudioOutputDevicePtr defaultOutputDevice() const;
+    QList<DAudioInputDevicePtr> availableInputDevices() const;
+    QList<DAudioOutputDevicePtr> availableOutputDevices() const;
+    DAudioInputDevicePtr inputDevice(const QString &deviceName) const;
+    DAudioOutputDevicePtr outputDevice(const QString &deviceName) const;
 
     void reset();
     void setReConnectionEnabled(const bool enable);
@@ -43,7 +49,7 @@ public:
 
     bool increaseVolume() const;
     bool reduceNoise() const;
-    bool maxVolume() const;
+    double maxVolume() const;
 
 public Q_SLOTS:
     void setIncreaseVolume(bool increaseVolume);
@@ -52,6 +58,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void deviceAdded(const QString &name, const bool isInputDevice);
     void deviceRemoved(const QString &name, const bool isInputDevice);
+    void cardsChanged();
 
     void increaseVolumeChanged(bool increaseVolume);
     void reduceNoiseChanged(bool reduceNoise);
@@ -60,6 +67,6 @@ Q_SIGNALS:
 private:
     Q_DISABLE_COPY(DAudioManager)
     Q_DECLARE_PRIVATE(DAudioManager)
-    DAudioManagerPrivate *d = nullptr;
+    QScopedPointer<DAudioManagerPrivate> d;
 };
 DAUDIOMANAGER_END_NAMESPACE

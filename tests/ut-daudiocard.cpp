@@ -11,7 +11,7 @@
 #include "daudiocard_p.h"
 #include "ut-daudiohelpers.hpp"
 
-#include <QPointer>
+#include <QScopedPointer>
 #include <QSignalSpy>
 
 DAUDIOMANAGER_USE_NAMESPACE
@@ -21,13 +21,13 @@ class ut_DAudioCard : public testing::Test
 public:
     void SetUp() override
     {
-        m_impl.reset(new TestAudioCard());
-        m_target = m_impl->source();
+        m_impl = new TestAudioCard();
+        m_target.reset(m_impl->create());
     }
     void TearDown() override;
 public:
-    QPointer<DAudioCard> m_target;
-    QScopedPointer<TestAudioCard> m_impl;
+    QScopedPointer<DAudioCard> m_target;
+    QExplicitlySharedDataPointer<TestAudioCard> m_impl;
 };
 
 void ut_DAudioCard::TearDown() {}
@@ -45,7 +45,7 @@ TEST_F(ut_DAudioCard, base)
 TEST_F(ut_DAudioCard, port)
 {
     EXPECT_TRUE(m_target->ports().isEmpty());
-    QScopedPointer<TestAudioPort> port1(new TestAudioPort(m_impl.data()));
+    QExplicitlySharedDataPointer<TestAudioPort> port1(new TestAudioPort(m_impl.data()));
     EXPECT_EQ(m_target->ports().count(), 1);
     auto port = m_target->ports()[0];
     EXPECT_EQ(port->name(), port1->name());

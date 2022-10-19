@@ -13,17 +13,13 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 class DPlatformAudioPort;
 class DAudioPort;
 class DAudioCard;
-class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioCard : public QObject
+class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioCard : public QObject, public QSharedData
 {
     Q_OBJECT
 
 public:
     virtual ~DPlatformAudioCard()
     {
-        if  (m_source) {
-            m_source->deleteLater();
-            m_source = nullptr;
-        }
     }
 
     virtual quint32 index() const { return 0; }
@@ -35,12 +31,9 @@ public:
     {
         m_ports << port;
     }
-    virtual DAudioCard *source()
+    virtual DAudioCard *create()
     {
-        if (!m_source) {
-            m_source = new DAudioCard(this);
-        }
-        return m_source;
+        return new DAudioCard(this);
     }
 
     QList<DPlatformAudioPort *> ports() const
@@ -52,7 +45,6 @@ Q_SIGNALS:
     void enabledChanged(bool enabled);
 
 public:
-    DAudioCard *m_source = nullptr;
     QList<DPlatformAudioPort*> m_ports;
 };
 
@@ -61,12 +53,9 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioBluetoothCard : public DPlat
     Q_OBJECT
 
 public:
-    virtual DAudioCard *source() override
+    virtual DAudioCard *create() override
     {
-        if (!m_source) {
-            m_source = new DAudioBluetoothCard(this);
-        }
-        return m_source;
+        return new DAudioBluetoothCard(this);
     }
 
     virtual QString mode() const = 0;

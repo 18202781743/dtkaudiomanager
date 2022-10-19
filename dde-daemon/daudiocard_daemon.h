@@ -7,6 +7,7 @@
 #include "daudiocard_p.h"
 #include "dbus/ddbusinterface.h"
 
+#include <QDBusInterface>
 #include <QObject>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
@@ -24,7 +25,7 @@ public:
     bool enabled() const override;
 
 public:
-    DDBusInterface *m_inter = nullptr;
+    QDBusInterface *m_inter = nullptr;
     QString m_name;
     bool m_enabled;
 };
@@ -43,6 +44,5 @@ public:
 
 public Q_SLOTS:
     void setMode(QString mode);
-
 };
 DAUDIOMANAGER_END_NAMESPACE

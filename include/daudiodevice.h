@@ -7,6 +7,7 @@
 #include "dtkaudiomanager_global.h"
 
 #include <QObject>
+#include <QSharedDataPointer>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioCard;
@@ -89,7 +90,7 @@ public Q_SLOTS:
 
 private:
     Q_DISABLE_COPY(DAudioInputDevice)
-    DPlatformAudioInputDevice *d = nullptr;
+    QExplicitlySharedDataPointer<DPlatformAudioInputDevice> d;
 };
 
 class DPlatformAudioOutputDevice;
@@ -120,7 +121,7 @@ public Q_SLOTS:
 
 private:
     Q_DISABLE_COPY(DAudioOutputDevice)
-    DPlatformAudioOutputDevice *d = nullptr;
+    QExplicitlySharedDataPointer<DPlatformAudioOutputDevice> d;
 
     // DAudioDevice interface
 };

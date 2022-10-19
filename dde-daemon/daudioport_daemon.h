@@ -25,6 +25,9 @@ public:
     QString name() const override;
     QString description() const override;
 
+public:
+    QString m_name;
+    QString m_description;
 private:
     DDBusInterface *m_inter = nullptr;
 };

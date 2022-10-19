@@ -7,6 +7,7 @@
 #include "daudiomanager_p.h"
 #include "dbus/ddbusinterface.h"
 
+#include <QDBusInterface>
 #include <QObject>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
@@ -26,10 +27,10 @@ public:
 
     virtual bool increaseVolume() const override;
     virtual bool reduceNoise() const override;
-    virtual bool maxVolume() const override;
+    virtual double maxVolume() const override;
 public Q_SLOTS:
-    void setIncreaseVolume(bool increaseVolume);
-    void setReduceNoise(bool reduceNoise);
+    virtual void setIncreaseVolume(bool increaseVolume) override;
+    virtual void setReduceNoise(bool reduceNoise) override;
 
 Q_SIGNALS:
     void deviceAdded(const QString &name, const bool isInputDevice);
@@ -47,7 +48,8 @@ private:
     void updateInputStream();
 
 private:
-    DDBusInterface *m_inter = nullptr;
+//    DDBusInterface *m_inter = nullptr;
+    QDBusInterface *m_inter = nullptr;
 
 };
 DAUDIOMANAGER_END_NAMESPACE

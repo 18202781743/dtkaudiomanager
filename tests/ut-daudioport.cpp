@@ -9,7 +9,8 @@
 
 #include "ut-daudiohelpers.hpp"
 
-#include <QPointer>
+#include <QScopedPointer>
+#include <QDebug>
 
 DAUDIOMANAGER_USE_NAMESPACE
 
@@ -18,13 +19,13 @@ class ut_DAudioPort : public testing::Test
 public:
     void SetUp() override
     {
-        m_impl.reset(new TestAudioPort());
-        m_target = m_impl->source();
+        m_impl = new TestAudioPort();
+        m_target.reset(m_impl->create());
     }
     void TearDown() override;
 public:
-    QPointer<DAudioPort> m_target;
-    QScopedPointer<TestAudioPort> m_impl;
+    QScopedPointer<DAudioPort> m_target;
+    QExplicitlySharedDataPointer<TestAudioPort> m_impl;
 };
 
 void ut_DAudioPort::TearDown() {}

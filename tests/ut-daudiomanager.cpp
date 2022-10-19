@@ -1,0 +1,62 @@
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
+#include "gtest/gtest.h"
+
+#include "daudiomanager.h"
+#include "daudiomanager_p.h"
+#include "ut-daudiohelpers.hpp"
+
+#include <QScopedPointer>
+#include <QSignalSpy>
+
+DAUDIOMANAGER_USE_NAMESPACE
+
+class ut_DAudioManager : public testing::Test
+{
+public:
+    void SetUp() override
+    {
+        m_impl = new TestAudioManager();
+        m_target.reset(new DAudioManager(m_impl.data()));
+    }
+    void TearDown() override;
+public:
+    QScopedPointer<DAudioManager> m_target;
+    QPointer<TestAudioManager> m_impl;
+};
+
+void ut_DAudioManager::TearDown() {}
+
+TEST_F(ut_DAudioManager, base)
+{
+    EXPECT_TRUE(qFuzzyCompare(m_target->maxVolume(), 1.0));
+    EXPECT_EQ(m_target->increaseVolume(), false);
+    m_target->setIncreaseVolume(true);
+    EXPECT_EQ(m_target->increaseVolume(), true);
+    EXPECT_EQ(m_target->reduceNoise(), false);
+    m_target->setReduceNoise(true);
+    EXPECT_EQ(m_target->reduceNoise(), true);
+}
+
+TEST_F(ut_DAudioManager, cards)
+{
+    EXPECT_TRUE(m_target->cards().isEmpty());
+    QSignalSpy spy(m_target.data(), &DAudioManager::cardsChanged);
+    auto card1 = new TestAudioCard();
+    auto port1 = new TestAudioPort(card1);
+    auto port2 = new TestAudioPort(card1, "test port2");
+    auto card2  = new TestAudioCard("test card2");
+    m_impl->addCard(card1);
+    m_impl->addCard(card2);
+
+    EXPECT_EQ(spy.count(), 2);
+
+    auto targetCards = m_target->cards();
+    EXPECT_EQ(targetCards.size(), 2);
+
+    auto targetCard1 = m_target->card(TestAudioCardName);
+    EXPECT_EQ(targetCard1->name(), card1->name());
+    EXPECT_EQ(targetCard1->ports().size(), 2);
+}

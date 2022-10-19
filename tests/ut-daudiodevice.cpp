@@ -9,7 +9,7 @@
 
 #include "ut-daudiohelpers.hpp"
 
-#include <QPointer>
+#include <QScopedPointer>
 #include <QSignalSpy>
 
 DAUDIOMANAGER_USE_NAMESPACE
@@ -19,13 +19,13 @@ class ut_DAudioInputDevice : public testing::Test
 public:
     void SetUp() override
     {
-        m_impl.reset(new TestAudioInputDevice());
-        m_target = m_impl->source();
+        m_impl = new TestAudioInputDevice();
+        m_target.reset(m_impl->create());
     }
     void TearDown() override;
 public:
-    QPointer<DAudioInputDevice> m_target;
-    QScopedPointer<TestAudioInputDevice> m_impl;
+    QScopedPointer<DAudioInputDevice> m_target;
+    QExplicitlySharedDataPointer<TestAudioInputDevice> m_impl;
 };
 
 void ut_DAudioInputDevice::TearDown() {}
@@ -57,13 +57,13 @@ class ut_DAudioOutputDevice : public testing::Test
 public:
     void SetUp() override
     {
-        m_impl.reset(new TestAudioOutputDevice());
-        m_target = m_impl->source();
+        m_impl = new TestAudioOutputDevice();
+        m_target.reset(m_impl->create());
     }
     void TearDown() override;
 public:
-    QPointer<DAudioOutputDevice> m_target;
-    QScopedPointer<TestAudioOutputDevice> m_impl;
+    QScopedPointer<DAudioOutputDevice> m_target;
+    QExplicitlySharedDataPointer<TestAudioOutputDevice> m_impl;
 };
 
 void ut_DAudioOutputDevice::TearDown() {}

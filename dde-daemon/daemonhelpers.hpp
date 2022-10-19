@@ -4,9 +4,16 @@
 
 #pragma once
 
+#include <QDBusInterface>
 #include <QObject>
 
 namespace DDaemonInternal {
 static const QString AudioServiceName("com.deepin.daemon.Audio");
+static const QString AudioServiceInterface(AudioServiceName);
 static const QString AudioPath("/com/deepin/daemon/Audio");
+
+inline QDBusInterface *createAudioInterface()
+{
+    return new QDBusInterface(AudioServiceName, AudioPath, AudioServiceInterface);
+}
 }

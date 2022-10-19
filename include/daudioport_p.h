@@ -13,7 +13,7 @@
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioPort;
 class DPlatformAudioCard;
-class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioPort : public QObject
+class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioPort : public QObject, public QSharedData
 {
     Q_OBJECT
 
@@ -27,10 +27,6 @@ public:
     }
     virtual ~DPlatformAudioPort()
     {
-        if (m_source) {
-            m_source->deleteLater();
-            m_source = nullptr;
-        }
     }
     virtual void setEnabled(const bool enabled) = 0;
     virtual bool isEnabled() const = 0;
@@ -38,12 +34,9 @@ public:
     virtual int direction() const = 0;
     virtual QString name() const = 0;
     virtual QString description() const = 0;
-    DAudioPort *source()
+    virtual DAudioPort *create()
     {
-        if (!m_source) {
-            m_source = new DAudioPort(this);
-        }
-        return m_source;
+        return new DAudioPort(this);
     }
 
 Q_SIGNALS:
@@ -54,7 +47,6 @@ Q_SIGNALS:
 
 protected:
     DPlatformAudioCard *m_card = nullptr;
-    DAudioPort *m_source = nullptr;
 
 };
 DAUDIOMANAGER_END_NAMESPACE

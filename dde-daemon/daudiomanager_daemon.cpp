@@ -22,7 +22,11 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 
 DDaemonAudioManager::DDaemonAudioManager(QObject *parent)
 {
-    m_inter = new DDBusInterface(DDaemonInternal::AudioServiceName, DDaemonInternal::AudioPath);
+    m_inter = new QDBusInterface(DDaemonInternal::AudioServiceName,
+                                 DDaemonInternal::AudioPath,
+                                 DDaemonInternal::AudioServiceInterface,
+                                 QDBusConnection::sessionBus());
+    m_inter->setTimeout(300);
     if (!m_inter->isValid()) {
         qWarning() << m_inter->lastError();
     }
@@ -65,7 +69,7 @@ bool DDaemonAudioManager::reduceNoise() const
     return false;
 }
 
-bool DDaemonAudioManager::maxVolume() const
+double DDaemonAudioManager::maxVolume() const
 {
     return false;
 }
@@ -82,12 +86,12 @@ void DDaemonAudioManager::setReduceNoise(bool reduceNoise)
 
 void DDaemonAudioManager::updateCards()
 {
-    const QDBusReply<QString> &reply = m_inter->call("cards");
-    if (!reply.isValid()) {
-        qWarning() << Q_FUNC_INFO << reply.error();
+    const QString &replyValue = qdbus_cast<QString>(m_inter->property("Cards"));
+    if (m_inter->lastError().isValid()) {
+        qWarning() << Q_FUNC_INFO << m_inter->lastError();
         return;
     }
-    QJsonDocument doc = QJsonDocument::fromJson(reply.value().toUtf8());
+    QJsonDocument doc = QJsonDocument::fromJson(replyValue.toUtf8());
     QJsonArray jCards = doc.array();
     for (QJsonValue cV : jCards) {
         QJsonObject jCard = cV.toObject();
@@ -96,22 +100,24 @@ void DDaemonAudioManager::updateCards()
         QJsonArray jPorts = jCard["Ports"].toArray();
 
         auto card = new DDaemonAudioCard();
-        m_cards << card;
         card->m_name = cardName;
 
         for (QJsonValue pV : jPorts) {
             QJsonObject jPort = pV.toObject();
             const double portAvai = jPort["Available"].toDouble();
             const bool aviablee = (portAvai == 2.0 || portAvai == 0.0);// 0 Unknown 1 Not available 2 Available
-            const QString portId = jPort["Name"].toString();
-            const QString portName = jPort["Description"].toString();
+            const QString portName = jPort["Name"].toString();
+            const QString portDescription = jPort["Description"].toString();
             const bool isEnabled = jPort["Enabled"].toBool();
             const bool isBluetooth = jPort["Bluetooth"].toBool();
             const int direction = jPort["Direction"].toInt();
 
             auto port = new DDaemonAudioPort(card);
             port->setEnabled(isEnabled);
+            port->m_name = portName;
+            port->m_description = portDescription;
         }
+        addCard(card);
     }
 }
 
@@ -133,7 +139,7 @@ void DDaemonAudioManager::updateInputDevice()
         const auto cardId = qdbus_cast<quint32>(inter.property("card"));
         for (auto item : m_cards) {
             if (item->index() == cardId) {
-                card = item;
+                card = item.data();
                 break;
             }
         }
@@ -160,7 +166,7 @@ void DDaemonAudioManager::updateOutputDevice()
         const auto cardId = qdbus_cast<quint32>(inter.property("card"));
         for (auto item : m_cards) {
             if (item->index() == cardId) {
-                card = item;
+                card = item.data();
                 break;
             }
         }

@@ -12,7 +12,7 @@
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioDevice;
-class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioStream : public QObject
+class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioStream : public QObject, public QSharedData
 {
     Q_OBJECT
 
@@ -67,18 +67,11 @@ public:
     }
     virtual ~DPlatformAudioInputStream() override
     {
-        if (m_source) {
-            m_source->deleteLater();
-            m_source = nullptr;
-        }
     }
 
-    DAudioInputStream *source()
+    virtual DAudioInputStream *create()
     {
-        if (!m_source) {
-            m_source = new DAudioInputStream(this);
-        }
-        return m_source;
+        return new DAudioInputStream(this);
     }
 
 protected:
@@ -96,20 +89,11 @@ public:
     }
     virtual ~DPlatformAudioOutputStream() override
     {
-        if (m_source) {
-            m_source->deleteLater();
-            m_source = nullptr;
-        }
     }
 
-    DAudioOutputStream *source()
+    virtual DAudioOutputStream *create()
     {
-        if (!m_source) {
-            m_source = new DAudioOutputStream(this);
-        }
-        return m_source;
+        return new DAudioOutputStream(this);
     }
-protected:
-    DAudioOutputStream *m_source = nullptr;
 };
 DAUDIOMANAGER_END_NAMESPACE

@@ -18,6 +18,9 @@
 #include "daudiostream.h"
 #include "daudiostream_p.h"
 
+#include "daudiostream.h"
+#include "daudiomanager_p.h"
+
 #include <QPointer>
 
 DAUDIOMANAGER_USE_NAMESPACE
@@ -27,9 +30,9 @@ static const QString TestAudioPortDescription("port for testing");
 class TestAudioPort : public DPlatformAudioPort
 {
 public:
-    explicit TestAudioPort(DPlatformAudioCard *card = nullptr)
+    explicit TestAudioPort(DPlatformAudioCard *card = nullptr, const QString &name = TestAudioPortName)
         : DPlatformAudioPort(card)
-        , m_name(TestAudioPortName)
+        , m_name(name)
     {
     }
     inline virtual ~TestAudioPort() override;
@@ -64,9 +67,9 @@ static const QString TestAudioCardName("test card");
 class TestAudioCard : public DPlatformAudioCard
 {
 public:
-    explicit TestAudioCard()
+    explicit TestAudioCard(const QString &name = TestAudioCardName)
         : DPlatformAudioCard()
-        , m_name(TestAudioCardName)
+        , m_name(name)
     {
     }
     inline virtual ~TestAudioCard() override;
@@ -419,3 +422,52 @@ public:
 };
 
 TestAudioOutputStream::~TestAudioOutputStream() {}
+
+class TestAudioManager : public DAudioManagerPrivate
+{
+public:
+    inline virtual ~TestAudioManager() override;
+
+    virtual void reset() override
+    {
+    }
+    virtual void setReConnectionEnabled(const bool enable) override
+    {
+    }
+    virtual void setPort(const QString &card, const QString &portName, const int direction) override
+    {
+    }
+    virtual void setPortEnabled(const QString &card, const QString &portName) override
+    {
+    }
+    virtual bool increaseVolume() const override
+    {
+        return m_increaseVolume;
+    }
+    virtual bool reduceNoise() const override
+    {
+        return m_reduceNoise;
+    }
+    virtual double maxVolume() const override
+    {
+        return m_maxVolume;
+    }
+
+public slots:
+    virtual void setIncreaseVolume(bool increaseVolume) override
+    {
+        m_increaseVolume = increaseVolume;
+    }
+    virtual void setReduceNoise(bool reduceNoise) override
+    {
+        m_reduceNoise = reduceNoise;
+    }
+
+public:
+    bool m_reconnectionEnabled = false;
+    bool m_increaseVolume = false;
+    bool m_reduceNoise = false;
+    double m_maxVolume = 1.0;
+};
+
+TestAudioManager::~TestAudioManager() {}

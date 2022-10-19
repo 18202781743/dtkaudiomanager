@@ -11,6 +11,7 @@
 #include <QDir>
 #include <QObject>
 #include <QPluginLoader>
+#include <QJsonArray>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 
@@ -39,9 +40,9 @@ public:
                 qWarning() << "load the plugin error." << loader.errorString();
                 continue;
             }
-            m_plugin = qobject_cast<DAudioPlugin *>(loader.instance());
+            m_plugin = dynamic_cast<DAudioPlugin *>(loader.instance());
             if (!m_plugin) {
-                qWarning() << "load the the Plugin error." << key << fileName;
+                qWarning() << "load the the Plugin error." << loader.instance() << key << fileName;
                 continue;
             }
             if (m_plugin) {
@@ -94,7 +95,7 @@ private:
             if (!pluginsDir.exists())
                 continue;
 
-            const auto entryList = pluginsDir.entryList(QDir::Files);
+            const auto entryList = pluginsDir.entryList(QDir::Files | QDir::NoSymLinks);
             for (const QString &fileName : qAsConst(entryList)) {
                 const auto path = pluginsDir.absoluteFilePath(fileName);
                 if (!QLibrary::isLibrary(path))
@@ -128,11 +129,12 @@ private:
             if (iid != QString(qobject_interface_iid<DAudioPlugin *>()))
                 break;
 
-            const auto key = meta["Key"].toString();
+            const auto metaData = meta["MetaData"];
+            const auto key = metaData["Key"].toString();
             if (key.isEmpty())
                 break;
 
-            return fileName;
+            return key;
         } while (false);
 
         return QString();
@@ -180,9 +182,9 @@ public:
     {
         return false;
     }
-    virtual bool maxVolume() const override
+    virtual double maxVolume() const override
     {
-        return false;
+        return 0.0;
     }
 
 public slots:

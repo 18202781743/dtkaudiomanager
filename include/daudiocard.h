@@ -7,6 +7,7 @@
 #include "dtkaudiomanager_global.h"
 
 #include <QObject>
+#include <QSharedPointer>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioPort;
@@ -20,7 +21,7 @@ public:
     explicit DAudioCard(DPlatformAudioCard *d);
     virtual ~DAudioCard() override;
 
-    QList<DAudioPort *> ports() const;
+    QList<QSharedPointer<DAudioPort>> ports() const;
     QString name() const;
 
     bool enabled() const;
@@ -31,7 +32,7 @@ Q_SIGNALS:
 protected:
     Q_DISABLE_COPY(DAudioCard)
     friend class DPlatformAudioCard;
-    DPlatformAudioCard *d = nullptr;
+    QExplicitlySharedDataPointer<DPlatformAudioCard> d;
 };
 
 class DPlatformAudioBluetoothCard;

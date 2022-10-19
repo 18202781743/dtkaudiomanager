@@ -7,6 +7,7 @@
 #include "dtkaudiomanager_global.h"
 
 #include <QObject>
+#include <QPointer>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DPlatformAudioPort;
@@ -35,9 +36,9 @@ Q_SIGNALS:
     void nameChanged(QString name);
     void descriptionChanged(QString description);
 
-private:
+public:
     Q_DISABLE_COPY(DAudioPort)
     friend class DPlatformAudioPort;
-    DPlatformAudioPort *d = nullptr;
+    QExplicitlySharedDataPointer<DPlatformAudioPort> d;
 };
 DAUDIOMANAGER_END_NAMESPACE

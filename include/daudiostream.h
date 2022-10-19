@@ -7,6 +7,7 @@
 #include "dtkaudiomanager_global.h"
 
 #include <QObject>
+#include <QSharedDataPointer>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioDevice;
@@ -86,7 +87,7 @@ public Q_SLOTS:
     virtual void setBalance(double balance) override;
 
 private:
-    DPlatformAudioInputStream *d = nullptr;
+    QExplicitlySharedDataPointer<DPlatformAudioInputStream> d;
 };
 
 class DPlatformAudioOutputStream;
@@ -114,6 +115,6 @@ public Q_SLOTS:
     virtual void setBalance(double balance) override;
 
 private:
-    DPlatformAudioOutputStream *d = nullptr;
+    QExplicitlySharedDataPointer<DPlatformAudioOutputStream> d;
 };
 DAUDIOMANAGER_END_NAMESPACE

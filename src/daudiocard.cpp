@@ -24,11 +24,11 @@ DAudioCard::~DAudioCard()
 
 }
 
-QList<DAudioPort *> DAudioCard::ports() const
+QList<QSharedPointer<DAudioPort> > DAudioCard::ports() const
 {
-    QList<DAudioPort *> result;
+    QList<QSharedPointer<DAudioPort>> result;
     for (auto item : d->ports())
-        result << item->source();
+        result << QSharedPointer<DAudioPort>(item->create());
 
     return result;
 }
@@ -50,16 +50,16 @@ DAudioBluetoothCard::DAudioBluetoothCard(DPlatformAudioBluetoothCard *d)
 
 QString DAudioBluetoothCard::mode() const
 {
-    return dynamic_cast<DPlatformAudioBluetoothCard *>(d)->mode();
+    return dynamic_cast<DPlatformAudioBluetoothCard *>(d.data())->mode();
 }
 
 QStringList DAudioBluetoothCard::modeOptions() const
 {
-    return dynamic_cast<DPlatformAudioBluetoothCard *>(d)->modeOptions();
+    return dynamic_cast<DPlatformAudioBluetoothCard *>(d.data())->modeOptions();
 }
 
 void DAudioBluetoothCard::setMode(QString mode)
 {
-    return dynamic_cast<DPlatformAudioBluetoothCard *>(d)->setMode(mode);
+    return dynamic_cast<DPlatformAudioBluetoothCard *>(d.data())->setMode(mode);
 }
 DAUDIOMANAGER_END_NAMESPACE

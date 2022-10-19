@@ -5,6 +5,7 @@
 #include "daudiocard_daemon.h"
 #include "daudioport.h"
 #include "daudioport_daemon.h"
+#include "daemonhelpers.hpp"
 
 #include <QDebug>
 
@@ -12,7 +13,9 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 
 DDaemonAudioCard::DDaemonAudioCard(QObject *parent)
 {
-    m_inter = new DDBusInterface("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio");
+    m_inter = new QDBusInterface(DDaemonInternal::AudioServiceName,
+                                 DDaemonInternal::AudioPath,
+                                 DDaemonInternal::AudioServiceInterface);
     if (!m_inter->isValid()) {
         qWarning() << m_inter->lastError();
     }
@@ -25,16 +28,21 @@ DDaemonAudioCard::~DDaemonAudioCard()
 
 QString DDaemonAudioCard::name() const
 {
-    return QString();
+    return m_name;
 }
 
 bool DDaemonAudioCard::enabled() const
 {
-    return false;
+    return m_enabled;
 }
 
 DDaemonAudioBluetoothCard::DDaemonAudioBluetoothCard(QObject *parent)
     : DDaemonAudioCard (parent)
+{
+
+}
+
+DDaemonAudioBluetoothCard::~DDaemonAudioBluetoothCard()
 {
 
 }

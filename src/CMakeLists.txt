@@ -28,6 +28,8 @@ file(GLOB_RECURSE SRCS
     "./daudiomanager.cpp"
     "./daudiodevice.cpp"
     "./daudiostream.cpp"
+    "./dbus/*.h"
+    "./dbus/*.cpp"
 )
 
 add_library(${BIN_NAME} SHARED

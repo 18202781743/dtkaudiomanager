@@ -12,10 +12,10 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 DDaemonAudioPort::DDaemonAudioPort(DPlatformAudioCard *card)
     :  DPlatformAudioPort (card)
 {
-    m_inter = new DDBusInterface("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio");
-    if (!m_inter->isValid()) {
-        qWarning() << m_inter->lastError();
-    }
+//    m_inter = new DDBusInterface("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio");
+//    if (!m_inter->isValid()) {
+//        qWarning() << m_inter->lastError();
+//    }
 }
 
 DDaemonAudioPort::~DDaemonAudioPort()
@@ -25,7 +25,7 @@ DDaemonAudioPort::~DDaemonAudioPort()
 
 void DDaemonAudioPort::setEnabled(const bool enabled)
 {
-    m_inter->call("setPortEnabled", name(), enabled);
+//    m_inter->call("setPortEnabled", name(), enabled);
 }
 
 bool DDaemonAudioPort::isEnabled() const
@@ -40,12 +40,12 @@ int DDaemonAudioPort::direction() const
 
 QString DDaemonAudioPort::name() const
 {
-    return QString();
+    return m_name;
 }
 
 QString DDaemonAudioPort::description() const
 {
-    return QString();
+    return m_description;
 }
 
 

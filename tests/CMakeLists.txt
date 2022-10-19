@@ -23,6 +23,7 @@ file(GLOB TEST_FILES
     "./ut-daudiocard.cpp"
     "./ut-daudiodevice.cpp"
     "./ut-daudiostream.cpp"
+    "./ut-daudiomanager.cpp"
 )
 
 include_directories(

@@ -11,108 +11,136 @@
 DAUDIOMANAGER_BEGIN_NAMESPACE
 
 DAudioManager::DAudioManager(QObject *parent)
-    : QObject (parent)
+    : DAudioManager(DAudioFactory::createAudioManager(), parent)
 {
-    d = DAudioFactory::createAudioManager();
+}
+
+DAudioManager::DAudioManager(DAudioManagerPrivate *d, QObject *parent)
+    : QObject(parent)
+    , d(d)
+{
+    Q_ASSERT(this->d);
+    connect(this->d.data(), &DAudioManagerPrivate::cardsChanged, this, &DAudioManager::cardsChanged);
 }
 
 DAudioManager::~DAudioManager()
 {
+    d->m_cards.clear();
 
+    qDeleteAll(d->m_inputDevices);
+    d->m_inputDevices.clear();
+
+    qDeleteAll(d->m_outputDevices);
+    d->m_outputDevices.clear();
+
+    qDeleteAll(d->m_inputStreams);
+    d->m_inputStreams.clear();
+
+    qDeleteAll(d->m_outputStreams);
+    d->m_outputStreams.clear();
 }
 
-QList<DAudioCard *> DAudioManager::cards() const
+QList<DAudioCardPtr> DAudioManager::cards() const
 {
-    QList<DAudioCard *> result;
+    QList<DAudioCardPtr> result;
     for (auto item : d->m_cards) {
-        result << item->source();
+        result << DAudioCardPtr(item->create());
     }
     return result;
 }
 
-QList<DAudioCard *> DAudioManager::availableCards() const
+DAudioCardPtr DAudioManager::card(const QString &cardName) const
 {
-    QList<DAudioCard *> result;
+    for (auto item : d->m_cards) {
+        if (item->name() == cardName)
+            return DAudioCardPtr(item->create());
+    }
+    return nullptr;
+}
+
+QList<DAudioCardPtr> DAudioManager::availableCards() const
+{
+    QList<DAudioCardPtr> result;
     for (auto item : d->m_cards) {
         if (item->enabled()) {
-            result << item->source();
+            result << DAudioCardPtr(item->create());
         }
     }
     return result;
 }
 
-QList<DAudioInputDevice *> DAudioManager::inputDevices() const
+QList<DAudioInputDevicePtr> DAudioManager::inputDevices() const
 {
-    QList<DAudioInputDevice *> result;
+    QList<DAudioInputDevicePtr> result;
     for (auto item : d->m_inputDevices) {
-        result << item->source();
+        result << DAudioInputDevicePtr(item->create());
     }
     return result;
 }
 
-QList<DAudioOutputDevice *> DAudioManager::outputDevices() const
+QList<DAudioOutputDevicePtr> DAudioManager::outputDevices() const
 {
-    QList<DAudioOutputDevice *> result;
+    QList<DAudioOutputDevicePtr> result;
     for (auto item : d->m_outputDevices) {
-        result << item->source();
+        result << DAudioOutputDevicePtr(item->create());
     }
     return result;
 }
 
-DAudioInputDevice *DAudioManager::defaultInputDevice() const
+DAudioInputDevicePtr DAudioManager::defaultInputDevice() const
 {
     for (auto item : d->m_inputDevices) {
         if (item->mute())
-            return item->source();
+            return DAudioInputDevicePtr(item->create());
     }
     return nullptr;
 }
 
-DAudioOutputDevice *DAudioManager::defaultOutputDevice() const
+DAudioOutputDevicePtr DAudioManager::defaultOutputDevice() const
 {
     for (auto item : d->m_outputDevices) {
         if (item->mute())
-            return item->source();
+            return DAudioOutputDevicePtr(item->create());
     }
     return nullptr;
 }
 
-QList<DAudioInputDevice *> DAudioManager::availableInputDevices() const
+QList<DAudioInputDevicePtr> DAudioManager::availableInputDevices() const
 {
-    QList<DAudioInputDevice *> result;
+    QList<DAudioInputDevicePtr> result;
     for (auto item : d->m_inputDevices) {
         if (item->mute()) {
-            result << item->source();
+            result << DAudioInputDevicePtr(item->create());
         }
     }
     return result;
 }
 
-QList<DAudioOutputDevice *> DAudioManager::availableOutputDevices() const
+QList<DAudioOutputDevicePtr> DAudioManager::availableOutputDevices() const
 {
-    QList<DAudioOutputDevice *> result;
+    QList<DAudioOutputDevicePtr> result;
     for (auto item : d->m_outputDevices) {
         if (item->mute()) {
-            result << item->source();
+            result << DAudioOutputDevicePtr(item->create());
         }
     }
     return result;
 }
 
-DAudioInputDevice *DAudioManager::inputDevice(const QString &deviceName) const
+DAudioInputDevicePtr DAudioManager::inputDevice(const QString &deviceName) const
 {
     for (auto item : d->m_inputDevices) {
         if (item->name() == deviceName)
-            return item->source();
+            return DAudioInputDevicePtr(item->create());
     }
     return nullptr;
 }
 
-DAudioOutputDevice *DAudioManager::outputDevice(const QString &deviceName) const
+DAudioOutputDevicePtr DAudioManager::outputDevice(const QString &deviceName) const
 {
     for (auto item : d->m_outputDevices) {
         if (item->name() == deviceName)
-            return item->source();
+            return DAudioOutputDevicePtr(item->create());
     }
     return nullptr;
 }
@@ -147,7 +175,7 @@ bool DAudioManager::reduceNoise() const
     return d->reduceNoise();
 }
 
-bool DAudioManager::maxVolume() const
+double DAudioManager::maxVolume() const
 {
     return d->maxVolume();
 }

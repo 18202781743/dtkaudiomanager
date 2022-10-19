@@ -13,7 +13,7 @@
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioCard;
 class DAudioDevicePrivate;
-class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioInputDevice : public QObject
+class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioInputDevice : public QObject, public QSharedData
 {
     Q_OBJECT
 public:
@@ -23,22 +23,15 @@ public:
     }
     virtual ~DPlatformAudioInputDevice() override
     {
-        if (m_source) {
-            m_source->deleteLater();
-            m_source = nullptr;
-        }
     }
     void setCard(DPlatformAudioCard *card)
     {
         m_card = card;
     }
 
-    DAudioInputDevice *source()
+    virtual DAudioInputDevice *create()
     {
-        if (!m_source) {
-            m_source = new DAudioInputDevice(this);
-        }
-        return m_source;
+        return new DAudioInputDevice(this);
     }
 
     QString key() const { return m_key; }
@@ -79,12 +72,11 @@ Q_SIGNALS:
     void descriptionChanged(QString description);
 
 protected:
-    DAudioInputDevice *m_source = nullptr;
     DPlatformAudioCard *m_card = nullptr;
     QString m_key;
 };
 
-class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioOutputDevice : public QObject
+class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioOutputDevice : public QObject, public QSharedData
 {
     Q_OBJECT
 public:
@@ -94,17 +86,10 @@ public:
     }
     virtual ~DPlatformAudioOutputDevice() override
     {
-        if (m_source) {
-            m_source->deleteLater();
-            m_source = nullptr;
-        }
     }
-    DAudioOutputDevice *source()
+    virtual DAudioOutputDevice *create()
     {
-        if (!m_source) {
-            m_source = new DAudioOutputDevice(this);
-        }
-        return m_source;
+        return new DAudioOutputDevice(this);
     }
 
     QString key() const { return m_key; }
@@ -145,7 +130,6 @@ Q_SIGNALS:
     void descriptionChanged(QString description);
 
 protected:
-    DAudioOutputDevice *m_source = nullptr;
     DPlatformAudioCard *m_card = nullptr;
     QString m_key;
 };
