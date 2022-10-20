@@ -39,15 +39,43 @@ public:
     }
     void removeCard(const QString &cardName)
     {
-        bool hasChanged = false;
         for (auto item : m_cards) {
             if (item->name() == cardName) {
                 m_cards.removeOne(item);
+                Q_EMIT cardsChanged();
                 break;
             }
         }
-        if (hasChanged) {
-            Q_EMIT cardsChanged();
+    }
+    void addInputDevice(DPlatformAudioInputDevice *device)
+    {
+        m_inputDevices.append(QExplicitlySharedDataPointer(device));
+        Q_EMIT deviceAdded(device->name(), true);
+    }
+    void removeInputDevice(const QString &deviceName)
+    {
+        for (auto item : m_inputDevices) {
+            if (item->name() == deviceName) {
+                m_inputDevices.removeOne(item);
+                deviceRemoved(deviceName, true);
+                break;
+            }
+        }
+    }
+
+    void addOutputDevice(DPlatformAudioOutputDevice *device)
+    {
+        m_outputDevices.append(QExplicitlySharedDataPointer(device));
+        Q_EMIT deviceAdded(device->name(), false);
+    }
+    void removeOutputDevice(const QString &deviceName)
+    {
+        for (auto item : m_outputDevices) {
+            if (item->name() == deviceName) {
+                m_outputDevices.removeOne(item);
+                deviceRemoved(deviceName, false);
+                break;
+            }
         }
     }
 
@@ -66,8 +94,8 @@ Q_SIGNALS:
 
 public:
     QList<QExplicitlySharedDataPointer<DPlatformAudioCard>> m_cards;
-    QList<DPlatformAudioInputDevice *> m_inputDevices;
-    QList<DPlatformAudioOutputDevice *> m_outputDevices;
+    QList<QExplicitlySharedDataPointer<DPlatformAudioInputDevice>> m_inputDevices;
+    QList<QExplicitlySharedDataPointer<DPlatformAudioOutputDevice>> m_outputDevices;
 
 };
 DAUDIOMANAGER_END_NAMESPACE

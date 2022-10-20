@@ -60,3 +60,24 @@ TEST_F(ut_DAudioManager, cards)
     EXPECT_EQ(targetCard1->name(), card1->name());
     EXPECT_EQ(targetCard1->ports().size(), 2);
 }
+
+TEST_F(ut_DAudioManager, inputDevices)
+{
+    EXPECT_TRUE(m_target->inputDevices().isEmpty());
+    QSignalSpy spy(m_target.data(), &DAudioManager::deviceAdded);
+    auto card1 = new TestAudioCard();
+    m_impl->addCard(card1);
+    auto device1 = new TestAudioInputDevice(card1);
+    auto device2 = new TestAudioInputDevice(card1);
+    device2->setName("test inputdevice2");
+    m_impl->addInputDevice(device1);
+    m_impl->addInputDevice(device2);
+
+    EXPECT_EQ(spy.count(), 2);
+
+    auto targetDevices = m_target->inputDevices();
+    EXPECT_EQ(targetDevices.size(), 2);
+
+    auto targetDevice1 = m_target->inputDevice(TestAudioInputDeviceName);
+    EXPECT_EQ(targetDevice1->name(), device1->name());
+}

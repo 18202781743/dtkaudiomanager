@@ -6,7 +6,7 @@ set(BIN_NAME ut-dtkaudiomanager)
 
 #add_definitions(-DUSE_MOCK_INTERFACE)
 
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-access-control -fno-inline -Wno-pmf-conversions")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-access-control -fno-inline -Wno-pmf-conversions")
 
 #include(./dbus/fakeInterface.cmake)
 

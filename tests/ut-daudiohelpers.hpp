@@ -100,7 +100,8 @@ static const QString TestAudioInputDeviceDescription("input device for testing")
 class TestAudioInputDevice : public DPlatformAudioInputDevice
 {
 public:
-    explicit TestAudioInputDevice()
+    explicit TestAudioInputDevice(DPlatformAudioCard *card = nullptr)
+        : DPlatformAudioInputDevice (card)
     {
         setName(TestAudioInputDeviceName);
         setDescription(TestAudioInputDeviceDescription);
@@ -182,7 +183,8 @@ static const QString TestAudioOutputDeviceDescription("output device for testing
 class TestAudioOutputDevice : public DPlatformAudioOutputDevice
 {
 public:
-    explicit TestAudioOutputDevice()
+    explicit TestAudioOutputDevice(DPlatformAudioCard *card = nullptr)
+        : DPlatformAudioOutputDevice (card)
     {
         setName(TestAudioOutputDeviceName);
         setDescription(TestAudioOutputDeviceDescription);

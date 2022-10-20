@@ -33,10 +33,8 @@ DAudioManager::~DAudioManager()
 {
     d->m_cards.clear();
 
-    qDeleteAll(d->m_inputDevices);
     d->m_inputDevices.clear();
 
-    qDeleteAll(d->m_outputDevices);
     d->m_outputDevices.clear();
 }
 

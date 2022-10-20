@@ -154,7 +154,7 @@ void DDaemonAudioManager::updateInputDevice()
         auto device = new DDaemonAudioInputDevice(path, card);
         device->setName(deviceName);
 
-        m_inputDevices << device;
+        addInputDevice(device);
     }
 }
 
@@ -184,7 +184,7 @@ void DDaemonAudioManager::updateOutputDevice()
         auto device = new DDaemonAudioOutputDevice(path, card);
         device->setName(deviceName);
 
-        m_outputDevices << device;
+        addOutputDevice(device);
     }
 }
 
@@ -205,7 +205,7 @@ void DDaemonAudioManager::updateOutputStream()
         const auto sinkIndex = qdbus_cast<quint32>(inter.property("SinkIndex"));
         for (auto item : m_inputDevices) {
             if (item->key() == QString::number(sinkIndex)) {
-                device = item;
+                device = item.data();
                 break;
             }
         }
@@ -236,7 +236,7 @@ void DDaemonAudioManager::updateInputStream()
         const auto sinkIndex = qdbus_cast<quint32>(inter.property("SinkIndex"));
         for (auto item : m_outputDevices) {
             if (item->name() == QString::number(sinkIndex)) {
-                device = item;
+                device = item.data();
                 break;
             }
         }
