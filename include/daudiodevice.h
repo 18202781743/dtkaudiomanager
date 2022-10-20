@@ -11,6 +11,10 @@
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioCard;
+class DAudioInputStream;
+class DAudioOutputStream;
+using DAudioInputStreamPtr = QSharedPointer<DAudioInputStream>;
+using DAudioOutputStreamPtr = QSharedPointer<DAudioOutputStream>;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioDevice : public QObject
 {
     Q_OBJECT
@@ -82,6 +86,9 @@ public:
 
     virtual QString name() const override;
     virtual QString description() const override;
+
+    QList<DAudioOutputStreamPtr> streams() const;
+    DAudioOutputStreamPtr stream(const QString &streamName) const;
 public Q_SLOTS:
     virtual void setMute(bool mute) override;
     virtual void setFade(double fade) override;
@@ -90,6 +97,7 @@ public Q_SLOTS:
 
 private:
     Q_DISABLE_COPY(DAudioInputDevice)
+    friend class DPlatformAudioInputDevice;
     QExplicitlySharedDataPointer<DPlatformAudioInputDevice> d;
 };
 
@@ -113,6 +121,9 @@ public:
     virtual QString name() const override;
     virtual QString description() const override;
 
+    QList<DAudioInputStreamPtr> streams() const;
+    DAudioInputStreamPtr stream(const QString& streamName);
+
 public Q_SLOTS:
     virtual void setMute(bool mute) override;
     virtual void setFade(double fade) override;
@@ -121,6 +132,7 @@ public Q_SLOTS:
 
 private:
     Q_DISABLE_COPY(DAudioOutputDevice)
+    friend class DPlatformAudioOutputDevice;
     QExplicitlySharedDataPointer<DPlatformAudioOutputDevice> d;
 
     // DAudioDevice interface

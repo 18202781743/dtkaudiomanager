@@ -100,6 +100,11 @@ static const QString TestAudioInputDeviceDescription("input device for testing")
 class TestAudioInputDevice : public DPlatformAudioInputDevice
 {
 public:
+    explicit TestAudioInputDevice()
+    {
+        setName(TestAudioInputDeviceName);
+        setDescription(TestAudioInputDeviceDescription);
+    }
     inline virtual ~TestAudioInputDevice() override;
 
     virtual bool mute() const override
@@ -130,14 +135,6 @@ public:
     {
         return m_baseVolume;
     }
-    virtual QString name() const override
-    {
-        return m_name;
-    }
-    virtual QString description() const override
-    {
-        return m_description;
-    }
 
 public Q_SLOTS:
     virtual void setMute(bool mute) override
@@ -171,8 +168,6 @@ public:
     bool m_supportBalance = false;
     bool m_supportFade = false;
     double m_baseVolume = 1.0;
-    QString m_name = TestAudioInputDeviceName;
-    QString m_description = TestAudioInputDeviceDescription;
 };
 
 TestAudioInputDevice::~TestAudioInputDevice() {}
@@ -182,6 +177,11 @@ static const QString TestAudioOutputDeviceDescription("output device for testing
 class TestAudioOutputDevice : public DPlatformAudioOutputDevice
 {
 public:
+    explicit TestAudioOutputDevice()
+    {
+        setName(TestAudioOutputDeviceName);
+        setDescription(TestAudioOutputDeviceDescription);
+    }
     inline virtual ~TestAudioOutputDevice() override;
 
     virtual bool mute() const override
@@ -212,14 +212,6 @@ public:
     {
         return m_baseVolume;
     }
-    virtual QString name() const override
-    {
-        return m_name;
-    }
-    virtual QString description() const override
-    {
-        return m_description;
-    }
 
 public Q_SLOTS:
     virtual void setMute(bool mute) override
@@ -253,8 +245,6 @@ public:
     bool m_supportBalance = false;
     bool m_supportFade = false;
     double m_baseVolume = 1.0;
-    QString m_name = TestAudioOutputDeviceName;
-    QString m_description = TestAudioOutputDeviceDescription;
 };
 
 TestAudioOutputDevice::~TestAudioOutputDevice() {}

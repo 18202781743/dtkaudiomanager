@@ -38,12 +38,6 @@ DAudioManager::~DAudioManager()
 
     qDeleteAll(d->m_outputDevices);
     d->m_outputDevices.clear();
-
-    qDeleteAll(d->m_inputStreams);
-    d->m_inputStreams.clear();
-
-    qDeleteAll(d->m_outputStreams);
-    d->m_outputStreams.clear();
 }
 
 QList<DAudioCardPtr> DAudioManager::cards() const

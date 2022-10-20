@@ -13,9 +13,7 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 
 DDaemonAudioCard::DDaemonAudioCard(QObject *parent)
 {
-    m_inter = new QDBusInterface(DDaemonInternal::AudioServiceName,
-                                 DDaemonInternal::AudioPath,
-                                 DDaemonInternal::AudioServiceInterface);
+    m_inter = DDaemonInternal::newAudioInterface();
     if (!m_inter->isValid()) {
         qWarning() << m_inter->lastError();
     }

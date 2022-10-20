@@ -80,6 +80,8 @@ public:
     virtual double meterVolume() const override;
 
     virtual QString card() const override;
+
+    QString name() const;
 public Q_SLOTS:
     virtual void setMute(bool mute) override;
     virtual void setFade(double fade) override;
@@ -108,6 +110,8 @@ public:
     virtual double meterVolume() const override;
 
     virtual QString card() const override;
+
+    QString name() const;
 public Q_SLOTS:
     virtual void setMute(bool mute) override;
     virtual void setFade(double fade) override;

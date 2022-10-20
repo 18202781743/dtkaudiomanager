@@ -14,7 +14,7 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 DDaemonInputStream::DDaemonInputStream(const QString &path, DPlatformAudioOutputDevice *parent)
     : DPlatformAudioInputStream (parent)
     , m_device(parent)
-    , m_inter(new DDBusInterface(DDaemonInternal::AudioServiceName, path))
+    , m_inter(DDaemonInternal::newAudioInterface(path))
 {
 
 }
@@ -87,7 +87,7 @@ void DDaemonInputStream::setBalance(double balance)
 DDaemonOutputStream::DDaemonOutputStream(const QString &path, DPlatformAudioInputDevice *parent)
     : DPlatformAudioOutputStream (parent)
     , m_device(parent)
-    , m_inter(new DDBusInterface(DDaemonInternal::AudioServiceName, path))
+    , m_inter(DDaemonInternal::newAudioInterface(path))
 {
 
 }

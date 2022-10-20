@@ -41,7 +41,7 @@ public Q_SLOTS:
 
 private:
     DPlatformAudioOutputDevice *m_device;
-    DDBusInterface *m_inter = nullptr;
+    QDBusInterface *m_inter = nullptr;
 };
 
 class DPlatformAudioOutputStream;
@@ -71,6 +71,6 @@ public Q_SLOTS:
 
 private:
     DPlatformAudioInputDevice *m_device;
-    DDBusInterface *m_inter = nullptr;
+    QDBusInterface *m_inter = nullptr;
 };
 DAUDIOMANAGER_END_NAMESPACE

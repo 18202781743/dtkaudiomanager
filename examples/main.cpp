@@ -18,11 +18,12 @@ DAUDIOMANAGER_USE_NAMESPACE
 
 struct Command
 {
-    virtual ~Command() {}
+    virtual ~Command();
     virtual bool exec() = 0;
     QStringList m_argus;
     DAudioManager m_handler;
 };
+Command::~Command() {}
 
 class CommandManager
 {
@@ -45,21 +46,12 @@ public:
             }
 
             auto cmd = argument[1];
-            if (cmd == "all") {
-                return execAllCommand();
-            }
 
-            if (!m_commands.contains(cmd)) {
-                break;
+            m_argus = argument.mid(1);
+            bool exit = true;
+            if (execCommands(cmd, exit)){
+                return exit;
             }
-
-            if (auto creator = m_commands.value(cmd)) {
-                auto command = creator();
-                command->m_argus = argument.mid(1);
-                qInfo() << m_descs.value(cmd);
-                return command->exec();
-            }
-
         } while(false);
 
         return outputHelp();
@@ -71,19 +63,26 @@ public:
         }
         return true;
     }
-    bool execAllCommand()
+    bool execCommands(const QString &cmdPrefix, bool &exit)
     {
-        bool exit = true;
+        bool existCommand = false;
         for (auto iter = m_commands.begin(); iter != m_commands.end(); ++iter) {
-            auto creator = iter.value();
-            auto command = creator();
-            qInfo() << m_descs.value(iter.key());
-            exit &= command->exec();
+            const auto cmd = iter.key();
+            if (cmd == cmdPrefix || cmd.startsWith(cmdPrefix) || cmdPrefix == "all") {
+                existCommand = true;
+
+                auto creator = iter.value();
+                auto command = creator();
+                command->m_argus = m_argus;
+                qInfo() << "************" << m_descs.value(iter.key());
+                exit &= command->exec();
+            }
         }
-        return exit;
+        return existCommand;
     }
     QMap<QString, CommandCreator> m_commands;
     QMap<QString, QString> m_descs;
+    QStringList m_argus;
 };
 
 struct ListCards : public Command
@@ -108,8 +107,28 @@ struct ListInputDevices : public Command
     virtual bool exec()
     {
         qInfo() << "input devices info:";
-        for (auto inputDevice : m_handler.inputDevices()) {
-            qInfo() << inputDevice->name();
+        for (auto device : m_handler.inputDevices()) {
+            qInfo() << device->name();
+            qInfo() << device->streams().size() << " output streams info:";
+            for (auto stream : device->streams()) {
+                qInfo() << stream->name();
+            }
+        }
+        return true;
+    }
+};
+
+struct ListOutputDevices : public Command
+{
+    virtual bool exec()
+    {
+        qInfo() << "output devices info:";
+        for (auto device : m_handler.outputDevices()) {
+            qInfo() << device->name();
+            qInfo() << device->streams().size() << " input streams info:";
+            for (auto stream : device->streams()) {
+                qInfo() << stream->name();
+            }
         }
         return true;
     }
@@ -143,6 +162,7 @@ int main(int argc, char *argv[])
     CommandManager manager;
     manager.regist("list-cards", "List cards", [](){ return new ListCards;});
     manager.regist("list-input-devices", "List loaded input devices", [](){ return new ListInputDevices;});
+    manager.regist("list-output-devices", "List loaded output devices", [](){ return new ListOutputDevices;});
     manager.regist("monitor-cards", "Monitor cards changed", [](){ return new MonitorCards;});
     QTimer::singleShot(0, qApp, [&manager, &app]() {
         if (manager.exec(app.arguments())) {

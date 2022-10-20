@@ -22,12 +22,6 @@ DAudioDevice::~DAudioDevice()
 
 }
 
-DAudioInputDevice::DAudioInputDevice(DAudioCard *parent)
-    : DAudioDevice (parent)
-{
-
-}
-
 DAudioInputDevice::DAudioInputDevice(DPlatformAudioInputDevice *d)
     : d(d)
 {
@@ -94,6 +88,25 @@ QString DAudioInputDevice::description() const
     return d->description();
 }
 
+QList<DAudioOutputStreamPtr> DAudioInputDevice::streams() const
+{
+    QList<DAudioOutputStreamPtr> result;
+    for (auto item : d->m_streams) {
+        result << DAudioOutputStreamPtr(item->create());
+    }
+    return result;
+}
+
+DAudioOutputStreamPtr DAudioInputDevice::stream(const QString &streamName) const
+{
+    QList<DAudioOutputStreamPtr> result;
+    for (auto item : d->m_streams) {
+        if (item->name() == streamName)
+            return DAudioOutputStreamPtr(item->create());
+    }
+    return nullptr;
+}
+
 void DAudioInputDevice::setMute(bool mute)
 {
     d->setMute(mute);
@@ -112,6 +125,12 @@ void DAudioInputDevice::setVolume(double volume)
 void DAudioInputDevice::setBalance(double balance)
 {
     d->setBalance(balance);
+}
+
+DAudioInputDevice::DAudioInputDevice(DAudioCard *parent)
+    : DAudioDevice (parent)
+{
+
 }
 
 DAudioOutputDevice::DAudioOutputDevice(DAudioCard *parent)
@@ -185,6 +204,25 @@ QString DAudioOutputDevice::name() const
 QString DAudioOutputDevice::description() const
 {
     return d->description();
+}
+
+QList<DAudioInputStreamPtr> DAudioOutputDevice::streams() const
+{
+    QList<DAudioInputStreamPtr> result;
+    for (auto item : d->m_streams) {
+        result << DAudioInputStreamPtr(item->create());
+    }
+    return result;
+}
+
+DAudioInputStreamPtr DAudioOutputDevice::stream(const QString &streamName)
+{
+    QList<DAudioInputStreamPtr> result;
+    for (auto item : d->m_streams) {
+        if (item->name() == streamName)
+            return DAudioInputStreamPtr(item->create());
+    }
+    return nullptr;
 }
 
 void DAudioOutputDevice::setMute(bool mute)

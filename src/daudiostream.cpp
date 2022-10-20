@@ -83,6 +83,11 @@ QString DAudioInputStream::card() const
     return d->card();
 }
 
+QString DAudioInputStream::name() const
+{
+    return d->name();
+}
+
 void DAudioInputStream::setMute(bool mute)
 {
     d->setMute(mute);
@@ -163,6 +168,11 @@ double DAudioOutputStream::meterVolume() const
 QString DAudioOutputStream::card() const
 {
     return d->card();
+}
+
+QString DAudioOutputStream::name() const
+{
+    return d->name();
 }
 
 void DAudioOutputStream::setMute(bool mute)

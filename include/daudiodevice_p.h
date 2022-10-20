@@ -7,6 +7,8 @@
 #include "dtkaudiomanager_global.h"
 #include "daudiodevice.h"
 #include "daudiocard_p.h"
+#include "daudiostream.h"
+#include "daudiostream_p.h"
 
 #include <QObject>
 
@@ -46,8 +48,49 @@ public:
     virtual bool supportFade() const = 0;
     virtual double baseVolume() const = 0;
 
-    virtual QString name() const = 0;
-    virtual QString description() const = 0;
+    void addStream(DPlatformAudioOutputStream *stream)
+    {
+        m_streams.append(stream);
+        Q_EMIT streamAdded(stream->name());
+    }
+    void removeStream(const QString &streamName)
+    {
+        bool hasChanged = false;
+        for (auto item : m_streams) {
+            if (item->name() == streamName) {
+                m_streams.removeOne(item);
+                break;
+            }
+        }
+        if (hasChanged) {
+            Q_EMIT streamRemoved(streamName);
+        }
+    }
+
+    QString name() const
+    {
+        return m_name;
+    }
+
+    QString description() const
+    {
+        return m_description;
+    }
+
+    void setName(const QString &name)
+    {
+        if (name == m_name)
+            return;
+        m_name = name;
+        Q_EMIT nameChanged(m_name);
+    }
+    void setDescription(const QString &description)
+    {
+        if (description == m_description)
+            return;
+        m_description = description;
+        Q_EMIT descriptionChanged(m_description);
+    }
 
 public Q_SLOTS:
     virtual void setMute(bool mute) = 0;
@@ -71,9 +114,12 @@ Q_SIGNALS:
     void nameChanged(QString name);
     void descriptionChanged(QString description);
 
-protected:
+public:
     DPlatformAudioCard *m_card = nullptr;
+    QList<DPlatformAudioOutputStream *> m_streams;
     QString m_key;
+    QString m_name;
+    QString  m_description;
 };
 
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioOutputDevice : public QObject, public QSharedData
@@ -104,8 +150,49 @@ public:
     virtual bool supportFade() const = 0;
     virtual double baseVolume() const = 0;
 
-    virtual QString name() const = 0;
-    virtual QString description() const = 0;
+    void addStream(DPlatformAudioInputStream *stream)
+    {
+        m_streams.append(QExplicitlySharedDataPointer(stream));
+        Q_EMIT streamAdded(stream->name());
+    }
+    void removeStream(const QString &streamName)
+    {
+        bool hasChanged = false;
+        for (auto item : m_streams) {
+            if (item->name() == streamName) {
+                m_streams.removeOne(item);
+                break;
+            }
+        }
+        if (hasChanged) {
+            Q_EMIT streamRemoved(streamName);
+        }
+    }
+
+    QString name() const
+    {
+        return m_name;
+    }
+
+    QString description() const
+    {
+        return m_description;
+    }
+
+    void setName(const QString &name)
+    {
+        if (name == m_name)
+            return;
+        m_name = name;
+        Q_EMIT nameChanged(m_name);
+    }
+    void setDescription(const QString &description)
+    {
+        if (description == m_description)
+            return;
+        m_description = description;
+        Q_EMIT descriptionChanged(m_description);
+    }
 
 public Q_SLOTS:
     virtual void setMute(bool mute) = 0;
@@ -129,8 +216,11 @@ Q_SIGNALS:
     void nameChanged(QString name);
     void descriptionChanged(QString description);
 
-protected:
+public:
     DPlatformAudioCard *m_card = nullptr;
+    QList<QExplicitlySharedDataPointer<DPlatformAudioInputStream>> m_streams;
     QString m_key;
+    QString m_name;
+    QString  m_description;
 };
 DAUDIOMANAGER_END_NAMESPACE

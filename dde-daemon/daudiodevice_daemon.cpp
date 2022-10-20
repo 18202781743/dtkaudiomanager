@@ -15,7 +15,7 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 
 DDaemonAudioInputDevice::DDaemonAudioInputDevice(const QString &path, DPlatformAudioCard *card)
     : DPlatformAudioInputDevice (card)
-    , m_inter(new DDBusInterface(DDaemonInternal::AudioServiceName, path))
+    , m_inter(DDaemonInternal::newAudioInterface(path))
 {
      const auto index = qdbus_cast<quint32>(m_inter->property("SinkIndex"));
      m_key = QString::number(index);
@@ -61,16 +61,6 @@ double DDaemonAudioInputDevice::baseVolume() const
     return qdbus_cast<bool>(m_inter->property("baseVolume"));
 }
 
-QString DDaemonAudioInputDevice::name() const
-{
-    return QString();
-}
-
-QString DDaemonAudioInputDevice::description() const
-{
-    return QString();
-}
-
 void DDaemonAudioInputDevice::setMute(bool mute)
 {
 }
@@ -92,7 +82,7 @@ void DDaemonAudioInputDevice::setBalance(double balance)
 
 DDaemonAudioOutputDevice::DDaemonAudioOutputDevice(const QString &path, DPlatformAudioCard *parent)
     : DPlatformAudioOutputDevice (parent)
-    , m_inter(new DDBusInterface(DDaemonInternal::AudioServiceName, path))
+    , m_inter(DDaemonInternal::newAudioInterface(path))
 {
     const auto index = qdbus_cast<quint32>(m_inter->property("SinkIndex"));
     m_key = QString::number(index);
@@ -136,16 +126,6 @@ bool DDaemonAudioOutputDevice::supportFade() const
 double DDaemonAudioOutputDevice::baseVolume() const
 {
     return 0.0;
-}
-
-QString DDaemonAudioOutputDevice::name() const
-{
-    return QString();
-}
-
-QString DDaemonAudioOutputDevice::description() const
-{
-    return QString();
 }
 
 void DDaemonAudioOutputDevice::setMute(bool mute)

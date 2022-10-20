@@ -29,33 +29,14 @@ public:
     virtual bool supportFade() const override;
     virtual double baseVolume() const override;
 
-    virtual QString name() const override;
-    virtual QString description() const override;
-
 public Q_SLOTS:
     virtual void setMute(bool mute) override;
     virtual void setFade(double fade) override;
     virtual void setVolume(double volume) override;
     virtual void setBalance(double balance) override;
 
-Q_SIGNALS:
-    void streamAdded(const QString &name);
-    void streamRemoved(const QString &name);
-
-    void muteChanged(bool mute);
-    void fadeChanged(double fade);
-    void volumeChanged(double volume);
-    void balanceChanged(double balance);
-
-    void supportBalanceChanged(bool supportBalance);
-    void supportFadeChanged(bool supportFade);
-    void baseVolumeChanged(double baseVolume);
-
-    void nameChanged(QString name);
-    void descriptionChanged(QString description);
-
 private:
-    DDBusInterface *m_inter = nullptr;
+    QDBusInterface *m_inter = nullptr;
 };
 
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DDaemonAudioOutputDevice : public DPlatformAudioOutputDevice
@@ -74,32 +55,13 @@ public:
     virtual bool supportFade() const override;
     virtual double baseVolume() const override;
 
-    virtual QString name() const override;
-    virtual QString description() const override;
-
 public Q_SLOTS:
     virtual void setMute(bool mute) override;
     virtual void setFade(double fade) override;
     virtual void setVolume(double volume) override;
     virtual void setBalance(double balance) override;
 
-Q_SIGNALS:
-    void streamAdded(const QString &name);
-    void streamRemoved(const QString &name);
-
-    void muteChanged(bool mute);
-    void fadeChanged(double fade);
-    void volumeChanged(double volume);
-    void balanceChanged(double balance);
-
-    void supportBalanceChanged(bool supportBalance);
-    void supportFadeChanged(bool supportFade);
-    void baseVolumeChanged(double baseVolume);
-
-    void nameChanged(QString name);
-    void descriptionChanged(QString description);
-
 private:
-    DDBusInterface *m_inter = nullptr;
+    QDBusInterface *m_inter = nullptr;
 };
 DAUDIOMANAGER_END_NAMESPACE

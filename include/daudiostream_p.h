@@ -6,12 +6,13 @@
 
 #include "dtkaudiomanager_global.h"
 #include "daudiostream.h"
-#include "daudiodevice_p.h"
 
 #include <QObject>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioDevice;
+class DPlatformAudioInputDevice;
+class DPlatformAudioOutputDevice;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioStream : public QObject, public QSharedData
 {
     Q_OBJECT
@@ -37,6 +38,9 @@ public:
 
     virtual QString card() const = 0;
 
+    void setName(const QString &name) { m_name = name; }
+    QString name() const { return m_name; }
+
 public Q_SLOTS:
     virtual void setMute(bool mute) = 0;
     virtual void setFade(double fade) = 0;
@@ -54,6 +58,9 @@ Q_SIGNALS:
     void meterVolumeChanged(double meterVolume);
 
     void cardChanged(QString card);
+
+protected:
+    QString m_name;
 };
 
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioInputStream : public DPlatformAudioStream
