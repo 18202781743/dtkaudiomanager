@@ -36,8 +36,8 @@ public:
 
     virtual QString card() const = 0;
 
-    void setName(const QString &name) { m_name = name; }
-    QString name() const { return m_name; }
+    QString name() const;
+    void setName(const QString &name);
 
 public Q_SLOTS:
     virtual void setMute(bool mute) = 0;
@@ -65,21 +65,13 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioInputStream : public DPlatfo
     Q_OBJECT
 
 public:
-    explicit DPlatformAudioInputStream(DPlatformAudioOutputDevice *parent = nullptr)
-    {
-
-    }
-    virtual ~DPlatformAudioInputStream() override
-    {
-    }
+    explicit DPlatformAudioInputStream(DPlatformAudioOutputDevice *parent = nullptr);
+    virtual ~DPlatformAudioInputStream() override;
 
     virtual DAudioInputStream *create()
     {
         return new DAudioInputStream(this);
     }
-
-protected:
-    DAudioInputStream *m_source = nullptr;
 };
 
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioOutputStream : public DPlatformAudioStream
@@ -87,13 +79,8 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioOutputStream : public DPlatf
     Q_OBJECT
 
 public:
-    explicit DPlatformAudioOutputStream(DPlatformAudioInputDevice *parent = nullptr)
-    {
-
-    }
-    virtual ~DPlatformAudioOutputStream() override
-    {
-    }
+    explicit DPlatformAudioOutputStream(DPlatformAudioInputDevice *parent = nullptr);
+    virtual ~DPlatformAudioOutputStream() override;
 
     virtual DAudioOutputStream *create()
     {

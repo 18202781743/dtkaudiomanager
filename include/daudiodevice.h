@@ -143,7 +143,5 @@ private:
     Q_DISABLE_COPY(DAudioOutputDevice)
     friend class DPlatformAudioOutputDevice;
     QExplicitlySharedDataPointer<DPlatformAudioOutputDevice> d;
-
-    // DAudioDevice interface
 };
 DAUDIOMANAGER_END_NAMESPACE

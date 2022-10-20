@@ -182,4 +182,33 @@ void DAudioOutputStream::setBalance(double balance)
 {
     d->setBalance(balance);
 }
+
+DPlatformAudioInputStream::DPlatformAudioInputStream(DPlatformAudioOutputDevice *parent)
+{
+
+}
+
+DPlatformAudioInputStream::~DPlatformAudioInputStream()
+{
+}
+
+DPlatformAudioOutputStream::DPlatformAudioOutputStream(DPlatformAudioInputDevice *parent)
+{
+
+}
+
+DPlatformAudioOutputStream::~DPlatformAudioOutputStream()
+{
+}
+
+QString DPlatformAudioStream::name() const
+{
+    return m_name;
+}
+
+void DPlatformAudioStream::setName(const QString &name)
+{
+    m_name = name;
+}
+
 DAUDIOMANAGER_END_NAMESPACE

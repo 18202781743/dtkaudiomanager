@@ -4,8 +4,6 @@
 
 #include "daudioplugin_p.h"
 
-#include <QObject>
-
 DAUDIOMANAGER_BEGIN_NAMESPACE
 
 DAudioPlugin::DAudioPlugin(QObject *parent)

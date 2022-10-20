@@ -19,19 +19,14 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioCard : public QObject, publi
     Q_OBJECT
 
 public:
-    virtual ~DPlatformAudioCard()
-    {
-    }
+    virtual ~DPlatformAudioCard();
 
-    virtual quint32 index() const { return 0; }
+    virtual quint32 index() const;
     virtual QString name() const = 0;
 
     virtual bool enabled() const = 0;
 
-    void addPort(DPlatformAudioPort *port)
-    {
-        m_ports.append(QExplicitlySharedDataPointer(port));
-    }
+    void addPort(DPlatformAudioPort *port);
     virtual DAudioCard *create()
     {
         return new DAudioCard(this);

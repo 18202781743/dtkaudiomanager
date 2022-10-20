@@ -204,7 +204,7 @@ void DDaemonAudioManager::updateOutputStream()
         auto inter = DDaemonInternal::audioInterface(path);
         const auto sinkIndex = qdbus_cast<quint32>(inter.property("SinkIndex"));
         for (auto item : m_inputDevices) {
-            if (item->key() == QString::number(sinkIndex)) {
+            if (item->name() == QString::number(sinkIndex)) {
                 device = item.data();
                 break;
             }

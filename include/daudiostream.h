@@ -11,7 +11,6 @@
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioDevice;
-class DAudioStreamPrivate;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioStream : public QObject
 {
     Q_OBJECT
@@ -53,10 +52,6 @@ Q_SIGNALS:
     void supportFadeChanged(bool supportFade);
 
     void cardChanged(QString card);
-
-private:
-    Q_DISABLE_COPY(DAudioStream)
-    Q_DECLARE_PRIVATE(DAudioStream)
 };
 
 class DPlatformAudioInputStream;

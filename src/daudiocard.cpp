@@ -64,4 +64,19 @@ void DAudioBluetoothCard::setMode(QString mode)
 {
     return dynamic_cast<DPlatformAudioBluetoothCard *>(d.data())->setMode(mode);
 }
+
+DPlatformAudioCard::~DPlatformAudioCard()
+{
+}
+
+quint32 DPlatformAudioCard::index() const
+{
+    return 0;
+}
+
+void DPlatformAudioCard::addPort(DPlatformAudioPort *port)
+{
+    m_ports.append(QExplicitlySharedDataPointer(port));
+}
+
 DAUDIOMANAGER_END_NAMESPACE

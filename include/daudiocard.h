@@ -31,7 +31,6 @@ Q_SIGNALS:
     void enabledChanged(bool enabled);
 
 protected:
-    Q_DISABLE_COPY(DAudioCard)
     friend class DPlatformAudioCard;
     QExplicitlySharedDataPointer<DPlatformAudioCard> d;
 };

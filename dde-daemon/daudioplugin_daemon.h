@@ -13,7 +13,7 @@ class DDaemonAudioPlugin : public DAudioPlugin
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID DdeAudioPlugin_iid FILE "daemonaudio.json")
+    Q_PLUGIN_METADATA(IID DtkAudioManagerPlugin_iid FILE "daemonaudio.json")
 
 public:
     explicit DDaemonAudioPlugin(QObject *parent = nullptr);

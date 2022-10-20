@@ -18,9 +18,7 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioPort : public QObject, publi
 
 public:
     explicit DPlatformAudioPort(DPlatformAudioCard *card);
-    virtual ~DPlatformAudioPort()
-    {
-    }
+    virtual ~DPlatformAudioPort();
     virtual void setEnabled(const bool enabled) = 0;
     virtual bool isEnabled() const = 0;
 

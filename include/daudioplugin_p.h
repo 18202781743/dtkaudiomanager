@@ -5,7 +5,6 @@
 #pragma once
 
 #include "dtkaudiomanager_global.h"
-#include <QtPlugin>
 
 #include <QObject>
 
@@ -24,6 +23,6 @@ public:
 };
 DAUDIOMANAGER_END_NAMESPACE
 
-#define DdeAudioPlugin_iid "org.deepin.dtk.audio.PluginInterface"
+#define DtkAudioManagerPlugin_iid "org.deepin.dtk.audiomanager.PluginInterface"
 
-Q_DECLARE_INTERFACE(DAUDIOMANAGER_NAMESPACE::DAudioPlugin, DdeAudioPlugin_iid)
+Q_DECLARE_INTERFACE(DAUDIOMANAGER_NAMESPACE::DAudioPlugin, DtkAudioManagerPlugin_iid)

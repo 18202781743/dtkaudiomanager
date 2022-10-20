@@ -6,8 +6,6 @@
 
 #include "dtkaudiomanager_global.h"
 
-#include <QObject>
-
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioManagerPrivate;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioFactory

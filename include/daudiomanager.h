@@ -5,7 +5,6 @@
 #pragma once
 
 #include "dtkaudiomanager_global.h"
-
 #include <QObject>
 #include <QSharedPointer>
 
@@ -13,10 +12,10 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioCard;
 class DAudioInputDevice;
 class DAudioOutputDevice;
-
 using DAudioCardPtr = QSharedPointer<DAudioCard>;
 using DAudioInputDevicePtr = QSharedPointer<DAudioInputDevice>;
 using DAudioOutputDevicePtr = QSharedPointer<DAudioOutputDevice>;
+
 class DAudioManagerPrivate;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioManager : public QObject
 {
@@ -66,7 +65,6 @@ Q_SIGNALS:
 
 private:
     Q_DISABLE_COPY(DAudioManager)
-    Q_DECLARE_PRIVATE(DAudioManager)
     QScopedPointer<DAudioManagerPrivate> d;
 };
 DAUDIOMANAGER_END_NAMESPACE

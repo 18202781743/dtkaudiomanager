@@ -256,4 +256,115 @@ void DAudioOutputDevice::setBalance(double balance)
 {
     d->setBalance(balance);
 }
+
+DPlatformAudioInputDevice::DPlatformAudioInputDevice(DPlatformAudioCard *card)
+    : m_card(card)
+{
+}
+
+DPlatformAudioInputDevice::~DPlatformAudioInputDevice()
+{
+}
+
+void DPlatformAudioInputDevice::addStream(DPlatformAudioOutputStream *stream)
+{
+    m_streams.append(stream);
+    Q_EMIT streamAdded(stream->name());
+}
+
+void DPlatformAudioInputDevice::removeStream(const QString &streamName)
+{
+    bool hasChanged = false;
+    for (auto item : m_streams) {
+        if (item->name() == streamName) {
+            m_streams.removeOne(item);
+            break;
+        }
+    }
+    if (hasChanged) {
+        Q_EMIT streamRemoved(streamName);
+    }
+}
+
+QString DPlatformAudioInputDevice::name() const
+{
+    return m_name;
+}
+
+QString DPlatformAudioInputDevice::description() const
+{
+    return m_description;
+}
+
+void DPlatformAudioInputDevice::setName(const QString &name)
+{
+    if (name == m_name)
+        return;
+    m_name = name;
+    Q_EMIT nameChanged(m_name);
+}
+
+void DPlatformAudioInputDevice::setDescription(const QString &description)
+{
+    if (description == m_description)
+        return;
+    m_description = description;
+    Q_EMIT descriptionChanged(m_description);
+}
+
+DPlatformAudioOutputDevice::DPlatformAudioOutputDevice(DPlatformAudioCard *card)
+    : m_card(card)
+{
+}
+
+DPlatformAudioOutputDevice::~DPlatformAudioOutputDevice()
+{
+}
+
+void DPlatformAudioOutputDevice::addStream(DPlatformAudioInputStream *stream)
+{
+    m_streams.append(QExplicitlySharedDataPointer(stream));
+    Q_EMIT streamAdded(stream->name());
+}
+
+void DPlatformAudioOutputDevice::removeStream(const QString &streamName)
+{
+    bool hasChanged = false;
+    for (auto item : m_streams) {
+        if (item->name() == streamName) {
+            m_streams.removeOne(item);
+            break;
+        }
+    }
+    if (hasChanged) {
+        Q_EMIT streamRemoved(streamName);
+    }
+}
+
+QString DPlatformAudioOutputDevice::name() const
+{
+    return m_name;
+}
+
+QString DPlatformAudioOutputDevice::description() const
+{
+    return m_description;
+}
+
+void DPlatformAudioOutputDevice::setName(const QString &name)
+{
+    if (name == m_name)
+        return;
+    m_name = name;
+    Q_EMIT nameChanged(m_name);
+}
+
+void DPlatformAudioOutputDevice::setDescription(const QString &description)
+{
+    if (description == m_description)
+        return;
+    m_description = description;
+    Q_EMIT descriptionChanged(m_description);
+}
+
 DAUDIOMANAGER_END_NAMESPACE

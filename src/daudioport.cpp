@@ -60,4 +60,8 @@ DPlatformAudioPort::DPlatformAudioPort(DPlatformAudioCard *card)
     }
 }
 
+DPlatformAudioPort::~DPlatformAudioPort()
+{
+}
+
 DAUDIOMANAGER_END_NAMESPACE
