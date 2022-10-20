@@ -9,8 +9,6 @@
 #include <QObject>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
-class DPlatformAudioPort;
-class DPlatformAudioCard;
 class DAudioManagerPrivate;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioFactory
 {

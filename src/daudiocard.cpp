@@ -46,6 +46,8 @@ bool DAudioCard::enabled() const
 DAudioBluetoothCard::DAudioBluetoothCard(DPlatformAudioBluetoothCard *d)
     : DAudioCard (d)
 {
+    connect(d, &DPlatformAudioBluetoothCard::modeChanged, this, &DAudioBluetoothCard::modeChanged);
+    connect(d, &DPlatformAudioBluetoothCard::modeOptionsChanged, this, &DAudioBluetoothCard::modeOptionsChanged);
 }
 
 QString DAudioBluetoothCard::mode() const

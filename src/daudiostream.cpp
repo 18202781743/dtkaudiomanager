@@ -29,6 +29,13 @@ DAudioInputStream::DAudioInputStream(DPlatformAudioInputStream *d, DAudioDevice 
 
     connect(d, &DPlatformAudioInputStream::muteChanged, this, &DAudioInputStream::muteChanged);
     connect(d, &DPlatformAudioInputStream::fadeChanged, this, &DAudioInputStream::fadeChanged);
+    connect(d, &DPlatformAudioInputStream::volumeChanged, this, &DAudioInputStream::volumeChanged);
+    connect(d, &DPlatformAudioInputStream::balanceChanged, this, &DAudioInputStream::balanceChanged);
+
+    connect(d, &DPlatformAudioInputStream::supportBalanceChanged, this, &DAudioInputStream::supportBalanceChanged);
+    connect(d, &DPlatformAudioInputStream::supportFadeChanged, this, &DAudioInputStream::supportFadeChanged);
+    connect(d, &DPlatformAudioInputStream::meterVolumeChanged, this, &DAudioInputStream::meterVolumeChanged);
+    connect(d, &DPlatformAudioInputStream::cardChanged, this, &DAudioInputStream::cardChanged);
 }
 
 DAudioInputStream::~DAudioInputStream()
@@ -104,6 +111,13 @@ DAudioOutputStream::DAudioOutputStream(DPlatformAudioOutputStream *d, DAudioDevi
 
     connect(d, &DPlatformAudioOutputStream::muteChanged, this, &DAudioOutputStream::muteChanged);
     connect(d, &DPlatformAudioOutputStream::fadeChanged, this, &DAudioOutputStream::fadeChanged);
+    connect(d, &DPlatformAudioOutputStream::volumeChanged, this, &DAudioOutputStream::volumeChanged);
+    connect(d, &DPlatformAudioOutputStream::balanceChanged, this, &DAudioOutputStream::balanceChanged);
+
+    connect(d, &DPlatformAudioOutputStream::supportBalanceChanged, this, &DAudioOutputStream::supportBalanceChanged);
+    connect(d, &DPlatformAudioOutputStream::supportFadeChanged, this, &DAudioOutputStream::supportFadeChanged);
+    connect(d, &DPlatformAudioOutputStream::meterVolumeChanged, this, &DAudioOutputStream::meterVolumeChanged);
+    connect(d, &DPlatformAudioOutputStream::cardChanged, this, &DAudioOutputStream::cardChanged);
 }
 
 DAudioOutputStream::~DAudioOutputStream()

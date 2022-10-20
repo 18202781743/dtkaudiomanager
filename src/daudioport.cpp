@@ -43,7 +43,7 @@ int DAudioPort::direction() const
 
 QString DAudioPort::name() const
 {
-    return d ?  d->name() : QString();
+    return d->name();
 }
 
 QString DAudioPort::description() const

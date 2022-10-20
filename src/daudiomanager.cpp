@@ -20,7 +20,13 @@ DAudioManager::DAudioManager(DAudioManagerPrivate *d, QObject *parent)
     , d(d)
 {
     Q_ASSERT(this->d);
+
+    connect(this->d.data(), &DAudioManagerPrivate::deviceAdded, this, &DAudioManager::deviceAdded);
+    connect(this->d.data(), &DAudioManagerPrivate::deviceRemoved, this, &DAudioManager::deviceRemoved);
     connect(this->d.data(), &DAudioManagerPrivate::cardsChanged, this, &DAudioManager::cardsChanged);
+    connect(this->d.data(), &DAudioManagerPrivate::increaseVolumeChanged, this, &DAudioManager::increaseVolumeChanged);
+    connect(this->d.data(), &DAudioManagerPrivate::reduceNoiseChanged, this, &DAudioManager::reduceNoiseChanged);
+    connect(this->d.data(), &DAudioManagerPrivate::maxVolumeChanged, this, &DAudioManager::maxVolumeChanged);
 }
 
 DAudioManager::~DAudioManager()

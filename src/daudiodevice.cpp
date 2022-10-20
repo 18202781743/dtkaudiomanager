@@ -33,8 +33,20 @@ DAudioInputDevice::DAudioInputDevice(DPlatformAudioInputDevice *d)
 {
     Q_ASSERT(d);
 
+    connect(d, &DPlatformAudioInputDevice::streamAdded, this, &DAudioInputDevice::streamAdded);
+    connect(d, &DPlatformAudioInputDevice::streamRemoved, this, &DAudioInputDevice::streamRemoved);
+
     connect(d, &DPlatformAudioInputDevice::muteChanged, this, &DAudioInputDevice::muteChanged);
     connect(d, &DPlatformAudioInputDevice::fadeChanged, this, &DAudioInputDevice::fadeChanged);
+    connect(d, &DPlatformAudioInputDevice::volumeChanged, this, &DAudioInputDevice::volumeChanged);
+    connect(d, &DPlatformAudioInputDevice::balanceChanged, this, &DAudioInputDevice::balanceChanged);
+
+    connect(d, &DPlatformAudioInputDevice::supportBalanceChanged, this, &DAudioInputDevice::supportBalanceChanged);
+    connect(d, &DPlatformAudioInputDevice::supportFadeChanged, this, &DAudioInputDevice::supportFadeChanged);
+    connect(d, &DPlatformAudioInputDevice::baseVolumeChanged, this, &DAudioInputDevice::baseVolumeChanged);
+
+    connect(d, &DPlatformAudioInputDevice::nameChanged, this, &DAudioInputDevice::nameChanged);
+    connect(d, &DPlatformAudioInputDevice::descriptionChanged, this, &DAudioInputDevice::descriptionChanged);
 }
 
 bool DAudioInputDevice::mute() const
@@ -113,8 +125,21 @@ DAudioOutputDevice::DAudioOutputDevice(DPlatformAudioOutputDevice *d)
 {
     Q_ASSERT(d);
 
+
+    connect(d, &DPlatformAudioOutputDevice::streamAdded, this, &DAudioOutputDevice::streamAdded);
+    connect(d, &DPlatformAudioOutputDevice::streamRemoved, this, &DAudioOutputDevice::streamRemoved);
+
     connect(d, &DPlatformAudioOutputDevice::muteChanged, this, &DAudioOutputDevice::muteChanged);
     connect(d, &DPlatformAudioOutputDevice::fadeChanged, this, &DAudioOutputDevice::fadeChanged);
+    connect(d, &DPlatformAudioOutputDevice::volumeChanged, this, &DAudioOutputDevice::volumeChanged);
+    connect(d, &DPlatformAudioOutputDevice::balanceChanged, this, &DAudioOutputDevice::balanceChanged);
+
+    connect(d, &DPlatformAudioOutputDevice::supportBalanceChanged, this, &DAudioOutputDevice::supportBalanceChanged);
+    connect(d, &DPlatformAudioOutputDevice::supportFadeChanged, this, &DAudioOutputDevice::supportFadeChanged);
+    connect(d, &DPlatformAudioOutputDevice::baseVolumeChanged, this, &DAudioOutputDevice::baseVolumeChanged);
+
+    connect(d, &DPlatformAudioOutputDevice::nameChanged, this, &DAudioOutputDevice::nameChanged);
+    connect(d, &DPlatformAudioOutputDevice::descriptionChanged, this, &DAudioOutputDevice::descriptionChanged);
 }
 
 bool DAudioOutputDevice::mute() const
