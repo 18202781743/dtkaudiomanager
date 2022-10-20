@@ -20,8 +20,16 @@ struct Command
 {
     virtual ~Command();
     virtual bool exec() = 0;
+    void outputProperties()
+    {
+        while(props.size() >= 2) {
+            qInfo().noquote() << "\t" << props.takeFirst().toString() << ": " << props.takeFirst().toString();
+        }
+    }
+
     QStringList m_argus;
     DAudioManager m_handler;
+    QVariantList props;
 };
 Command::~Command() {}
 
@@ -90,10 +98,10 @@ struct ListCards : public Command
     virtual bool exec()
     {
         auto cards = m_handler.cards();
-        qInfo() << "card info:";
+        qInfo() << cards.size() << "card info:";
         for (auto card : cards) {
             qInfo() << card->name();
-            qInfo() << "\t" << "port info:";
+            qInfo() << "\t" << card->ports().size() << "port info:";
             for (auto port : card->ports()) {
                 qInfo() << "\t" << port->name() << port->description();
             }
@@ -109,9 +117,24 @@ struct ListInputDevices : public Command
         qInfo() << "input devices info:";
         for (auto device : m_handler.inputDevices()) {
             qInfo() << device->name();
+            props << "mute" << device->mute()
+                  << "fade" << device->fade()
+                  << "volume" << device->volume()
+                  << "balance" << device->balance()
+                  << "supportFade" << device->supportFade()
+                  << "supportBalance" << device->supportBalance()
+                  << "meterVolume" << device->meterVolume();
+
+            outputProperties();
             qInfo() << device->streams().size() << " output streams info:";
             for (auto stream : device->streams()) {
                 qInfo() << stream->name();
+                props << "mute" << stream->mute()
+                      << "fade" << stream->fade()
+                      << "volume" << stream->volume()
+                      << "balance" << stream->balance();
+
+                outputProperties();
             }
         }
         return true;
@@ -125,9 +148,24 @@ struct ListOutputDevices : public Command
         qInfo() << "output devices info:";
         for (auto device : m_handler.outputDevices()) {
             qInfo() << device->name();
+            props << "mute" << device->mute()
+                  << "fade" << device->fade()
+                  << "volume" << device->volume()
+                  << "balance" << device->balance()
+                  << "supportFade" << device->supportFade()
+                  << "supportBalance" << device->supportBalance()
+                  << "meterVolume" << device->meterVolume();
+
+            outputProperties();
             qInfo() << device->streams().size() << " input streams info:";
             for (auto stream : device->streams()) {
                 qInfo() << stream->name();
+                props << "mute" << stream->mute()
+                      << "fade" << stream->fade()
+                      << "volume" << stream->volume()
+                      << "balance" << stream->balance();
+
+                outputProperties();
             }
         }
         return true;

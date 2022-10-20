@@ -134,7 +134,9 @@ void DDaemonAudioManager::updateInputDevice()
 
     for (auto item : sinkPaths) {
         const auto &path = item.path();
-        const auto deviceName = DDaemonInternal::deviceName(path);
+        const auto &deviceName = DDaemonInternal::deviceName(path);
+        if (containInputDevice(deviceName))
+            continue;
 
         DPlatformAudioCard *card = nullptr;
         auto inter = DDaemonInternal::audioInterface(path);
@@ -166,7 +168,9 @@ void DDaemonAudioManager::updateOutputDevice()
 
     for (auto item : sinkPaths) {
         const auto &path = item.path();
-        const auto deviceName = DDaemonInternal::deviceName(path);
+        const auto &deviceName = DDaemonInternal::deviceName(path);
+        if (containOutputDevice(deviceName))
+            continue;
 
         DPlatformAudioCard *card = nullptr;
         auto inter = DDaemonInternal::audioInterface(path);
@@ -244,6 +248,24 @@ void DDaemonAudioManager::updateInputStream()
         stream->setName(streamName);
         device->addStream(stream);
     }
+}
+
+bool DDaemonAudioManager::containInputDevice(const QString &deviceName)
+{
+    for (auto item : m_inputDevices) {
+        if (item->name() == deviceName)
+            return true;
+    }
+    return false;
+}
+
+bool DDaemonAudioManager::containOutputDevice(const QString &deviceName)
+{
+    for (auto item : m_outputDevices) {
+        if (item->name() == deviceName)
+            return true;
+    }
+    return false;
 }
 
 DAUDIOMANAGER_END_NAMESPACE

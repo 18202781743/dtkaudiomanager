@@ -12,6 +12,7 @@
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioPort;
 class DPlatformAudioCard;
+using DAudioPortPtr = QSharedPointer<DAudioPort>;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioCard : public QObject
 {
     Q_OBJECT
@@ -21,7 +22,7 @@ public:
     explicit DAudioCard(DPlatformAudioCard *d);
     virtual ~DAudioCard() override;
 
-    QList<QSharedPointer<DAudioPort>> ports() const;
+    QList<DAudioPortPtr> ports() const;
     QString name() const;
 
     bool enabled() const;

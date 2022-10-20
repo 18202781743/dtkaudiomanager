@@ -9,13 +9,14 @@
 
 #include <QDBusAbstractInterface>
 #include <QDBusArgument>
+#include <QDBusReply>
 #include <QDebug>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 
 DDaemonAudioInputDevice::DDaemonAudioInputDevice(const QString &path, DPlatformAudioCard *card)
     : DPlatformAudioInputDevice (card)
-    , m_inter(DDaemonInternal::newAudioInterface(path))
+    , m_inter(DDaemonInternal::newAudioInterface(path, DDaemonInternal::AudioServiceSourceInterface))
 {
      const auto index = qdbus_cast<quint32>(m_inter->property("SinkIndex"));
      m_key = QString::number(index);
@@ -28,61 +29,94 @@ DDaemonAudioInputDevice::~DDaemonAudioInputDevice()
 
 bool DDaemonAudioInputDevice::mute() const
 {
-    return qdbus_cast<bool>(m_inter->property("mute"));
+    return qdbus_cast<bool>(m_inter->property("Mute"));
 }
 
 double DDaemonAudioInputDevice::fade() const
 {
-    return qdbus_cast<double>(m_inter->property("fade"));
+    return qdbus_cast<double>(m_inter->property("Fade"));
 }
 
 double DDaemonAudioInputDevice::volume() const
 {
-    return qdbus_cast<double>(m_inter->property("volume"));
+    return qdbus_cast<double>(m_inter->property("Volume"));
 }
 
 double DDaemonAudioInputDevice::balance() const
 {
-    return qdbus_cast<double>(m_inter->property("balance"));
+    return qdbus_cast<double>(m_inter->property("Balance"));
 }
 
 bool DDaemonAudioInputDevice::supportBalance() const
 {
-    return qdbus_cast<bool>(m_inter->property("supportBalance"));
+    return qdbus_cast<bool>(m_inter->property("SupportBalance"));
 }
 
 bool DDaemonAudioInputDevice::supportFade() const
 {
-    return qdbus_cast<bool>(m_inter->property("supportFade"));
+    return qdbus_cast<bool>(m_inter->property("SupportFade"));
 }
 
 double DDaemonAudioInputDevice::baseVolume() const
 {
-    return qdbus_cast<bool>(m_inter->property("baseVolume"));
+    return qdbus_cast<bool>(m_inter->property("BaseVolume"));
+}
+
+double DDaemonAudioInputDevice::meterVolume() const
+{
+    const_cast<DDaemonAudioInputDevice *>(this)->ensureMeter();
+
+    return m_meterInter ? qdbus_cast<double>(m_meterInter->property("Volume")) : 0.0;
 }
 
 void DDaemonAudioInputDevice::setMute(bool mute)
 {
+    m_inter->call("SetMute", mute);
 }
 
 void DDaemonAudioInputDevice::setFade(double fade)
 {
-
+    m_inter->call("SetFade", fade);
 }
 
 void DDaemonAudioInputDevice::setVolume(double volume)
 {
-    m_inter->call("setVolume", volume);
+    m_inter->call("SetVolume", volume);
 }
 
 void DDaemonAudioInputDevice::setBalance(double balance)
 {
-    m_inter->call("setBalance", balance);
+    m_inter->call("SetBalance", balance);
+}
+
+void DDaemonAudioInputDevice::ensureMeter()
+{
+    if (m_meterInter && !m_meterInter->isValid()) {
+        m_meterInter->deleteLater();
+        m_meterInter = nullptr;
+    }
+    if (!m_meterInter) {
+
+        QDBusReply<QDBusObjectPath> reply = m_inter->call("GetMeter");
+        if (!reply.isValid()) {
+            qWarning() << "Can't get Meter" << reply.error();
+            return;
+        }
+        const auto path = reply.value().path();
+        auto inter = DDaemonInternal::newAudioInterface(path, DDaemonInternal::AudioServiceMeterInterface);
+        if (!inter->isValid()) {
+            qWarning() << "Error:" << inter->lastError();
+            inter->deleteLater();
+            return;
+        }
+        m_meterInter = inter;
+    }
+    m_meterInter->call("Tick");
 }
 
 DDaemonAudioOutputDevice::DDaemonAudioOutputDevice(const QString &path, DPlatformAudioCard *parent)
     : DPlatformAudioOutputDevice (parent)
-    , m_inter(DDaemonInternal::newAudioInterface(path))
+    , m_inter(DDaemonInternal::newAudioInterface(path, DDaemonInternal::AudioServiceSinkInterface))
 {
     const auto index = qdbus_cast<quint32>(m_inter->property("SinkIndex"));
     m_key = QString::number(index);
@@ -95,57 +129,62 @@ DDaemonAudioOutputDevice::~DDaemonAudioOutputDevice()
 
 bool DDaemonAudioOutputDevice::mute() const
 {
-    return false;
+    return qdbus_cast<bool>(m_inter->property("Mute"));
 }
 
 double DDaemonAudioOutputDevice::fade() const
 {
-    return 0.0;
+    return qdbus_cast<double>(m_inter->property("Fade"));
 }
 
 double DDaemonAudioOutputDevice::volume() const
 {
-    return 0.0;
+    return qdbus_cast<double>(m_inter->property("Volume"));
 }
 
 double DDaemonAudioOutputDevice::balance() const
 {
-    return 0.0;
+    return qdbus_cast<double>(m_inter->property("Balance"));
 }
 
 bool DDaemonAudioOutputDevice::supportBalance() const
 {
-    return false;
+    return qdbus_cast<bool>(m_inter->property("SupportBalance"));
 }
 
 bool DDaemonAudioOutputDevice::supportFade() const
 {
-    return false;
+    return qdbus_cast<bool>(m_inter->property("SupportFade"));
 }
 
 double DDaemonAudioOutputDevice::baseVolume() const
+{
+    return qdbus_cast<double>(m_inter->property("BaseVolume"));
+}
+
+double DDaemonAudioOutputDevice::meterVolume() const
 {
     return 0.0;
 }
 
 void DDaemonAudioOutputDevice::setMute(bool mute)
 {
-
+    m_inter->call("SetMute", mute);
 }
 
 void DDaemonAudioOutputDevice::setFade(double fade)
 {
-
+    m_inter->call("SetFade", fade);
 }
 
 void DDaemonAudioOutputDevice::setVolume(double volume)
 {
-
+    m_inter->call("SetVolume", volume);
 }
 
 void DDaemonAudioOutputDevice::setBalance(double balance)
 {
-
+    m_inter->call("SetBalance", balance);
 }
 
 DAUDIOMANAGER_END_NAMESPACE

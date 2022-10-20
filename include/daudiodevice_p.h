@@ -48,6 +48,8 @@ public:
     virtual bool supportFade() const = 0;
     virtual double baseVolume() const = 0;
 
+    virtual double meterVolume() const = 0;
+
     void addStream(DPlatformAudioOutputStream *stream)
     {
         m_streams.append(stream);
@@ -111,6 +113,8 @@ Q_SIGNALS:
     void supportFadeChanged(bool supportFade);
     void baseVolumeChanged(double baseVolume);
 
+    void meterVolumeChanged(double meterVolume);
+
     void nameChanged(QString name);
     void descriptionChanged(QString description);
 
@@ -149,6 +153,8 @@ public:
     virtual bool supportBalance() const = 0;
     virtual bool supportFade() const = 0;
     virtual double baseVolume() const = 0;
+
+    virtual double meterVolume() const = 0;
 
     void addStream(DPlatformAudioInputStream *stream)
     {
@@ -212,6 +218,8 @@ Q_SIGNALS:
     void supportBalanceChanged(bool supportBalance);
     void supportFadeChanged(bool supportFade);
     void baseVolumeChanged(double baseVolume);
+
+    void meterVolumeChanged(double meterVolume);
 
     void nameChanged(QString name);
     void descriptionChanged(QString description);

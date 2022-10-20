@@ -5,7 +5,6 @@
 #pragma once
 
 #include "dtkaudiomanager_global.h"
-#include "daudiocard_p.h"
 #include "daudioport.h"
 
 #include <QObject>
@@ -18,13 +17,7 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioPort : public QObject, publi
     Q_OBJECT
 
 public:
-    explicit DPlatformAudioPort(DPlatformAudioCard *card)
-        : m_card(card)
-    {
-        if (m_card) {
-            m_card->addPort(this);
-        }
-    }
+    explicit DPlatformAudioPort(DPlatformAudioCard *card);
     virtual ~DPlatformAudioPort()
     {
     }

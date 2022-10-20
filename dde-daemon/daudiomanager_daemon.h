@@ -47,6 +47,9 @@ private:
     void updateOutputStream();
     void updateInputStream();
 
+    bool containInputDevice(const QString &deviceName);
+    bool containOutputDevice(const QString &deviceName);
+
 private:
 //    DDBusInterface *m_inter = nullptr;
     QDBusInterface *m_inter = nullptr;

@@ -34,7 +34,6 @@ DAudioInputStream::DAudioInputStream(DPlatformAudioInputStream *d, DAudioDevice 
 
     connect(d, &DPlatformAudioInputStream::supportBalanceChanged, this, &DAudioInputStream::supportBalanceChanged);
     connect(d, &DPlatformAudioInputStream::supportFadeChanged, this, &DAudioInputStream::supportFadeChanged);
-    connect(d, &DPlatformAudioInputStream::meterVolumeChanged, this, &DAudioInputStream::meterVolumeChanged);
     connect(d, &DPlatformAudioInputStream::cardChanged, this, &DAudioInputStream::cardChanged);
 }
 
@@ -71,11 +70,6 @@ bool DAudioInputStream::supportBalance() const
 bool DAudioInputStream::supportFade() const
 {
     return d->supportFade();
-}
-
-double DAudioInputStream::meterVolume() const
-{
-    return d->meterVolume();
 }
 
 QString DAudioInputStream::card() const
@@ -121,7 +115,6 @@ DAudioOutputStream::DAudioOutputStream(DPlatformAudioOutputStream *d, DAudioDevi
 
     connect(d, &DPlatformAudioOutputStream::supportBalanceChanged, this, &DAudioOutputStream::supportBalanceChanged);
     connect(d, &DPlatformAudioOutputStream::supportFadeChanged, this, &DAudioOutputStream::supportFadeChanged);
-    connect(d, &DPlatformAudioOutputStream::meterVolumeChanged, this, &DAudioOutputStream::meterVolumeChanged);
     connect(d, &DPlatformAudioOutputStream::cardChanged, this, &DAudioOutputStream::cardChanged);
 }
 
@@ -158,11 +151,6 @@ bool DAudioOutputStream::supportBalance() const
 bool DAudioOutputStream::supportFade() const
 {
     return d->supportFade();
-}
-
-double DAudioOutputStream::meterVolume() const
-{
-    return d->meterVolume();
 }
 
 QString DAudioOutputStream::card() const

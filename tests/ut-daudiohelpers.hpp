@@ -159,6 +159,10 @@ public Q_SLOTS:
     {
         m_balance = balance;
     }
+    virtual double meterVolume() const override
+    {
+        return m_meterVolume;
+    }
 
 public:
     bool m_mute = false;
@@ -168,6 +172,7 @@ public:
     bool m_supportBalance = false;
     bool m_supportFade = false;
     double m_baseVolume = 1.0;
+    double m_meterVolume = 1.0;
 };
 
 TestAudioInputDevice::~TestAudioInputDevice() {}
@@ -212,6 +217,10 @@ public:
     {
         return m_baseVolume;
     }
+    virtual double meterVolume() const override
+    {
+        return m_meterVolume;
+    }
 
 public Q_SLOTS:
     virtual void setMute(bool mute) override
@@ -245,6 +254,7 @@ public:
     bool m_supportBalance = false;
     bool m_supportFade = false;
     double m_baseVolume = 1.0;
+    double m_meterVolume = 1.0;
 };
 
 TestAudioOutputDevice::~TestAudioOutputDevice() {}
@@ -284,10 +294,6 @@ public:
     virtual bool supportFade() const override
     {
         return m_supportFade;
-    }
-    virtual double meterVolume() const override
-    {
-        return m_meterVolume;
     }
     virtual QString card() const override
     {
@@ -366,10 +372,6 @@ public:
     virtual bool supportFade() const override
     {
         return m_supportFade;
-    }
-    virtual double meterVolume() const override
-    {
-        return m_meterVolume;
     }
     virtual QString card() const override
     {

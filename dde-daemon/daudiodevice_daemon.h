@@ -29,6 +29,8 @@ public:
     virtual bool supportFade() const override;
     virtual double baseVolume() const override;
 
+    virtual double meterVolume() const override;
+
 public Q_SLOTS:
     virtual void setMute(bool mute) override;
     virtual void setFade(double fade) override;
@@ -36,7 +38,11 @@ public Q_SLOTS:
     virtual void setBalance(double balance) override;
 
 private:
+    void ensureMeter();
+
+private:
     QDBusInterface *m_inter = nullptr;
+    QDBusInterface *m_meterInter = nullptr;
 };
 
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DDaemonAudioOutputDevice : public DPlatformAudioOutputDevice
@@ -54,6 +60,8 @@ public:
     virtual bool supportBalance() const override;
     virtual bool supportFade() const override;
     virtual double baseVolume() const override;
+
+    virtual double meterVolume() const override;
 
 public Q_SLOTS:
     virtual void setMute(bool mute) override;

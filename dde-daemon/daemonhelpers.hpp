@@ -6,6 +6,7 @@
 
 #include <QDBusInterface>
 #include <QObject>
+#include <QDebug>
 
 namespace DDaemonInternal {
 static const QString AudioServiceName("com.deepin.daemon.Audio");
@@ -16,6 +17,7 @@ static const QString AudioServiceSinkInterface(AudioServiceInterface + ".Sink");
 static const QString AudioServiceSinkInputInterface(AudioServiceSinkInterface + "Input");
 static const QString AudioServiceSourceInterface(AudioServiceInterface + ".Source");
 static const QString AudioServiceSourceOutputInterface(AudioServiceSourceInterface + ".Output");
+static const QString AudioServiceMeterInterface(AudioServiceInterface + ".Meter");
 
 static const QString SinkFlag("Sink");
 static const QString SourceFlag("Source");

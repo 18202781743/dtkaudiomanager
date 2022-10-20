@@ -14,7 +14,7 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 DDaemonInputStream::DDaemonInputStream(const QString &path, DPlatformAudioOutputDevice *parent)
     : DPlatformAudioInputStream (parent)
     , m_device(parent)
-    , m_inter(DDaemonInternal::newAudioInterface(path))
+    , m_inter(DDaemonInternal::newAudioInterface(path, DDaemonInternal::AudioServiceSinkInputInterface))
 {
 
 }
@@ -26,7 +26,7 @@ DDaemonInputStream::~DDaemonInputStream()
 
 bool DDaemonInputStream::mute() const
 {
-    return qdbus_cast<bool>(m_inter->property("mute"));
+    return qdbus_cast<bool>(m_inter->property("Mute"));
 }
 
 double DDaemonInputStream::fade() const
@@ -52,11 +52,6 @@ bool DDaemonInputStream::supportBalance() const
 bool DDaemonInputStream::supportFade() const
 {
     return qdbus_cast<bool>(m_inter->property("supportFade"));
-}
-
-double DDaemonInputStream::meterVolume() const
-{
-    return qdbus_cast<bool>(m_inter->property("meterVolume"));
 }
 
 QString DDaemonInputStream::card() const
@@ -87,9 +82,8 @@ void DDaemonInputStream::setBalance(double balance)
 DDaemonOutputStream::DDaemonOutputStream(const QString &path, DPlatformAudioInputDevice *parent)
     : DPlatformAudioOutputStream (parent)
     , m_device(parent)
-    , m_inter(DDaemonInternal::newAudioInterface(path))
+    , m_inter(DDaemonInternal::newAudioInterface(path, DDaemonInternal::AudioServiceSourceOutputInterface))
 {
-
 }
 
 DDaemonOutputStream::~DDaemonOutputStream()
@@ -99,37 +93,32 @@ DDaemonOutputStream::~DDaemonOutputStream()
 
 bool DDaemonOutputStream::mute() const
 {
-    return false;
+    return qdbus_cast<bool>(m_inter->property("Mute"));
 }
 
 double DDaemonOutputStream::fade() const
 {
-    return 0.0;
+    return qdbus_cast<double>(m_inter->property("Fade"));
 }
 
 double DDaemonOutputStream::volume() const
 {
-    return 0.0;
+    return qdbus_cast<double>(m_inter->property("Volume"));
 }
 
 double DDaemonOutputStream::balance() const
 {
-    return 0.0;
+    return qdbus_cast<double>(m_inter->property("Balance"));
 }
 
 bool DDaemonOutputStream::supportBalance() const
 {
-    return false;
+    return qdbus_cast<bool>(m_inter->property("SupportBalance"));
 }
 
 bool DDaemonOutputStream::supportFade() const
 {
-    return false;
-}
-
-double DDaemonOutputStream::meterVolume() const
-{
-    return 0.0;
+    return qdbus_cast<bool>(m_inter->property("SupportFade"));
 }
 
 QString DDaemonOutputStream::card() const
@@ -155,4 +144,5 @@ void DDaemonOutputStream::setBalance(double balance)
 {
 
 }
+
 DAUDIOMANAGER_END_NAMESPACE

@@ -39,6 +39,8 @@ DAudioInputDevice::DAudioInputDevice(DPlatformAudioInputDevice *d)
     connect(d, &DPlatformAudioInputDevice::supportFadeChanged, this, &DAudioInputDevice::supportFadeChanged);
     connect(d, &DPlatformAudioInputDevice::baseVolumeChanged, this, &DAudioInputDevice::baseVolumeChanged);
 
+    connect(d, &DPlatformAudioInputDevice::meterVolumeChanged, this, &DAudioInputDevice::meterVolumeChanged);
+
     connect(d, &DPlatformAudioInputDevice::nameChanged, this, &DAudioInputDevice::nameChanged);
     connect(d, &DPlatformAudioInputDevice::descriptionChanged, this, &DAudioInputDevice::descriptionChanged);
 }
@@ -76,6 +78,11 @@ bool DAudioInputDevice::supportFade() const
 double DAudioInputDevice::baseVolume() const
 {
     return d->baseVolume();
+}
+
+double DAudioInputDevice::meterVolume() const
+{
+    return d->meterVolume();
 }
 
 QString DAudioInputDevice::name() const
@@ -194,6 +201,11 @@ bool DAudioOutputDevice::supportFade() const
 double DAudioOutputDevice::baseVolume() const
 {
     return d->baseVolume();
+}
+
+double DAudioOutputDevice::meterVolume() const
+{
+    return d->meterVolume();
 }
 
 QString DAudioOutputDevice::name() const

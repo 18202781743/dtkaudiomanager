@@ -24,11 +24,11 @@ DAudioCard::~DAudioCard()
 
 }
 
-QList<QSharedPointer<DAudioPort> > DAudioCard::ports() const
+QList<DAudioPortPtr> DAudioCard::ports() const
 {
-    QList<QSharedPointer<DAudioPort>> result;
-    for (auto item : d->ports())
-        result << QSharedPointer<DAudioPort>(item->create());
+    QList<DAudioPortPtr> result;
+    for (auto item : d->m_ports)
+        result << DAudioPortPtr(item->create());
 
     return result;
 }

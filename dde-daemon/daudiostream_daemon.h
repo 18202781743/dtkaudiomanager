@@ -29,7 +29,6 @@ public:
     virtual double balance() const override;
     virtual bool supportBalance() const override;
     virtual bool supportFade() const override;
-    virtual double meterVolume() const override;
 
     virtual QString card() const override;
 
@@ -59,7 +58,6 @@ public:
     virtual double balance() const override;
     virtual bool supportBalance() const override;
     virtual bool supportFade() const override;
-    virtual double meterVolume() const override;
 
     virtual QString card() const override;
 
@@ -68,9 +66,9 @@ public Q_SLOTS:
     virtual void setFade(double fade) override;
     virtual void setVolume(double volume) override;
     virtual void setBalance(double balance) override;
-
 private:
     DPlatformAudioInputDevice *m_device;
     QDBusInterface *m_inter = nullptr;
+    QDBusInterface *m_meterInter = nullptr;
 };
 DAUDIOMANAGER_END_NAMESPACE

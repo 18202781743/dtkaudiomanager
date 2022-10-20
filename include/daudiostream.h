@@ -22,7 +22,6 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioStream : public QObject
     Q_PROPERTY(double balance READ balance WRITE setBalance NOTIFY balanceChanged)
     Q_PROPERTY(bool supportBalance READ supportBalance NOTIFY supportBalanceChanged)
     Q_PROPERTY(bool supportFade READ supportFade NOTIFY supportFadeChanged)
-    Q_PROPERTY(double meterVolume READ meterVolume NOTIFY meterVolumeChanged)
     Q_PROPERTY(QString card READ card NOTIFY cardChanged)
 public:
     explicit DAudioStream(DAudioDevice *parent = nullptr);
@@ -35,7 +34,6 @@ public:
 
     virtual bool supportBalance() const = 0;
     virtual bool supportFade() const = 0;
-    virtual double meterVolume() const = 0;
 
     virtual QString card() const = 0;
 
@@ -53,7 +51,6 @@ Q_SIGNALS:
 
     void supportBalanceChanged(bool supportBalance);
     void supportFadeChanged(bool supportFade);
-    void meterVolumeChanged(double meterVolume);
 
     void cardChanged(QString card);
 
@@ -77,7 +74,6 @@ public:
     virtual double balance() const override;
     virtual bool supportBalance() const override;
     virtual bool supportFade() const override;
-    virtual double meterVolume() const override;
 
     virtual QString card() const override;
 
@@ -107,7 +103,6 @@ public:
     virtual double balance() const override;
     virtual bool supportBalance() const override;
     virtual bool supportFade() const override;
-    virtual double meterVolume() const override;
 
     virtual QString card() const override;
 

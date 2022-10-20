@@ -6,6 +6,7 @@
 
 #include "daudioport.h"
 #include "daudiocard.h"
+#include "daudioport_p.h"
 
 #include <QObject>
 
@@ -29,23 +30,18 @@ public:
 
     void addPort(DPlatformAudioPort *port)
     {
-        m_ports << port;
+        m_ports.append(QExplicitlySharedDataPointer(port));
     }
     virtual DAudioCard *create()
     {
         return new DAudioCard(this);
     }
 
-    QList<DPlatformAudioPort *> ports() const
-    {
-        return m_ports;
-    }
-
 Q_SIGNALS:
     void enabledChanged(bool enabled);
 
 public:
-    QList<DPlatformAudioPort*> m_ports;
+    QList<QExplicitlySharedDataPointer<DPlatformAudioPort>> m_ports;
 };
 
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioBluetoothCard : public DPlatformAudioCard

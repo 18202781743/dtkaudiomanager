@@ -4,6 +4,7 @@
 
 #include "daudioport.h"
 #include "daudioport_p.h"
+#include "daudiocard_p.h"
 
 #include "daudiofactory_p.h"
 
@@ -50,4 +51,13 @@ QString DAudioPort::description() const
 {
     return d->description();
 }
+
+DPlatformAudioPort::DPlatformAudioPort(DPlatformAudioCard *card)
+    : m_card(card)
+{
+    if (m_card) {
+        m_card->addPort(this);
+    }
+}
+
 DAUDIOMANAGER_END_NAMESPACE
