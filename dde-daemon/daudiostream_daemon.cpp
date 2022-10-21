@@ -16,7 +16,7 @@ DDaemonInputStream::DDaemonInputStream(const QString &path, DPlatformAudioOutput
     , m_device(parent)
     , m_inter(DDaemonInternal::newAudioInterface(path, DDaemonInternal::AudioServiceSinkInputInterface))
 {
-
+    setName(DDaemonInternal::streamName(path));
 }
 
 DDaemonInputStream::~DDaemonInputStream()
@@ -84,6 +84,7 @@ DDaemonOutputStream::DDaemonOutputStream(const QString &path, DPlatformAudioInpu
     , m_device(parent)
     , m_inter(DDaemonInternal::newAudioInterface(path, DDaemonInternal::AudioServiceSourceOutputInterface))
 {
+    setName(DDaemonInternal::streamName(path));
 }
 
 DDaemonOutputStream::~DDaemonOutputStream()

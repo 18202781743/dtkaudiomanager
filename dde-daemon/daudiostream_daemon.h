@@ -40,7 +40,7 @@ public Q_SLOTS:
 
 private:
     DPlatformAudioOutputDevice *m_device;
-    QDBusInterface *m_inter = nullptr;
+    QScopedPointer<QDBusInterface>  m_inter;
 };
 
 class DPlatformAudioOutputStream;
@@ -68,7 +68,7 @@ public Q_SLOTS:
     virtual void setBalance(double balance) override;
 private:
     DPlatformAudioInputDevice *m_device;
-    QDBusInterface *m_inter = nullptr;
+    QScopedPointer<QDBusInterface>  m_inter;
     QDBusInterface *m_meterInter = nullptr;
 };
 DAUDIOMANAGER_END_NAMESPACE

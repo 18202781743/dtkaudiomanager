@@ -41,8 +41,8 @@ private:
     void ensureMeter();
 
 private:
-    QDBusInterface *m_inter = nullptr;
-    QDBusInterface *m_meterInter = nullptr;
+    QScopedPointer<QDBusInterface> m_inter;
+    QScopedPointer<QDBusInterface> m_meterInter;
 };
 
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DDaemonAudioOutputDevice : public DPlatformAudioOutputDevice
@@ -70,6 +70,6 @@ public Q_SLOTS:
     virtual void setBalance(double balance) override;
 
 private:
-    QDBusInterface *m_inter = nullptr;
+    QScopedPointer<QDBusInterface>  m_inter;
 };
 DAUDIOMANAGER_END_NAMESPACE

@@ -84,6 +84,8 @@ public:
                 command->m_argus = m_argus;
                 qInfo() << "************" << m_descs.value(iter.key());
                 exit &= command->exec();
+                delete command;
+                command = nullptr;
             }
         }
         return existCommand;
@@ -101,6 +103,15 @@ struct ListCards : public Command
         qInfo() << cards.size() << "card info:";
         for (auto card : cards) {
             qInfo() << card->name();
+            props << "type" << card->type();
+            if (card->type() == DAudioCard::Bluetooth) {
+                if (auto bluetoothCard = qobject_cast<DAudioBluetoothCard *>(card.data())) {
+                    props << "mode" << bluetoothCard->mode()
+                          << "modeOptions" << bluetoothCard->modeOptions();
+                }
+            }
+            outputProperties();
+
             qInfo() << "\t" << card->ports().size() << "port info:";
             for (auto port : card->ports()) {
                 qInfo() << "\t" << port->name() << port->description();

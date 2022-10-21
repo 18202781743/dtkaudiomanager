@@ -19,11 +19,19 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioCard : public QObject
 
     Q_PROPERTY(bool enabled READ enabled NOTIFY enabledChanged)
 public:
+    enum Type{
+        Normal,
+        Bluetooth,
+        Other = 64
+    };
+    Q_ENUM(Type)
+
     explicit DAudioCard(DPlatformAudioCard *d);
     virtual ~DAudioCard() override;
 
     QList<DAudioPortPtr> ports() const;
     QString name() const;
+    virtual Type type() const;
 
     bool enabled() const;
 
@@ -43,9 +51,12 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioBluetoothCard : public DAudioCard
     Q_PROPERTY(QString mode READ mode WRITE setMode NOTIFY modeChanged)
     Q_PROPERTY(QStringList modeOptions READ modeOptions NOTIFY modeOptionsChanged)
 public:
+    virtual ~DAudioBluetoothCard();
 
     QString mode() const;
     QStringList modeOptions() const;
+
+    virtual DAudioCard::Type type() const override;
 
 public Q_SLOTS:
     void setMode(QString mode);

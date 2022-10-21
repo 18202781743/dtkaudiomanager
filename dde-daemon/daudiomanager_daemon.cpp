@@ -21,8 +21,8 @@
 DAUDIOMANAGER_BEGIN_NAMESPACE
 
 DDaemonAudioManager::DDaemonAudioManager(QObject *parent)
+    : m_inter(DDaemonInternal::newAudioInterface())
 {
-    m_inter = DDaemonInternal::newAudioInterface();
 //    m_inter->setTimeout(300);
     if (!m_inter->isValid()) {
         qWarning() << m_inter->lastError();
@@ -152,8 +152,6 @@ void DDaemonAudioManager::updateInputDevice()
             return;
         }
         auto device = new DDaemonAudioInputDevice(path, card);
-        device->setName(deviceName);
-
         addInputDevice(device);
     }
 }
@@ -182,8 +180,6 @@ void DDaemonAudioManager::updateOutputDevice()
             }
         }
         auto device = new DDaemonAudioOutputDevice(path, card);
-        device->setName(deviceName);
-
         addOutputDevice(device);
     }
 }
@@ -214,7 +210,6 @@ void DDaemonAudioManager::updateOutputStream()
             return;
         }
         auto stream = new DDaemonOutputStream(path, device);
-        stream->setName(streamName);
         device->addStream(stream);
     }
 }
@@ -245,7 +240,6 @@ void DDaemonAudioManager::updateInputStream()
             return;
         }
         auto stream = new DDaemonInputStream(path, device);
-        stream->setName(streamName);
         device->addStream(stream);
     }
 }

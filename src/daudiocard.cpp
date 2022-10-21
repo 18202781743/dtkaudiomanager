@@ -38,6 +38,11 @@ QString DAudioCard::name() const
     return d->name();
 }
 
+DAudioCard::Type DAudioCard::type() const
+{
+    return DAudioCard::Normal;
+}
+
 bool DAudioCard::enabled() const
 {
     return d->enabled();
@@ -50,6 +55,10 @@ DAudioBluetoothCard::DAudioBluetoothCard(DPlatformAudioBluetoothCard *d)
     connect(d, &DPlatformAudioBluetoothCard::modeOptionsChanged, this, &DAudioBluetoothCard::modeOptionsChanged);
 }
 
+DAudioBluetoothCard::~DAudioBluetoothCard()
+{
+}
+
 QString DAudioBluetoothCard::mode() const
 {
     return dynamic_cast<DPlatformAudioBluetoothCard *>(d.data())->mode();
@@ -58,6 +67,11 @@ QString DAudioBluetoothCard::mode() const
 QStringList DAudioBluetoothCard::modeOptions() const
 {
     return dynamic_cast<DPlatformAudioBluetoothCard *>(d.data())->modeOptions();
+}
+
+DAudioCard::Type DAudioBluetoothCard::type() const
+{
+    return DAudioCard::Bluetooth;
 }
 
 void DAudioBluetoothCard::setMode(QString mode)

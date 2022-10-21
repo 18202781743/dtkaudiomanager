@@ -7,13 +7,14 @@
 #include "daudioport_daemon.h"
 #include "daemonhelpers.hpp"
 
+#include <QDBusArgument>
 #include <QDebug>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 
 DDaemonAudioCard::DDaemonAudioCard(QObject *parent)
+    : m_inter(DDaemonInternal::newAudioInterface())
 {
-    m_inter = DDaemonInternal::newAudioInterface();
     if (!m_inter->isValid()) {
         qWarning() << m_inter->lastError();
     }
@@ -37,7 +38,6 @@ bool DDaemonAudioCard::enabled() const
 DDaemonAudioBluetoothCard::DDaemonAudioBluetoothCard(QObject *parent)
     : DDaemonAudioCard (parent)
 {
-
 }
 
 DDaemonAudioBluetoothCard::~DDaemonAudioBluetoothCard()
@@ -47,16 +47,16 @@ DDaemonAudioBluetoothCard::~DDaemonAudioBluetoothCard()
 
 QString DDaemonAudioBluetoothCard::mode() const
 {
-    return QString();
+    return qdbus_cast<QString>(m_inter->property("BluetoothAudioMode"));
 }
 
 QStringList DDaemonAudioBluetoothCard::modeOptions() const
 {
-    return {};
+    return qdbus_cast<QStringList>(m_inter->property("BluetoothAudioModeOpts"));
 }
 
 void DDaemonAudioBluetoothCard::setMode(QString mode)
 {
-
+    m_inter->call("SetBluetoothAudioMode", mode);
 }
 DAUDIOMANAGER_END_NAMESPACE

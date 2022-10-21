@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 #include "daudioport_daemon.h"
+#include "daemonhelpers.hpp"
 
 #include <QDebug>
 #include <QDBusAbstractInterface>
@@ -12,10 +13,6 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 DDaemonAudioPort::DDaemonAudioPort(DPlatformAudioCard *card)
     :  DPlatformAudioPort (card)
 {
-//    m_inter = new DDBusInterface("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio");
-//    if (!m_inter->isValid()) {
-//        qWarning() << m_inter->lastError();
-//    }
 }
 
 DDaemonAudioPort::~DDaemonAudioPort()

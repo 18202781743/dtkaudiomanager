@@ -25,7 +25,7 @@ public:
     bool enabled() const override;
 
 public:
-    QDBusInterface *m_inter = nullptr;
+    QScopedPointer<QDBusInterface>  m_inter;
     QString m_name;
     bool m_enabled;
 };

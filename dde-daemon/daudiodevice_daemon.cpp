@@ -18,8 +18,7 @@ DDaemonAudioInputDevice::DDaemonAudioInputDevice(const QString &path, DPlatformA
     : DPlatformAudioInputDevice (card)
     , m_inter(DDaemonInternal::newAudioInterface(path, DDaemonInternal::AudioServiceSourceInterface))
 {
-     const auto index = qdbus_cast<quint32>(m_inter->property("SinkIndex"));
-     m_key = QString::number(index);
+    setName(DDaemonInternal::deviceName(path));
 }
 
 DDaemonAudioInputDevice::~DDaemonAudioInputDevice()
@@ -92,8 +91,7 @@ void DDaemonAudioInputDevice::setBalance(double balance)
 void DDaemonAudioInputDevice::ensureMeter()
 {
     if (m_meterInter && !m_meterInter->isValid()) {
-        m_meterInter->deleteLater();
-        m_meterInter = nullptr;
+        m_meterInter.reset();
     }
     if (!m_meterInter) {
 
@@ -109,7 +107,7 @@ void DDaemonAudioInputDevice::ensureMeter()
             inter->deleteLater();
             return;
         }
-        m_meterInter = inter;
+        m_meterInter.reset(inter);
     }
     m_meterInter->call("Tick");
 }
@@ -118,8 +116,7 @@ DDaemonAudioOutputDevice::DDaemonAudioOutputDevice(const QString &path, DPlatfor
     : DPlatformAudioOutputDevice (parent)
     , m_inter(DDaemonInternal::newAudioInterface(path, DDaemonInternal::AudioServiceSinkInterface))
 {
-    const auto index = qdbus_cast<quint32>(m_inter->property("SinkIndex"));
-    m_key = QString::number(index);
+    setName(DDaemonInternal::deviceName(path));
 }
 
 DDaemonAudioOutputDevice::~DDaemonAudioOutputDevice()

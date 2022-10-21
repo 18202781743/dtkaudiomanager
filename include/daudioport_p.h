@@ -38,6 +38,5 @@ Q_SIGNALS:
 
 protected:
     DPlatformAudioCard *m_card = nullptr;
-
 };
 DAUDIOMANAGER_END_NAMESPACE

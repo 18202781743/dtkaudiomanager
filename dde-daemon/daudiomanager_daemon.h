@@ -52,7 +52,7 @@ private:
 
 private:
 //    DDBusInterface *m_inter = nullptr;
-    QDBusInterface *m_inter = nullptr;
+    QScopedPointer<QDBusInterface>  m_inter;
 
 };
 DAUDIOMANAGER_END_NAMESPACE
