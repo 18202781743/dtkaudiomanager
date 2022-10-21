@@ -44,5 +44,10 @@ public:
 
 public Q_SLOTS:
     void setMode(QString mode);
+
+Q_SIGNALS:
+    void modeChanged(QString mode);
+
+    void modeOptionsChanged(QStringList modeOptions);
 };
 DAUDIOMANAGER_END_NAMESPACE

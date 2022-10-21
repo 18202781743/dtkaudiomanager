@@ -114,14 +114,22 @@ void DDaemonAudioInputDevice::ensureMeter()
 
 DDaemonAudioOutputDevice::DDaemonAudioOutputDevice(const QString &path, DPlatformAudioCard *parent)
     : DPlatformAudioOutputDevice (parent)
-    , m_inter(DDaemonInternal::newAudioInterface(path, DDaemonInternal::AudioServiceSinkInterface))
+    , m_inter(DDaemonInternal::newAudioInterface2(this, path, DDaemonInternal::AudioServiceSinkInterface))
 {
     setName(DDaemonInternal::deviceName(path));
+
+    connect(this, &DDaemonAudioOutputDevice::MuteChanged, this, &DPlatformAudioOutputDevice::muteChanged);
+    connect(this, &DDaemonAudioOutputDevice::FadeChanged, this, &DPlatformAudioOutputDevice::fadeChanged);
+    connect(this, &DDaemonAudioOutputDevice::VolumeChanged, this, &DPlatformAudioOutputDevice::volumeChanged);
+    connect(this, &DDaemonAudioOutputDevice::BalanceChanged, this, &DPlatformAudioOutputDevice::balanceChanged);
+
+    connect(this, &DDaemonAudioOutputDevice::SupportBalanceChanged, this, &DPlatformAudioOutputDevice::supportBalanceChanged);
+    connect(this, &DDaemonAudioOutputDevice::SupportFadeChanged, this, &DPlatformAudioOutputDevice::supportFadeChanged);
+    connect(this, &DDaemonAudioOutputDevice::BaseVolumeChanged, this, &DPlatformAudioOutputDevice::baseVolumeChanged);
 }
 
 DDaemonAudioOutputDevice::~DDaemonAudioOutputDevice()
 {
-
 }
 
 bool DDaemonAudioOutputDevice::mute() const

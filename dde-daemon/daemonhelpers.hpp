@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include  <dbus/ddbusinterface.h>
+
 #include <QDBusInterface>
 #include <QObject>
 #include <QDebug>
@@ -30,6 +32,10 @@ inline QDBusInterface audioInterface(const QString &path = AudioPath, const QStr
 inline QDBusInterface *newAudioInterface(const QString &path = AudioPath, const QString &interface = AudioServiceInterface)
 {
     return new QDBusInterface(audioInterface(path, interface));
+}
+inline DDBusInterface *newAudioInterface2(QObject *parent, const QString &path = AudioPath, const QString &interface = AudioServiceInterface)
+{
+    return new DDBusInterface(AudioServiceName, path, interface, QDBusConnection::sessionBus(), parent);
 }
 inline QString deviceName(const QString &path)
 {
