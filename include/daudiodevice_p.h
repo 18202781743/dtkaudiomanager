@@ -35,6 +35,7 @@ public:
 
     virtual double meterVolume() const = 0;
 
+    QString card() const;
     void addStream(DPlatformAudioOutputStream *stream);
     void removeStream(const QString &streamName);
 
@@ -97,6 +98,7 @@ public:
 
     virtual double meterVolume() const = 0;
 
+    QString card() const;
     void addStream(DPlatformAudioInputStream *stream);
     void removeStream(const QString &streamName);
 

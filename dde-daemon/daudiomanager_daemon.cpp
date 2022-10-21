@@ -21,7 +21,7 @@
 DAUDIOMANAGER_BEGIN_NAMESPACE
 
 DDaemonAudioManager::DDaemonAudioManager(QObject *parent)
-    : m_inter(DDaemonInternal::newAudioInterface())
+    : m_inter(DDaemonInternal::newAudioInterface2(this))
 {
 //    m_inter->setTimeout(300);
     if (!m_inter->isValid()) {
@@ -35,6 +35,9 @@ DDaemonAudioManager::DDaemonAudioManager(QObject *parent)
 
     updateInputDevice();
     updateOutputStream();
+    connect(this, &DDaemonAudioManager::DefaultSourceChanged, this, [this](QDBusObjectPath path) {
+        qDebug() << "*****" << path.path();
+    });
 }
 
 DDaemonAudioManager::~DDaemonAudioManager()
@@ -54,12 +57,12 @@ void DDaemonAudioManager::setReConnectionEnabled(const bool enable)
 
 void DDaemonAudioManager::setPort(const QString &card, const QString &portName, const int direction)
 {
-
+    m_inter->call("SetPort", card, portName, direction);
 }
 
 void DDaemonAudioManager::setPortEnabled(const QString &card, const QString &portName)
 {
-
+    m_inter->call("SetPortEnabled", card, portName);
 }
 
 bool DDaemonAudioManager::increaseVolume() const
@@ -79,12 +82,12 @@ double DDaemonAudioManager::maxVolume() const
 
 void DDaemonAudioManager::setIncreaseVolume(bool increaseVolume)
 {
-
+    m_inter->setProperty("IncreaseVolume", increaseVolume);
 }
 
 void DDaemonAudioManager::setReduceNoise(bool reduceNoise)
 {
-
+    m_inter->setProperty("ReduceNoise", reduceNoise);
 }
 
 void DDaemonAudioManager::updateCards()

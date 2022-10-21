@@ -26,6 +26,10 @@ struct Command
             qInfo().noquote() << "\t" << props.takeFirst().toString() << ": " << props.takeFirst().toString();
         }
     }
+    double changeValue(const double origin, const double flag = 0.5, const double delta = 0.1)
+    {
+        return origin + (origin > flag ? -delta : +delta);
+    }
 
     QStringList m_argus;
     DAudioManager m_handler;
@@ -191,6 +195,42 @@ struct ListOutputDevices : public Command
     }
 };
 
+struct SetOutputDevices : public Command
+{
+    virtual bool exec()
+    {
+        qInfo() << "set output devices info:";
+        for (auto device : m_handler.outputDevices()) {
+            qInfo() << device->name() << "pre";
+            props << "mute" << device->mute()
+                  << "fade" << device->fade()
+                  << "volume" << device->volume()
+                  << "balance" << device->balance()
+                  << "supportFade" << device->supportFade()
+                  << "supportBalance" << device->supportBalance()
+                  << "meterVolume" << device->meterVolume();
+
+            outputProperties();
+
+            device->setMute(!device->mute());
+            device->setFade(changeValue(device->fade()));
+            device->setVolume(changeValue(device->volume()));
+
+            qInfo() << device->name() << "now";
+            props << "mute" << device->mute()
+                  << "fade" << device->fade()
+                  << "volume" << device->volume()
+                  << "balance" << device->balance()
+                  << "supportFade" << device->supportFade()
+                  << "supportBalance" << device->supportBalance()
+                  << "meterVolume" << device->meterVolume();
+
+            outputProperties();
+        }
+        return true;
+    }
+};
+
 struct MonitorCards : public Command
 {
     virtual bool exec()
@@ -260,6 +300,7 @@ int main(int argc, char *argv[])
     manager.regist("list-cards", "List cards", [](){ return new ListCards;});
     manager.regist("list-input-devices", "List loaded input devices", [](){ return new ListInputDevices;});
     manager.regist("list-output-devices", "List loaded output devices", [](){ return new ListOutputDevices;});
+    manager.regist("set-output-devices", "Change output device property, example: mute, fade, volume", [](){ return new SetOutputDevices;});
     manager.regist("monitor-cards", "Monitor cards changed", [](){ return new MonitorCards;});
     manager.regist("monitor-output-device-properties", "Monitor output device property changed, example: mute, fade", [](){ return new MonitorOutputDevice;});
     QTimer::singleShot(0, qApp, [&manager, &app]() {

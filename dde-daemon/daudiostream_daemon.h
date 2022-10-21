@@ -66,6 +66,15 @@ public Q_SLOTS:
     virtual void setFade(double fade) override;
     virtual void setVolume(double volume) override;
     virtual void setBalance(double balance) override;
+
+Q_SIGNALS:
+    void MuteChanged(bool mute);
+    void FadeChanged(double fade);
+    void VolumeChanged(double volume);
+    void BalanceChanged(double balance);
+
+    void SupportBalanceChanged(bool supportBalance);
+    void SupportFadeChanged(bool supportFade);
 private:
     DPlatformAudioInputDevice *m_device;
     QScopedPointer<QDBusInterface>  m_inter;

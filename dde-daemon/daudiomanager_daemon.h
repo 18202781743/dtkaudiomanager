@@ -40,6 +40,7 @@ Q_SIGNALS:
     void reduceNoiseChanged(bool reduceNoise);
     void maxVolumeChanged(bool maxVolume);
 
+    void DefaultSourceChanged(QDBusObjectPath path);
 private:
     void updateCards();
     void updateInputDevice();
@@ -51,8 +52,7 @@ private:
     bool containOutputDevice(const QString &deviceName);
 
 private:
-//    DDBusInterface *m_inter = nullptr;
-    QScopedPointer<QDBusInterface>  m_inter;
+    QScopedPointer<DDBusInterface> m_inter;
 
 };
 DAUDIOMANAGER_END_NAMESPACE

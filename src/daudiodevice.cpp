@@ -95,6 +95,11 @@ QString DAudioInputDevice::description() const
     return d->description();
 }
 
+QString DAudioInputDevice::card() const
+{
+    return d->card();
+}
+
 QList<DAudioOutputStreamPtr> DAudioInputDevice::streams() const
 {
     QList<DAudioOutputStreamPtr> result;
@@ -218,6 +223,11 @@ QString DAudioOutputDevice::description() const
     return d->description();
 }
 
+QString DAudioOutputDevice::card() const
+{
+    return d->card();
+}
+
 QList<DAudioInputStreamPtr> DAudioOutputDevice::streams() const
 {
     QList<DAudioInputStreamPtr> result;
@@ -264,6 +274,14 @@ DPlatformAudioInputDevice::DPlatformAudioInputDevice(DPlatformAudioCard *card)
 
 DPlatformAudioInputDevice::~DPlatformAudioInputDevice()
 {
+}
+
+QString DPlatformAudioInputDevice::card() const
+{
+    if (m_card) {
+        m_card->name();
+    }
+    return QString();
 }
 
 void DPlatformAudioInputDevice::addStream(DPlatformAudioOutputStream *stream)
@@ -319,6 +337,14 @@ DPlatformAudioOutputDevice::DPlatformAudioOutputDevice(DPlatformAudioCard *card)
 
 DPlatformAudioOutputDevice::~DPlatformAudioOutputDevice()
 {
+}
+
+QString DPlatformAudioOutputDevice::card() const
+{
+    if (m_card) {
+        m_card->name();
+    }
+    return QString();
 }
 
 void DPlatformAudioOutputDevice::addStream(DPlatformAudioInputStream *stream)

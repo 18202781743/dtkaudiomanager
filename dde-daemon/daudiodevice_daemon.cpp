@@ -19,6 +19,15 @@ DDaemonAudioInputDevice::DDaemonAudioInputDevice(const QString &path, DPlatformA
     , m_inter(DDaemonInternal::newAudioInterface(path, DDaemonInternal::AudioServiceSourceInterface))
 {
     setName(DDaemonInternal::deviceName(path));
+
+    connect(this, &DDaemonAudioInputDevice::MuteChanged, this, &DPlatformAudioInputDevice::muteChanged);
+    connect(this, &DDaemonAudioInputDevice::FadeChanged, this, &DPlatformAudioInputDevice::fadeChanged);
+    connect(this, &DDaemonAudioInputDevice::VolumeChanged, this, &DPlatformAudioInputDevice::volumeChanged);
+    connect(this, &DDaemonAudioInputDevice::BalanceChanged, this, &DPlatformAudioInputDevice::balanceChanged);
+
+    connect(this, &DDaemonAudioInputDevice::SupportBalanceChanged, this, &DPlatformAudioInputDevice::supportBalanceChanged);
+    connect(this, &DDaemonAudioInputDevice::SupportFadeChanged, this, &DPlatformAudioInputDevice::supportFadeChanged);
+    connect(this, &DDaemonAudioInputDevice::BaseVolumeChanged, this, &DPlatformAudioInputDevice::baseVolumeChanged);
 }
 
 DDaemonAudioInputDevice::~DDaemonAudioInputDevice()
@@ -80,7 +89,7 @@ void DDaemonAudioInputDevice::setFade(double fade)
 
 void DDaemonAudioInputDevice::setVolume(double volume)
 {
-    m_inter->call("SetVolume", volume);
+    m_inter->call("SetVolume", volume, true);
 }
 
 void DDaemonAudioInputDevice::setBalance(double balance)
@@ -184,7 +193,7 @@ void DDaemonAudioOutputDevice::setFade(double fade)
 
 void DDaemonAudioOutputDevice::setVolume(double volume)
 {
-    m_inter->call("SetVolume", volume);
+    m_inter->call("SetVolume", volume, true);
 }
 
 void DDaemonAudioOutputDevice::setBalance(double balance)

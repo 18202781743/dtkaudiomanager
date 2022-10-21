@@ -56,27 +56,30 @@ bool DDaemonInputStream::supportFade() const
 
 QString DDaemonInputStream::card() const
 {
-
+    if (m_device) {
+        m_device->card();
+    }
+    return QString();
 }
 
 void DDaemonInputStream::setMute(bool mute)
 {
-
+    m_inter->call("SetMute", mute);
 }
 
 void DDaemonInputStream::setFade(double fade)
 {
-
+    m_inter->call("SetFade", fade);
 }
 
 void DDaemonInputStream::setVolume(double volume)
 {
-
+    m_inter->call("SetVolume", volume, true);
 }
 
 void DDaemonInputStream::setBalance(double balance)
 {
-
+    m_inter->call("SetBalance", balance, true);
 }
 
 DDaemonOutputStream::DDaemonOutputStream(const QString &path, DPlatformAudioInputDevice *parent)
@@ -124,26 +127,30 @@ bool DDaemonOutputStream::supportFade() const
 
 QString DDaemonOutputStream::card() const
 {
+    if (m_device) {
+        m_device->card();
+    }
+    return QString();
 }
 
 void DDaemonOutputStream::setMute(bool mute)
 {
-
+    m_inter->call("SetMute", mute);
 }
 
 void DDaemonOutputStream::setFade(double fade)
 {
-
+    m_inter->call("SetFade", fade);
 }
 
 void DDaemonOutputStream::setVolume(double volume)
 {
-
+    m_inter->call("SetVolume", volume, true);
 }
 
 void DDaemonOutputStream::setBalance(double balance)
 {
-
+    m_inter->call("SetBalance", balance, true);
 }
 
 DAUDIOMANAGER_END_NAMESPACE

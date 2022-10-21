@@ -46,6 +46,7 @@ public:
 
     virtual QString name() const = 0;
     virtual QString description() const = 0;
+    virtual QString card() const = 0;
 
 public Q_SLOTS:
     virtual void setMute(bool mute) = 0;
@@ -93,6 +94,7 @@ public:
 
     virtual QString name() const override;
     virtual QString description() const override;
+    virtual QString card() const override;
 
     QList<DAudioOutputStreamPtr> streams() const;
     DAudioOutputStreamPtr stream(const QString &streamName) const;
@@ -129,6 +131,7 @@ public:
 
     virtual QString name() const override;
     virtual QString description() const override;
+    virtual QString card() const override;
 
     QList<DAudioInputStreamPtr> streams() const;
     DAudioInputStreamPtr stream(const QString& streamName);
