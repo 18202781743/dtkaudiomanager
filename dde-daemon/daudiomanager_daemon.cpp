@@ -38,6 +38,9 @@ DDaemonAudioManager::DDaemonAudioManager(QObject *parent)
     connect(this, &DDaemonAudioManager::DefaultSourceChanged, this, [this](QDBusObjectPath path) {
         qDebug() << "*****" << path.path();
     });
+    connect(this, &DDaemonAudioManager::IncreaseVolumeChanged, this, &DAudioManagerPrivate::increaseVolumeChanged);
+    connect(this, &DDaemonAudioManager::ReduceNoiseChanged, this, &DAudioManagerPrivate::reduceNoiseChanged);
+    connect(this, &DDaemonAudioManager::MaxUIVolumeChanged, this, &DAudioManagerPrivate::maxVolumeChanged);
 }
 
 DDaemonAudioManager::~DDaemonAudioManager()
@@ -67,17 +70,17 @@ void DDaemonAudioManager::setPortEnabled(const QString &card, const QString &por
 
 bool DDaemonAudioManager::increaseVolume() const
 {
-    return qdbus_cast<bool>(m_inter->property("increaseVolume"));
+    return qdbus_cast<bool>(m_inter->property("IncreaseVolume"));
 }
 
 bool DDaemonAudioManager::reduceNoise() const
 {
-    return qdbus_cast<bool>(m_inter->property("reduceNoise"));
+    return qdbus_cast<bool>(m_inter->property("ReduceNoise"));
 }
 
 double DDaemonAudioManager::maxVolume() const
 {
-    return qdbus_cast<double>(m_inter->property("maxVolume"));
+    return qdbus_cast<double>(m_inter->property("MaxUIVolume"));
 }
 
 void DDaemonAudioManager::setIncreaseVolume(bool increaseVolume)

@@ -36,9 +36,9 @@ Q_SIGNALS:
     void deviceAdded(const QString &name, const bool isInputDevice);
     void deviceRemoved(const QString &name, const bool isInputDevice);
 
-    void increaseVolumeChanged(bool increaseVolume);
-    void reduceNoiseChanged(bool reduceNoise);
-    void maxVolumeChanged(bool maxVolume);
+    void IncreaseVolumeChanged(bool increaseVolume);
+    void ReduceNoiseChanged(bool reduceNoise);
+    void MaxUIVolumeChanged(bool maxVolume);
 
     void DefaultSourceChanged(QDBusObjectPath path);
 private:

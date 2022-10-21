@@ -15,6 +15,39 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioDevice;
 
 class DPlatformAudioInputStream;
+class DDAemonStreamInterface : public QObject
+{
+    Q_OBJECT
+public:
+    explicit DDAemonStreamInterface(DDBusInterface *inter, DPlatformAudioStream *owner = nullptr);
+
+    bool mute() const;
+    double fade() const;
+    double volume() const;
+    double balance() const;
+    bool supportBalance() const;
+    bool supportFade() const;
+
+public Q_SLOTS:
+    void setMute(bool mute);
+    void setFade(double fade);
+    void setVolume(double volume);
+    void setBalance(double balance);
+
+Q_SIGNALS:
+    void MuteChanged(bool mute);
+    void FadeChanged(double fade);
+    void VolumeChanged(double volume);
+    void BalanceChanged(double balance);
+
+    void SupportBalanceChanged(bool supportBalance);
+    void SupportFadeChanged(bool supportFade);
+
+public:
+     QScopedPointer<DDBusInterface> m_inter;
+     DPlatformAudioStream *m_owner = nullptr;
+};
+
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DDaemonInputStream : public DPlatformAudioInputStream
 {
     Q_OBJECT
@@ -30,8 +63,6 @@ public:
     virtual bool supportBalance() const override;
     virtual bool supportFade() const override;
 
-    virtual QString card() const override;
-
 public Q_SLOTS:
     virtual void setMute(bool mute) override;
     virtual void setFade(double fade) override;
@@ -39,8 +70,7 @@ public Q_SLOTS:
     virtual void setBalance(double balance) override;
 
 private:
-    DPlatformAudioOutputDevice *m_device;
-    QScopedPointer<QDBusInterface>  m_inter;
+    QScopedPointer<DDAemonStreamInterface> m_interface;
 };
 
 class DPlatformAudioOutputStream;
@@ -59,25 +89,13 @@ public:
     virtual bool supportBalance() const override;
     virtual bool supportFade() const override;
 
-    virtual QString card() const override;
-
 public Q_SLOTS:
     virtual void setMute(bool mute) override;
     virtual void setFade(double fade) override;
     virtual void setVolume(double volume) override;
     virtual void setBalance(double balance) override;
 
-Q_SIGNALS:
-    void MuteChanged(bool mute);
-    void FadeChanged(double fade);
-    void VolumeChanged(double volume);
-    void BalanceChanged(double balance);
-
-    void SupportBalanceChanged(bool supportBalance);
-    void SupportFadeChanged(bool supportFade);
 private:
-    DPlatformAudioInputDevice *m_device;
-    QScopedPointer<QDBusInterface>  m_inter;
-    QDBusInterface *m_meterInter = nullptr;
+    QScopedPointer<DDAemonStreamInterface> m_interface;
 };
 DAUDIOMANAGER_END_NAMESPACE

@@ -13,6 +13,40 @@
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioCard;
 class DAudioDevicePrivate;
+class DDAemonDeviceInterface : public QObject
+{
+    Q_OBJECT
+public:
+    explicit DDAemonDeviceInterface(DDBusInterface *inter, DPlatformAudioDevice *owner = nullptr);
+
+    bool mute() const;
+    double fade() const;
+    double volume() const;
+    double balance() const;
+    bool supportBalance() const;
+    bool supportFade() const;
+    double baseVolume() const;
+
+public Q_SLOTS:
+    void setMute(bool mute);
+    void setFade(double fade);
+    void setVolume(double volume);
+    void setBalance(double balance);
+
+Q_SIGNALS:
+    void MuteChanged(bool mute);
+    void FadeChanged(double fade);
+    void VolumeChanged(double volume);
+    void BalanceChanged(double balance);
+
+    void SupportBalanceChanged(bool supportBalance);
+    void SupportFadeChanged(bool supportFade);
+    void BaseVolumeChanged(double baseVolume);
+
+public:
+     QScopedPointer<DDBusInterface> m_inter;
+     DPlatformAudioDevice *m_owner = nullptr;
+};
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DDaemonAudioInputDevice : public DPlatformAudioInputDevice
 {
     Q_OBJECT
@@ -37,20 +71,11 @@ public Q_SLOTS:
     virtual void setVolume(double volume) override;
     virtual void setBalance(double balance) override;
 
-Q_SIGNALS:
-    void MuteChanged(bool mute);
-    void FadeChanged(double fade);
-    void VolumeChanged(double volume);
-    void BalanceChanged(double balance);
-
-    void SupportBalanceChanged(bool supportBalance);
-    void SupportFadeChanged(bool supportFade);
-    void BaseVolumeChanged(double baseVolume);
 private:
     void ensureMeter();
 
 private:
-    QScopedPointer<QDBusInterface> m_inter;
+    QScopedPointer<DDAemonDeviceInterface> m_interface;
     QScopedPointer<QDBusInterface> m_meterInter;
 };
 
@@ -78,16 +103,7 @@ public Q_SLOTS:
     virtual void setVolume(double volume) override;
     virtual void setBalance(double balance) override;
 
-Q_SIGNALS:
-    void MuteChanged(bool mute);
-    void FadeChanged(double fade);
-    void VolumeChanged(double volume);
-    void BalanceChanged(double balance);
-
-    void SupportBalanceChanged(bool supportBalance);
-    void SupportFadeChanged(bool supportFade);
-    void BaseVolumeChanged(double baseVolume);
 private:
-    QScopedPointer<DDBusInterface> m_inter;
+    QScopedPointer<DDAemonDeviceInterface> m_interface;
 };
 DAUDIOMANAGER_END_NAMESPACE
