@@ -24,7 +24,7 @@ public:
     }
     void TearDown() override;
 public:
-    QScopedPointer<DAudioInputDevice> m_target;
+    QScopedPointer<DAudioDevice> m_target;
     QExplicitlySharedDataPointer<TestAudioInputDevice> m_impl;
 };
 
@@ -62,7 +62,7 @@ public:
     }
     void TearDown() override;
 public:
-    QScopedPointer<DAudioOutputDevice> m_target;
+    QScopedPointer<DAudioDevice> m_target;
     QExplicitlySharedDataPointer<TestAudioOutputDevice> m_impl;
 };
 

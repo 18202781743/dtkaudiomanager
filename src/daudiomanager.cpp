@@ -71,7 +71,7 @@ QList<DAudioInputDevicePtr> DAudioManager::inputDevices() const
 {
     QList<DAudioInputDevicePtr> result;
     for (auto item : d->m_inputDevices) {
-        result << DAudioInputDevicePtr(item->create());
+        result << DAudioInputDevicePtr(dynamic_cast<DAudioInputDevice *>(item->create()));
     }
     return result;
 }
@@ -80,7 +80,7 @@ QList<DAudioOutputDevicePtr> DAudioManager::outputDevices() const
 {
     QList<DAudioOutputDevicePtr> result;
     for (auto item : d->m_outputDevices) {
-        result << DAudioOutputDevicePtr(item->create());
+        result << DAudioOutputDevicePtr(dynamic_cast<DAudioOutputDevice *>(item->create()));
     }
     return result;
 }
@@ -89,7 +89,7 @@ DAudioInputDevicePtr DAudioManager::defaultInputDevice() const
 {
     for (auto item : d->m_inputDevices) {
         if (item->mute())
-            return DAudioInputDevicePtr(item->create());
+            return DAudioInputDevicePtr(dynamic_cast<DAudioInputDevice *>(item->create()));
     }
     return nullptr;
 }
@@ -98,7 +98,7 @@ DAudioOutputDevicePtr DAudioManager::defaultOutputDevice() const
 {
     for (auto item : d->m_outputDevices) {
         if (item->mute())
-            return DAudioOutputDevicePtr(item->create());
+            return DAudioOutputDevicePtr(dynamic_cast<DAudioOutputDevice *>(item->create()));
     }
     return nullptr;
 }
@@ -108,7 +108,7 @@ QList<DAudioInputDevicePtr> DAudioManager::availableInputDevices() const
     QList<DAudioInputDevicePtr> result;
     for (auto item : d->m_inputDevices) {
         if (item->mute()) {
-            result << DAudioInputDevicePtr(item->create());
+            result << DAudioInputDevicePtr(dynamic_cast<DAudioInputDevice *>(item->create()));
         }
     }
     return result;
@@ -119,7 +119,7 @@ QList<DAudioOutputDevicePtr> DAudioManager::availableOutputDevices() const
     QList<DAudioOutputDevicePtr> result;
     for (auto item : d->m_outputDevices) {
         if (item->mute()) {
-            result << DAudioOutputDevicePtr(item->create());
+            result << DAudioOutputDevicePtr(dynamic_cast<DAudioOutputDevice *>(item->create()));
         }
     }
     return result;
@@ -129,7 +129,7 @@ DAudioInputDevicePtr DAudioManager::inputDevice(const QString &deviceName) const
 {
     for (auto item : d->m_inputDevices) {
         if (item->name() == deviceName)
-            return DAudioInputDevicePtr(item->create());
+            return DAudioInputDevicePtr(dynamic_cast<DAudioInputDevice *>(item->create()));
     }
     return nullptr;
 }
@@ -138,7 +138,7 @@ DAudioOutputDevicePtr DAudioManager::outputDevice(const QString &deviceName) con
 {
     for (auto item : d->m_outputDevices) {
         if (item->name() == deviceName)
-            return DAudioOutputDevicePtr(item->create());
+            return DAudioOutputDevicePtr(dynamic_cast<DAudioOutputDevice *>(item->create()));
     }
     return nullptr;
 }

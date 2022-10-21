@@ -11,6 +11,7 @@
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioDevice;
+class DPlatformAudioDevice;
 class DPlatformAudioInputDevice;
 class DPlatformAudioOutputDevice;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioStream : public QObject, public QSharedData
@@ -25,7 +26,7 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioStream : public QObject, pub
     Q_PROPERTY(bool supportFade READ supportFade NOTIFY supportFadeChanged)
     Q_PROPERTY(QString card READ card NOTIFY cardChanged)
 public:
-
+    explicit DPlatformAudioStream(DPlatformAudioDevice *parent = nullptr);
     virtual bool mute() const = 0;
     virtual double fade() const = 0;
     virtual double volume() const = 0;
@@ -34,8 +35,10 @@ public:
     virtual bool supportBalance() const = 0;
     virtual bool supportFade() const = 0;
 
-    virtual QString card() const = 0;
 
+    virtual DAudioStream *create() = 0;
+
+    virtual QString card() const;
     QString name() const;
     void setName(const QString &name);
 
@@ -58,6 +61,7 @@ Q_SIGNALS:
 
 protected:
     QString m_name;
+    DPlatformAudioDevice *m_device = nullptr;
 };
 
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioInputStream : public DPlatformAudioStream
@@ -68,7 +72,7 @@ public:
     explicit DPlatformAudioInputStream(DPlatformAudioOutputDevice *parent = nullptr);
     virtual ~DPlatformAudioInputStream() override;
 
-    virtual DAudioInputStream *create()
+    virtual DAudioStream *create() override
     {
         return new DAudioInputStream(this);
     }
@@ -82,7 +86,7 @@ public:
     explicit DPlatformAudioOutputStream(DPlatformAudioInputDevice *parent = nullptr);
     virtual ~DPlatformAudioOutputStream() override;
 
-    virtual DAudioOutputStream *create()
+    virtual DAudioStream *create() override
     {
         return new DAudioOutputStream(this);
     }

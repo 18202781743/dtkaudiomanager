@@ -11,10 +11,13 @@
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 class DAudioCard;
+class DAudioStream;
 class DAudioInputStream;
 class DAudioOutputStream;
+using DAudioStreamPtr = QSharedPointer<DAudioStream>;
 using DAudioInputStreamPtr = QSharedPointer<DAudioInputStream>;
 using DAudioOutputStreamPtr = QSharedPointer<DAudioOutputStream>;
+class DPlatformAudioDevice;
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioDevice : public QObject
 {
     Q_OBJECT
@@ -31,28 +34,31 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioDevice : public QObject
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
 public:
     explicit DAudioDevice(DAudioCard *parent = nullptr);
+    explicit DAudioDevice(DPlatformAudioDevice *d);
     virtual ~DAudioDevice() override;
 
-    virtual bool mute() const = 0;
-    virtual double fade() const = 0;
-    virtual double volume() const = 0;
-    virtual double balance() const = 0;
+    virtual bool mute() const;
+    virtual double fade() const;
+    virtual double volume() const;
+    virtual double balance() const;
+    virtual bool supportBalance() const;
+    virtual bool supportFade() const;
+    virtual double baseVolume() const;
 
-    virtual bool supportBalance() const = 0;
-    virtual bool supportFade() const = 0;
-    virtual double baseVolume() const = 0;
+    virtual double meterVolume() const;
 
-    virtual double meterVolume() const = 0;
+    virtual QString name() const;
+    virtual QString description() const;
+    virtual QString card() const;
 
-    virtual QString name() const = 0;
-    virtual QString description() const = 0;
-    virtual QString card() const = 0;
+    QList<DAudioStreamPtr> streams() const;
+    DAudioStreamPtr stream(const QString &streamName) const;
 
 public Q_SLOTS:
-    virtual void setMute(bool mute) = 0;
-    virtual void setFade(double fade) = 0;
-    virtual void setVolume(double volume) = 0;
-    virtual void setBalance(double balance) = 0;
+    virtual void setMute(bool mute);
+    virtual void setFade(double fade);
+    virtual void setVolume(double volume);
+    virtual void setBalance(double balance);
 
 Q_SIGNALS:
     void streamAdded(const QString &name);
@@ -71,6 +77,8 @@ Q_SIGNALS:
 
     void nameChanged(QString name);
     void descriptionChanged(QString description);
+protected:
+    QExplicitlySharedDataPointer<DPlatformAudioDevice> d;
 };
 
 class DPlatformAudioInputDevice;
@@ -82,32 +90,9 @@ public:
     explicit DAudioInputDevice(DAudioCard *parent = nullptr);
     explicit DAudioInputDevice(DPlatformAudioInputDevice *d);
 
-    virtual bool mute() const override;
-    virtual double fade() const override;
-    virtual double volume() const override;
-    virtual double balance() const override;
-    virtual bool supportBalance() const override;
-    virtual bool supportFade() const override;
-    virtual double baseVolume() const override;
-
-    virtual double meterVolume() const override;
-
-    virtual QString name() const override;
-    virtual QString description() const override;
-    virtual QString card() const override;
-
-    QList<DAudioOutputStreamPtr> streams() const;
-    DAudioOutputStreamPtr stream(const QString &streamName) const;
-public Q_SLOTS:
-    virtual void setMute(bool mute) override;
-    virtual void setFade(double fade) override;
-    virtual void setVolume(double volume) override;
-    virtual void setBalance(double balance) override;
-
 private:
     Q_DISABLE_COPY(DAudioInputDevice)
     friend class DPlatformAudioInputDevice;
-    QExplicitlySharedDataPointer<DPlatformAudioInputDevice> d;
 };
 
 class DPlatformAudioOutputDevice;
@@ -119,32 +104,8 @@ public:
     explicit DAudioOutputDevice(DAudioCard *parent = nullptr);
     explicit DAudioOutputDevice(DPlatformAudioOutputDevice *d);
 
-    virtual bool mute() const override;
-    virtual double fade() const override;
-    virtual double volume() const override;
-    virtual double balance() const override;
-    virtual bool supportBalance() const override;
-    virtual bool supportFade() const override;
-    virtual double baseVolume() const override;
-
-    virtual double meterVolume() const override;
-
-    virtual QString name() const override;
-    virtual QString description() const override;
-    virtual QString card() const override;
-
-    QList<DAudioInputStreamPtr> streams() const;
-    DAudioInputStreamPtr stream(const QString& streamName);
-
-public Q_SLOTS:
-    virtual void setMute(bool mute) override;
-    virtual void setFade(double fade) override;
-    virtual void setVolume(double volume) override;
-    virtual void setBalance(double balance) override;
-
 private:
     Q_DISABLE_COPY(DAudioOutputDevice)
     friend class DPlatformAudioOutputDevice;
-    QExplicitlySharedDataPointer<DPlatformAudioOutputDevice> d;
 };
 DAUDIOMANAGER_END_NAMESPACE
