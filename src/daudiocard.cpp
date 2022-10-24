@@ -79,6 +79,12 @@ void DAudioBluetoothCard::setMode(QString mode)
     return dynamic_cast<DPlatformAudioBluetoothCard *>(d.data())->setMode(mode);
 }
 
+DPlatformAudioCard::DPlatformAudioCard(QObject *parent)
+    : QObject (parent)
+{
+
+}
+
 DPlatformAudioCard::~DPlatformAudioCard()
 {
 }
@@ -114,6 +120,14 @@ void DPlatformAudioCard::setEnabled(const bool enabled)
 void DPlatformAudioCard::addPort(DPlatformAudioPort *port)
 {
     m_ports.append(QExplicitlySharedDataPointer(port));
+}
+
+DPlatformAudioPort *DPlatformAudioCard::portByName(const QString &portName) const
+{
+    auto iter = std::find_if(m_ports.begin(), m_ports.end(), [portName](auto port) {
+        return port->name() == portName;
+    });
+    return iter != m_ports.end() ? iter->data() : nullptr;
 }
 
 DAUDIOMANAGER_END_NAMESPACE

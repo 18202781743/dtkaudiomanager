@@ -21,10 +21,10 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioManagerPrivate : public QObject
     Q_OBJECT
 
 public:
+    explicit DAudioManagerPrivate(QObject *parent = nullptr);
+    virtual ~DAudioManagerPrivate();
     virtual void reset() = 0;
     virtual void setReConnectionEnabled(const bool enable) = 0;
-    virtual void setPort(const QString& card, const QString &portName, const int direction) = 0;
-    virtual void setPortEnabled(const QString& card, const QString &portName) = 0;
 
     virtual bool increaseVolume() const = 0;
     virtual bool reduceNoise() const = 0;
@@ -32,6 +32,7 @@ public:
 
     void addCard(DPlatformAudioCard *card);
     void removeCard(const QString &cardName);
+    DPlatformAudioCard *cardByName(const QString &cardName) const;
     void addInputDevice(DPlatformAudioInputDevice *device);
     void removeInputDevice(const QString &deviceName);
     void addOutputDevice(DPlatformAudioOutputDevice *device);

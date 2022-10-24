@@ -17,7 +17,6 @@ DAudioPort::DAudioPort(DPlatformAudioPort *d)
 {
     Q_ASSERT(d);
 
-    connect(d, &DPlatformAudioPort::directionChanged, this, &DAudioPort::directionChanged);
     connect(d, &DPlatformAudioPort::nameChanged, this, &DAudioPort::nameChanged);
     connect(d, &DPlatformAudioPort::descriptionChanged, this, &DAudioPort::descriptionChanged);
 }
@@ -62,6 +61,26 @@ DPlatformAudioPort::DPlatformAudioPort(DPlatformAudioCard *card)
 
 DPlatformAudioPort::~DPlatformAudioPort()
 {
+}
+
+bool DPlatformAudioPort::isActive() const
+{
+    return m_isActive;
+}
+
+void DPlatformAudioPort::setActive(const int active)
+{
+    m_isActive = active;
+}
+
+int DPlatformAudioPort::direction() const
+{
+    return m_direction;
+}
+
+void DPlatformAudioPort::setDirection(const int direction)
+{
+    m_direction = direction;
 }
 
 DAUDIOMANAGER_END_NAMESPACE

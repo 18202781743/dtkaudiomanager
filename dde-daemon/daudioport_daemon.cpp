@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 #include "daudioport_daemon.h"
+#include "daudiocard_daemon.h"
 #include "daemonhelpers.hpp"
 
 #include <QDebug>
@@ -13,6 +14,7 @@ DAUDIOMANAGER_BEGIN_NAMESPACE
 DDaemonAudioPort::DDaemonAudioPort(DPlatformAudioCard *card)
     :  DPlatformAudioPort (card)
 {
+    Q_ASSERT(m_card);
 }
 
 DDaemonAudioPort::~DDaemonAudioPort()
@@ -22,7 +24,8 @@ DDaemonAudioPort::~DDaemonAudioPort()
 
 void DDaemonAudioPort::setEnabled(const bool enabled)
 {
-//    m_inter->call("setPortEnabled", name(), enabled);
+    auto inter = DDaemonInternal::audioInterface();
+    inter.call("SetPortEnabled", m_card->name(), m_name, enabled);
 }
 
 bool DDaemonAudioPort::isEnabled() const
@@ -30,9 +33,11 @@ bool DDaemonAudioPort::isEnabled() const
     return false;
 }
 
-int DDaemonAudioPort::direction() const
+void DDaemonAudioPort::setActive(const int active)
 {
-    return 0;
+    auto inter = DDaemonInternal::audioInterface();
+    inter.call("SetPort", m_card->name(), m_name, m_direction);
+    DPlatformAudioPort::setActive(active);
 }
 
 QString DDaemonAudioPort::name() const

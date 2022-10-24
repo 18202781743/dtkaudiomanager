@@ -22,7 +22,10 @@ public:
     virtual void setEnabled(const bool enabled) = 0;
     virtual bool isEnabled() const = 0;
 
-    virtual int direction() const = 0;
+    virtual bool isActive() const;
+    virtual void setActive(const int active);
+    int direction() const;
+    void setDirection(const int direction);
     virtual QString name() const = 0;
     virtual QString description() const = 0;
     virtual DAudioPort *create()
@@ -32,11 +35,12 @@ public:
 
 Q_SIGNALS:
 
-    void directionChanged(int direction);
     void nameChanged(QString name);
     void descriptionChanged(QString description);
 
 protected:
     DPlatformAudioCard *m_card = nullptr;
+    int m_direction = 1;
+    bool m_isActive = false;
 };
 DAUDIOMANAGER_END_NAMESPACE

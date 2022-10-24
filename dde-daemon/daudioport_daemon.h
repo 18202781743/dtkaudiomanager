@@ -21,14 +21,13 @@ public:
     void setEnabled(const bool enabled) override;
     bool isEnabled() const override;
 
-    int direction() const override;
+    virtual void setActive(const int active) override;
+
     QString name() const override;
     QString description() const override;
 
 public:
     QString m_name;
     QString m_description;
-private:
-    DDBusInterface *m_inter = nullptr;
 };
 DAUDIOMANAGER_END_NAMESPACE

@@ -44,10 +44,6 @@ public:
     {
         return m_enabled;
     }
-    virtual int direction() const override
-    {
-        return 1;
-    }
     virtual QString name() const override
     {
         return m_name;
@@ -408,12 +404,6 @@ public:
     {
     }
     virtual void setReConnectionEnabled(const bool enable) override
-    {
-    }
-    virtual void setPort(const QString &card, const QString &portName, const int direction) override
-    {
-    }
-    virtual void setPortEnabled(const QString &card, const QString &portName) override
     {
     }
     virtual bool increaseVolume() const override

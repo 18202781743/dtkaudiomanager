@@ -51,10 +51,9 @@ QList<DAudioCardPtr> DAudioManager::cards() const
 
 DAudioCardPtr DAudioManager::card(const QString &cardName) const
 {
-    for (auto item : d->m_cards) {
-        if (item->name() == cardName)
-            return DAudioCardPtr(item->create());
-    }
+    if (auto card = d->cardByName(cardName))
+        return DAudioCardPtr(card->create());
+
     return nullptr;
 }
 
@@ -99,32 +98,10 @@ DAudioInputDevicePtr DAudioManager::defaultInputDevice() const
 DAudioOutputDevicePtr DAudioManager::defaultOutputDevice() const
 {
     for (auto item : d->m_outputDevices) {
-        if (item->mute())
+        if (item->isDefault())
             return DAudioOutputDevicePtr(dynamic_cast<DAudioOutputDevice *>(item->create()));
     }
     return nullptr;
-}
-
-QList<DAudioInputDevicePtr> DAudioManager::availableInputDevices() const
-{
-    QList<DAudioInputDevicePtr> result;
-    for (auto item : d->m_inputDevices) {
-        if (item->mute()) {
-            result << DAudioInputDevicePtr(dynamic_cast<DAudioInputDevice *>(item->create()));
-        }
-    }
-    return result;
-}
-
-QList<DAudioOutputDevicePtr> DAudioManager::availableOutputDevices() const
-{
-    QList<DAudioOutputDevicePtr> result;
-    for (auto item : d->m_outputDevices) {
-        if (item->mute()) {
-            result << DAudioOutputDevicePtr(dynamic_cast<DAudioOutputDevice *>(item->create()));
-        }
-    }
-    return result;
 }
 
 DAudioInputDevicePtr DAudioManager::inputDevice(const QString &deviceName) const
@@ -155,14 +132,22 @@ void DAudioManager::setReConnectionEnabled(const bool enable)
     d->setReConnectionEnabled(enable);
 }
 
-void DAudioManager::setPort(const QString &card, const QString &portName, const int direction)
+void DAudioManager::setPort(const QString &cardName, const QString &portName)
 {
-    d->setPort(card, portName, direction);
+    if (auto card = d->cardByName(cardName)) {
+        if (auto port = card->portByName(portName)) {
+            port->setActive(true);
+        }
+    }
 }
 
-void DAudioManager::setPortEnabled(const QString &card, const QString &portName)
+void DAudioManager::setPortEnabled(const QString &cardName, const QString &portName, bool enabled)
 {
-    d->setPortEnabled(card, portName);
+    if (auto card = d->cardByName(cardName)) {
+        if (auto port = card->portByName(portName)) {
+            port->setEnabled(enabled);
+        }
+    }
 }
 
 bool DAudioManager::increaseVolume() const
@@ -190,6 +175,17 @@ void DAudioManager::setReduceNoise(bool reduceNoise)
     d->setReduceNoise(reduceNoise);
 }
 
+DAudioManagerPrivate::DAudioManagerPrivate(QObject *parent)
+    : QObject (parent)
+{
+
+}
+
+DAudioManagerPrivate::~DAudioManagerPrivate()
+{
+
+}
+
 void DAudioManagerPrivate::addCard(DPlatformAudioCard *card)
 {
     m_cards.append(QExplicitlySharedDataPointer(card));
@@ -205,6 +201,14 @@ void DAudioManagerPrivate::removeCard(const QString &cardName)
             break;
         }
     }
+}
+
+DPlatformAudioCard *DAudioManagerPrivate::cardByName(const QString &cardName) const
+{
+    auto iter = std::find_if(m_cards.begin(), m_cards.end(), [cardName](auto port) {
+        return port->name() == cardName;
+    });
+    return iter != m_cards.end() ? iter->data() : nullptr;
 }
 
 void DAudioManagerPrivate::addInputDevice(DPlatformAudioInputDevice *device)

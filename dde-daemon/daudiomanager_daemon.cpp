@@ -20,15 +20,6 @@
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 
-static void registObjectPath()
-{
-    qDebug() << "******" << Q_FUNC_INFO;
-//    qRegisterMetaType<QList<QDBusObjectPath>>();
-//    qRegisterMetaType<QDBusObjectPath>();
-//    qRegisterMetaType<QDBusArgument>();
-}
-Q_CONSTRUCTOR_FUNCTION(registObjectPath);
-
 DDaemonAudioManager::DDaemonAudioManager(QObject *parent)
     : m_inter(DDaemonInternal::newAudioInterface2(this))
 {
@@ -65,12 +56,14 @@ DDaemonAudioManager::DDaemonAudioManager(QObject *parent)
         Q_UNUSED(paths);
         updateInputDevice();
     });
+
     connect(this, &DDaemonAudioManager::IncreaseVolumeChanged, this, &DAudioManagerPrivate::increaseVolumeChanged);
     connect(this, &DDaemonAudioManager::ReduceNoiseChanged, this, &DAudioManagerPrivate::reduceNoiseChanged);
     connect(this, &DDaemonAudioManager::MaxUIVolumeChanged, this, &DAudioManagerPrivate::maxVolumeChanged);
 
     connect(this, &DDaemonAudioManager::DefaultSourceChanged, this, [this](const QDBusObjectPath &path) {
         const auto &deviceName = DDaemonInternal::deviceName(path.path());
+        qDebug() << "Default input device changed :" << deviceName;
         for (auto item : m_inputDevices) {
             const bool isDefault = item->name() == deviceName;
             item->setDefault(isDefault);
@@ -78,13 +71,21 @@ DDaemonAudioManager::DDaemonAudioManager(QObject *parent)
         Q_EMIT defaultInputDeviceChanged(deviceName);
     });
     connect(this, &DDaemonAudioManager::DefaultSinkChanged, this, [this](const QDBusObjectPath &path) {
-        qDebug() << "*****" << path.path();
         const auto &deviceName = DDaemonInternal::deviceName(path.path());
+        qDebug() << "Default output device changed :" << deviceName;
         for (auto item : m_outputDevices) {
             const bool isDefault = item->name() == deviceName;
             item->setDefault(isDefault);
         }
         Q_EMIT defaultOutputDeviceChanged(deviceName);
+    });
+
+    connect(this, &DDaemonAudioManager::PortEnableChanged, this, [this](quint32 cardIndex, const QString &portName, bool enabled) {
+        if (auto card = cardByName(QString::number(cardIndex))) {
+            if (auto port = card->portByName(portName)) {
+                port->setEnabled(enabled);
+            }
+        }
     });
 }
 
@@ -105,16 +106,6 @@ void DDaemonAudioManager::setReConnectionEnabled(const bool enable)
     } else {
         qWarning() << "Don't support to switch, it's default action.";
     }
-}
-
-void DDaemonAudioManager::setPort(const QString &card, const QString &portName, const int direction)
-{
-    m_inter->call("SetPort", card, portName, direction);
-}
-
-void DDaemonAudioManager::setPortEnabled(const QString &card, const QString &portName)
-{
-    m_inter->call("SetPortEnabled", card, portName);
 }
 
 bool DDaemonAudioManager::increaseVolume() const
@@ -144,6 +135,7 @@ void DDaemonAudioManager::setReduceNoise(bool reduceNoise)
 
 void DDaemonAudioManager::updateCards()
 {
+    qDebug() << Q_FUNC_INFO;
     const QString &replyValue = qdbus_cast<QString>(m_inter->property("Cards"));
     if (m_inter->lastError().isValid()) {
         qWarning() << Q_FUNC_INFO << m_inter->lastError();
@@ -181,6 +173,8 @@ void DDaemonAudioManager::updateCards()
 
 void DDaemonAudioManager::updateInputDevice()
 {
+    qDebug() << Q_FUNC_INFO;
+
     auto sinkPaths = qdbus_cast<QList<QDBusObjectPath>>(m_inter->property("Sources"));
     if (m_inter->lastError().isValid()) {
         qWarning() << Q_FUNC_INFO << m_inter->lastError();
@@ -213,6 +207,8 @@ void DDaemonAudioManager::updateInputDevice()
 
 void DDaemonAudioManager::updateOutputDevice()
 {
+    qDebug() << Q_FUNC_INFO;
+
     auto sinkPaths = qdbus_cast<QList<QDBusObjectPath>>(m_inter->property("Sinks"));
     if (m_inter->lastError().isValid()) {
         qWarning() << Q_FUNC_INFO << m_inter->lastError();
@@ -241,6 +237,8 @@ void DDaemonAudioManager::updateOutputDevice()
 
 void DDaemonAudioManager::updateOutputStream()
 {
+    qDebug() << Q_FUNC_INFO;
+
     auto sourceOutputPaths = qdbus_cast<QList<QDBusObjectPath>>(m_inter->property("SourceOutputs"));
     if (m_inter->lastError().isValid()) {
         qWarning() << Q_FUNC_INFO << m_inter->lastError();
@@ -271,6 +269,8 @@ void DDaemonAudioManager::updateOutputStream()
 
 void DDaemonAudioManager::updateInputStream()
 {
+    qDebug() << Q_FUNC_INFO;
+
     auto sinkInputPaths = qdbus_cast<QList<QDBusObjectPath>>(m_inter->property("SinkInputs"));
     if (m_inter->lastError().isValid()) {
         qWarning() << Q_FUNC_INFO << m_inter->lastError();

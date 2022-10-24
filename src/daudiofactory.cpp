@@ -163,17 +163,6 @@ public:
     {
         Q_UNUSED(enable);
     }
-    virtual void setPort(const QString &card, const QString &portName, const int direction) override
-    {
-        Q_UNUSED(card);
-        Q_UNUSED(portName);
-        Q_UNUSED(direction);
-    }
-    virtual void setPortEnabled(const QString &card, const QString &portName) override
-    {
-        Q_UNUSED(card);
-        Q_UNUSED(portName);
-    }
     virtual bool increaseVolume() const override
     {
         return false;

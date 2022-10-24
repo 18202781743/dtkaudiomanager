@@ -19,9 +19,6 @@ class DDaemonAudioCard : public DPlatformAudioCard
 public:
     explicit DDaemonAudioCard(QObject *parent = nullptr);
     virtual ~DDaemonAudioCard() override;
-
-public:
-    QScopedPointer<DDBusInterface>  m_inter;
 };
 
 class DAudioBluetoothCardPrivate;
@@ -30,7 +27,7 @@ class DDaemonAudioBluetoothCard : public DDaemonAudioCard
     Q_OBJECT
 
 public:
-    explicit DDaemonAudioBluetoothCard(QObject *parent);
+    explicit DDaemonAudioBluetoothCard(QObject *parent = nullptr);
     virtual ~DDaemonAudioBluetoothCard() override;
 
     QString mode() const;
@@ -46,5 +43,8 @@ Q_SIGNALS:
 
     void BluetoothAudioModeChanged(const QString &mode);
     void BluetoothAudioModeOptsChanged(const QStringList &modeOpts);
+
+private:
+    QScopedPointer<DDBusInterface>  m_inter;
 };
 DAUDIOMANAGER_END_NAMESPACE

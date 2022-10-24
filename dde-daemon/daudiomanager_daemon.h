@@ -22,8 +22,6 @@ public:
 
     virtual void reset() override;
     virtual void setReConnectionEnabled(const bool enable) override;
-    virtual void setPort(const QString& card, const QString &portName, const int direction) override;
-    virtual void setPortEnabled(const QString& card, const QString &portName) override;
 
     virtual bool increaseVolume() const override;
     virtual bool reduceNoise() const override;
@@ -47,6 +45,8 @@ Q_SIGNALS:
     void CardsWithoutUnavailableChanged(const QString &availableCards);
     void SinksChanged(const QList<QDBusObjectPath> &paths);
     void SourcesChanged(const QList<QDBusObjectPath> &paths);
+
+    void PortEnableChanged(quint32 cardIndex, const QString &portName, bool enabled);
 private:
     void updateCards();
     void updateInputDevice();

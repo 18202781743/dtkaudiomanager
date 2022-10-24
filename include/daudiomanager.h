@@ -36,15 +36,13 @@ public:
     QList<DAudioOutputDevicePtr> outputDevices() const;
     DAudioInputDevicePtr defaultInputDevice() const;
     DAudioOutputDevicePtr defaultOutputDevice() const;
-    QList<DAudioInputDevicePtr> availableInputDevices() const;
-    QList<DAudioOutputDevicePtr> availableOutputDevices() const;
     DAudioInputDevicePtr inputDevice(const QString &deviceName) const;
     DAudioOutputDevicePtr outputDevice(const QString &deviceName) const;
 
     void reset();
     void setReConnectionEnabled(const bool enable);
-    void setPort(const QString& card, const QString &portName, const int direction);
-    void setPortEnabled(const QString& card, const QString &portName);
+    void setPort(const QString& cardName, const QString &portName);
+    void setPortEnabled(const QString& cardName, const QString &portName, bool enabled);
 
     bool increaseVolume() const;
     bool reduceNoise() const;

@@ -13,11 +13,8 @@
 DAUDIOMANAGER_BEGIN_NAMESPACE
 
 DDaemonAudioCard::DDaemonAudioCard(QObject *parent)
-    : m_inter(DDaemonInternal::newAudioInterface2(this))
+    : DPlatformAudioCard (parent)
 {
-    if (!m_inter->isValid()) {
-        qWarning() << m_inter->lastError();
-    }
 }
 
 DDaemonAudioCard::~DDaemonAudioCard()
@@ -27,6 +24,7 @@ DDaemonAudioCard::~DDaemonAudioCard()
 
 DDaemonAudioBluetoothCard::DDaemonAudioBluetoothCard(QObject *parent)
     : DDaemonAudioCard (parent)
+    , m_inter(DDaemonInternal::newAudioInterface2(this))
 {
     connect(this, &DDaemonAudioBluetoothCard::BluetoothAudioModeChanged, this, &DDaemonAudioBluetoothCard::modeChanged);
     connect(this, &DDaemonAudioBluetoothCard::BluetoothAudioModeOptsChanged, this, &DDaemonAudioBluetoothCard::modeOptionsChanged);
