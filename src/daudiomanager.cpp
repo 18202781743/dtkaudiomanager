@@ -24,6 +24,8 @@ DAudioManager::DAudioManager(DAudioManagerPrivate *d, QObject *parent)
     connect(this->d.data(), &DAudioManagerPrivate::deviceAdded, this, &DAudioManager::deviceAdded);
     connect(this->d.data(), &DAudioManagerPrivate::deviceRemoved, this, &DAudioManager::deviceRemoved);
     connect(this->d.data(), &DAudioManagerPrivate::cardsChanged, this, &DAudioManager::cardsChanged);
+    connect(this->d.data(), &DAudioManagerPrivate::defaultInputDeviceChanged, this, &DAudioManager::defaultInputDevice);
+    connect(this->d.data(), &DAudioManagerPrivate::defaultOutputDeviceChanged, this, &DAudioManager::defaultOutputDeviceChanged);
     connect(this->d.data(), &DAudioManagerPrivate::increaseVolumeChanged, this, &DAudioManager::increaseVolumeChanged);
     connect(this->d.data(), &DAudioManagerPrivate::reduceNoiseChanged, this, &DAudioManager::reduceNoiseChanged);
     connect(this->d.data(), &DAudioManagerPrivate::maxVolumeChanged, this, &DAudioManager::maxVolumeChanged);
@@ -88,7 +90,7 @@ QList<DAudioOutputDevicePtr> DAudioManager::outputDevices() const
 DAudioInputDevicePtr DAudioManager::defaultInputDevice() const
 {
     for (auto item : d->m_inputDevices) {
-        if (item->mute())
+        if (item->isDefault())
             return DAudioInputDevicePtr(dynamic_cast<DAudioInputDevice *>(item->create()));
     }
     return nullptr;

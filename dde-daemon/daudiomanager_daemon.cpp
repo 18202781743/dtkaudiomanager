@@ -20,6 +20,15 @@
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 
+static void registObjectPath()
+{
+    qDebug() << "******" << Q_FUNC_INFO;
+//    qRegisterMetaType<QList<QDBusObjectPath>>();
+//    qRegisterMetaType<QDBusObjectPath>();
+//    qRegisterMetaType<QDBusArgument>();
+}
+Q_CONSTRUCTOR_FUNCTION(registObjectPath);
+
 DDaemonAudioManager::DDaemonAudioManager(QObject *parent)
     : m_inter(DDaemonInternal::newAudioInterface2(this))
 {
@@ -35,12 +44,48 @@ DDaemonAudioManager::DDaemonAudioManager(QObject *parent)
 
     updateInputDevice();
     updateOutputStream();
-    connect(this, &DDaemonAudioManager::DefaultSourceChanged, this, [this](QDBusObjectPath path) {
-        qDebug() << "*****" << path.path();
+
+    connect(this, &DDaemonAudioManager::CardsChanged, this, [this](const QString &cards) {
+        Q_UNUSED(cards);
+        updateCards();
+    });
+    connect(this, &DDaemonAudioManager::CardsWithoutUnavailableChanged, this, [this](const QString &availableCards) {
+        Q_UNUSED(availableCards);
+        updateCards();
+    });
+    connect(this, &DDaemonAudioManager::SinkInputsChanged, this, [this](const QList<QDBusObjectPath> &paths) {
+        Q_UNUSED(paths);
+        updateInputStream();
+    });
+    connect(this, &DDaemonAudioManager::SinksChanged, this, [this](const QList<QDBusObjectPath> &paths) {
+        Q_UNUSED(paths);
+        updateOutputDevice();
+    });
+    connect(this, &DDaemonAudioManager::SourcesChanged, this, [this](const QList<QDBusObjectPath> &paths) {
+        Q_UNUSED(paths);
+        updateInputDevice();
     });
     connect(this, &DDaemonAudioManager::IncreaseVolumeChanged, this, &DAudioManagerPrivate::increaseVolumeChanged);
     connect(this, &DDaemonAudioManager::ReduceNoiseChanged, this, &DAudioManagerPrivate::reduceNoiseChanged);
     connect(this, &DDaemonAudioManager::MaxUIVolumeChanged, this, &DAudioManagerPrivate::maxVolumeChanged);
+
+    connect(this, &DDaemonAudioManager::DefaultSourceChanged, this, [this](const QDBusObjectPath &path) {
+        const auto &deviceName = DDaemonInternal::deviceName(path.path());
+        for (auto item : m_inputDevices) {
+            const bool isDefault = item->name() == deviceName;
+            item->setDefault(isDefault);
+        }
+        Q_EMIT defaultInputDeviceChanged(deviceName);
+    });
+    connect(this, &DDaemonAudioManager::DefaultSinkChanged, this, [this](const QDBusObjectPath &path) {
+        qDebug() << "*****" << path.path();
+        const auto &deviceName = DDaemonInternal::deviceName(path.path());
+        for (auto item : m_outputDevices) {
+            const bool isDefault = item->name() == deviceName;
+            item->setDefault(isDefault);
+        }
+        Q_EMIT defaultOutputDeviceChanged(deviceName);
+    });
 }
 
 DDaemonAudioManager::~DDaemonAudioManager()
@@ -50,12 +95,16 @@ DDaemonAudioManager::~DDaemonAudioManager()
 
 void DDaemonAudioManager::reset()
 {
-    m_inter->call("reset");
+    m_inter->call("Reset");
 }
 
 void DDaemonAudioManager::setReConnectionEnabled(const bool enable)
 {
-
+    if (!enable) {
+        m_inter->call("NoRestartPulseAudio");
+    } else {
+        qWarning() << "Don't support to switch, it's default action.";
+    }
 }
 
 void DDaemonAudioManager::setPort(const QString &card, const QString &portName, const int direction)

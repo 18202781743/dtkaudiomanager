@@ -23,7 +23,7 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioManager : public QObject
 
     Q_PROPERTY(bool increaseVolume READ increaseVolume WRITE setIncreaseVolume NOTIFY increaseVolumeChanged)
     Q_PROPERTY(bool reduceNoise READ reduceNoise WRITE setReduceNoise NOTIFY reduceNoiseChanged)
-    Q_PROPERTY(bool maxVolume READ maxVolume NOTIFY maxVolumeChanged)
+    Q_PROPERTY(double maxVolume READ maxVolume NOTIFY maxVolumeChanged)
 public:
     explicit DAudioManager(QObject *parent = nullptr);
     explicit DAudioManager(DAudioManagerPrivate *d, QObject *parent = nullptr);
@@ -58,6 +58,8 @@ Q_SIGNALS:
     void deviceAdded(const QString &name, const bool isInputDevice);
     void deviceRemoved(const QString &name, const bool isInputDevice);
     void cardsChanged();
+    void defaultInputDeviceChanged(const QString &name);
+    void defaultOutputDeviceChanged(const QString &name);
 
     void increaseVolumeChanged(bool increaseVolume);
     void reduceNoiseChanged(bool reduceNoise);
@@ -68,3 +70,4 @@ private:
     QScopedPointer<DAudioManagerPrivate> d;
 };
 DAUDIOMANAGER_END_NAMESPACE
+

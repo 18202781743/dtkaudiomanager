@@ -69,28 +69,10 @@ class TestAudioCard : public DPlatformAudioCard
 public:
     explicit TestAudioCard(const QString &name = TestAudioCardName)
         : DPlatformAudioCard()
-        , m_name(name)
     {
+        setName(name);
     }
     inline virtual ~TestAudioCard() override;
-    virtual bool enabled() const override
-    {
-        return m_enabled;
-    }
-    virtual QString name() const override
-    {
-        return m_name;
-    }
-    void setEnabled(bool enabled)
-    {
-        if (m_enabled == enabled)
-            return;
-        m_enabled = enabled;
-        Q_EMIT enabledChanged(m_enabled);
-    }
-
-    QString m_name;
-    bool m_enabled = false;
 };
 
 TestAudioCard::~TestAudioCard() {}

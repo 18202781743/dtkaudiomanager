@@ -22,9 +22,11 @@ public:
     virtual ~DPlatformAudioCard();
 
     virtual quint32 index() const;
-    virtual QString name() const = 0;
+    QString name() const;
+    void setName(const QString &name);
 
-    virtual bool enabled() const = 0;
+    bool enabled() const;
+    void setEnabled(const bool enabled);
 
     void addPort(DPlatformAudioPort *port);
     virtual DAudioCard *create()
@@ -37,6 +39,8 @@ Q_SIGNALS:
 
 public:
     QList<QExplicitlySharedDataPointer<DPlatformAudioPort>> m_ports;
+    QString m_name;
+    bool m_enabled;
 };
 
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioBluetoothCard : public DPlatformAudioCard
@@ -53,12 +57,12 @@ public:
     virtual QStringList modeOptions() const = 0;
 
 public Q_SLOTS:
-    virtual void setMode(QString mode) = 0;
+    virtual void setMode(const QString &mode) = 0;
 
 Q_SIGNALS:
-    void modeChanged(QString mode);
+    void modeChanged(const QString &mode);
 
-    void modeOptionsChanged(QStringList modeOptions);
+    void modeOptionsChanged(const QStringList &modeOptions);
 
 };
 DAUDIOMANAGER_END_NAMESPACE

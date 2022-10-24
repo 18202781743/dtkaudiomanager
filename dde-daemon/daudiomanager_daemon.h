@@ -38,9 +38,15 @@ Q_SIGNALS:
 
     void IncreaseVolumeChanged(bool increaseVolume);
     void ReduceNoiseChanged(bool reduceNoise);
-    void MaxUIVolumeChanged(bool maxVolume);
+    void MaxUIVolumeChanged(double maxVolume);
 
+    void DefaultSinkChanged(QDBusObjectPath path);
     void DefaultSourceChanged(QDBusObjectPath path);
+    void SinkInputsChanged(const QList<QDBusObjectPath> &paths);
+    void CardsChanged(const QString &cards);
+    void CardsWithoutUnavailableChanged(const QString &availableCards);
+    void SinksChanged(const QList<QDBusObjectPath> &paths);
+    void SourcesChanged(const QList<QDBusObjectPath> &paths);
 private:
     void updateCards();
     void updateInputDevice();

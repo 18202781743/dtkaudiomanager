@@ -45,10 +45,12 @@ Q_SIGNALS:
     void deviceAdded(const QString &name, const bool isInputDevice);
     void deviceRemoved(const QString &name, const bool isInputDevice);
     void cardsChanged();
+    void defaultInputDeviceChanged(const QString &name);
+    void defaultOutputDeviceChanged(const QString &name);
 
     void increaseVolumeChanged(bool increaseVolume);
     void reduceNoiseChanged(bool reduceNoise);
-    void maxVolumeChanged(bool maxVolume);
+    void maxVolumeChanged(double maxVolume);
 
 public:
     QList<QExplicitlySharedDataPointer<DPlatformAudioCard>> m_cards;

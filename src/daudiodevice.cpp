@@ -149,7 +149,6 @@ DAudioInputDevice::DAudioInputDevice(DPlatformAudioInputDevice *d)
     : DAudioDevice(d)
 {
     Q_ASSERT(d);
-
 }
 
 DAudioOutputDevice::DAudioOutputDevice(DAudioCard *parent)
@@ -173,6 +172,7 @@ DPlatformAudioInputDevice::~DPlatformAudioInputDevice()
 }
 
 DPlatformAudioDevice::DPlatformAudioDevice(DPlatformAudioCard *card)
+    : m_card(card)
 {
 
 }
@@ -180,6 +180,16 @@ DPlatformAudioDevice::DPlatformAudioDevice(DPlatformAudioCard *card)
 DPlatformAudioDevice::~DPlatformAudioDevice()
 {
 
+}
+
+bool DPlatformAudioDevice::isDefault() const
+{
+    return m_isDefault;
+}
+
+void DPlatformAudioDevice::setDefault(bool isDefault)
+{
+    m_isDefault = isDefault;
 }
 
 QString DPlatformAudioDevice::card() const

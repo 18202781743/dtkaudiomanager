@@ -88,6 +88,29 @@ quint32 DPlatformAudioCard::index() const
     return 0;
 }
 
+QString DPlatformAudioCard::name() const
+{
+    return m_name;
+}
+
+void DPlatformAudioCard::setName(const QString &name)
+{
+    m_name = name;
+}
+
+bool DPlatformAudioCard::enabled() const
+{
+    return m_enabled;
+}
+
+void DPlatformAudioCard::setEnabled(const bool enabled)
+{
+    if (m_enabled == enabled)
+        return;
+    m_enabled = enabled;
+    Q_EMIT enabledChanged(m_enabled);
+}
+
 void DPlatformAudioCard::addPort(DPlatformAudioPort *port)
 {
     m_ports.append(QExplicitlySharedDataPointer(port));

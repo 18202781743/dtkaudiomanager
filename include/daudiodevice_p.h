@@ -32,6 +32,8 @@ public:
 
     virtual double meterVolume() const = 0;
 
+    bool isDefault() const;
+    void setDefault(bool isDefault);
     QString card() const;
     void addStream(DPlatformAudioStream *stream);
     void removeStream(const QString &streamName);
@@ -71,6 +73,7 @@ public:
     QString m_key;
     QString m_name;
     QString m_description;
+    bool m_isDefault = false;
 };
 
 class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioInputDevice : public DPlatformAudioDevice
