@@ -19,15 +19,17 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DPlatformAudioPort : public QObject, publi
 public:
     explicit DPlatformAudioPort(DPlatformAudioCard *card);
     virtual ~DPlatformAudioPort();
-    virtual void setEnabled(const bool enabled) = 0;
-    virtual bool isEnabled() const = 0;
+    virtual bool isEnabled() const;
+    virtual void setEnabled(const bool enabled);
 
     virtual bool isActive() const;
     virtual void setActive(const int active);
     int direction() const;
     void setDirection(const int direction);
-    virtual QString name() const = 0;
-    virtual QString description() const = 0;
+    QString name() const;
+    void setName(const QString &name);
+    QString description() const;
+    void setDescription(const QString &description);
     virtual DAudioPort *create()
     {
         return new DAudioPort(this);
@@ -37,10 +39,14 @@ Q_SIGNALS:
 
     void nameChanged(QString name);
     void descriptionChanged(QString description);
+    void enabledChanged(bool enabled);
 
 protected:
     DPlatformAudioCard *m_card = nullptr;
     int m_direction = 1;
     bool m_isActive = false;
+    bool m_isEnabled = false;
+    QString m_name;
+    QString m_description;
 };
 DAUDIOMANAGER_END_NAMESPACE

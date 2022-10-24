@@ -49,9 +49,9 @@ QList<DAudioCardPtr> DAudioManager::cards() const
     return result;
 }
 
-DAudioCardPtr DAudioManager::card(const QString &cardName) const
+DAudioCardPtr DAudioManager::card(const quint32 cardId) const
 {
-    if (auto card = d->cardByName(cardName))
+    if (auto card = d->cardById(cardId))
         return DAudioCardPtr(card->create());
 
     return nullptr;
@@ -132,18 +132,18 @@ void DAudioManager::setReConnectionEnabled(const bool enable)
     d->setReConnectionEnabled(enable);
 }
 
-void DAudioManager::setPort(const QString &cardName, const QString &portName)
+void DAudioManager::setPort(const quint32 cardId, const QString &portName)
 {
-    if (auto card = d->cardByName(cardName)) {
+    if (auto card = d->cardById(cardId)) {
         if (auto port = card->portByName(portName)) {
             port->setActive(true);
         }
     }
 }
 
-void DAudioManager::setPortEnabled(const QString &cardName, const QString &portName, bool enabled)
+void DAudioManager::setPortEnabled(const quint32 cardId, const QString &portName, bool enabled)
 {
-    if (auto card = d->cardByName(cardName)) {
+    if (auto card = d->cardById(cardId)) {
         if (auto port = card->portByName(portName)) {
             port->setEnabled(enabled);
         }
@@ -192,10 +192,10 @@ void DAudioManagerPrivate::addCard(DPlatformAudioCard *card)
     Q_EMIT cardsChanged();
 }
 
-void DAudioManagerPrivate::removeCard(const QString &cardName)
+void DAudioManagerPrivate::removeCard(const quint32 cardId)
 {
     for (auto item : m_cards) {
-        if (item->name() == cardName) {
+        if (item->name() == cardId) {
             m_cards.removeOne(item);
             Q_EMIT cardsChanged();
             break;
@@ -203,10 +203,10 @@ void DAudioManagerPrivate::removeCard(const QString &cardName)
     }
 }
 
-DPlatformAudioCard *DAudioManagerPrivate::cardByName(const QString &cardName) const
+DPlatformAudioCard *DAudioManagerPrivate::cardById(const quint32 cardId) const
 {
-    auto iter = std::find_if(m_cards.begin(), m_cards.end(), [cardName](auto port) {
-        return port->name() == cardName;
+    auto iter = std::find_if(m_cards.begin(), m_cards.end(), [cardId](auto card) {
+        return card->id() == cardId;
     });
     return iter != m_cards.end() ? iter->data() : nullptr;
 }

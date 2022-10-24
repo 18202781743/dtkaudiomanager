@@ -21,15 +21,9 @@
 DAUDIOMANAGER_BEGIN_NAMESPACE
 
 DDaemonAudioManager::DDaemonAudioManager(QObject *parent)
-    : m_inter(DDaemonInternal::newAudioInterface2(this))
+    : DAudioManagerPrivate (parent)
+    , m_inter(DDaemonInternal::newAudioInterface2(this))
 {
-//    m_inter->setTimeout(300);
-    if (!m_inter->isValid()) {
-        qWarning() << m_inter->lastError();
-    }
-
-    updateCards();
-
     updateOutputDevice();
     updateInputStream();
 
@@ -80,13 +74,12 @@ DDaemonAudioManager::DDaemonAudioManager(QObject *parent)
         Q_EMIT defaultOutputDeviceChanged(deviceName);
     });
 
-    connect(this, &DDaemonAudioManager::PortEnableChanged, this, [this](quint32 cardIndex, const QString &portName, bool enabled) {
-        if (auto card = cardByName(QString::number(cardIndex))) {
-            if (auto port = card->portByName(portName)) {
-                port->setEnabled(enabled);
-            }
-        }
-    });
+    QDBusConnection Connection = QDBusConnection::sessionBus();
+    Connection.connect(DDaemonInternal::AudioServiceName,
+                       DDaemonInternal::AudioPath,
+                       DDaemonInternal::AudioServiceInterface,
+                       "PortEnableChanged", this,
+                       SLOT(onPortEnableChanged(quint32, const QString &, bool)));
 }
 
 DDaemonAudioManager::~DDaemonAudioManager()
@@ -133,9 +126,21 @@ void DDaemonAudioManager::setReduceNoise(bool reduceNoise)
     m_inter->setProperty("ReduceNoise", reduceNoise);
 }
 
+void DDaemonAudioManager::onPortEnableChanged(quint32 cardIndex, const QString &portName, bool enabled)
+{
+    qDebug() << Q_FUNC_INFO;
+
+    if (auto card = cardById(cardIndex)) {
+        if (auto port = card->portByName(portName)) {
+            port->setEnabled(enabled);
+        }
+    }
+}
+
 void DDaemonAudioManager::updateCards()
 {
     qDebug() << Q_FUNC_INFO;
+
     const QString &replyValue = qdbus_cast<QString>(m_inter->property("Cards"));
     if (m_inter->lastError().isValid()) {
         qWarning() << Q_FUNC_INFO << m_inter->lastError();
@@ -149,8 +154,19 @@ void DDaemonAudioManager::updateCards()
         const QString cardName = jCard["Name"].toString();
         QJsonArray jPorts = jCard["Ports"].toArray();
 
-        auto card = new DDaemonAudioCard();
-        card->m_name = cardName;
+        bool isBluetooth = false;
+        for (QJsonValue pV : jPorts) {
+            QJsonObject jPort = pV.toObject();
+            isBluetooth |= jPort["Bluetooth"].toBool();
+        }
+        DPlatformAudioCard *card = nullptr;
+        if (isBluetooth) {
+            card = new DDaemonAudioBluetoothCard();
+        } else {
+            card = new DDaemonAudioCard();
+        }
+        card->setName(cardName);
+        card->setId(cardId);
 
         for (QJsonValue pV : jPorts) {
             QJsonObject jPort = pV.toObject();
@@ -159,13 +175,13 @@ void DDaemonAudioManager::updateCards()
             const QString portName = jPort["Name"].toString();
             const QString portDescription = jPort["Description"].toString();
             const bool isEnabled = jPort["Enabled"].toBool();
-            const bool isBluetooth = jPort["Bluetooth"].toBool();
             const int direction = jPort["Direction"].toInt();
 
             auto port = new DDaemonAudioPort(card);
             port->setEnabled(isEnabled);
-            port->m_name = portName;
-            port->m_description = portDescription;
+            port->setDirection(direction);
+            port->setName(portName);
+            port->setDescription(portDescription);
         }
         addCard(card);
     }
@@ -191,7 +207,7 @@ void DDaemonAudioManager::updateInputDevice()
         auto inter = DDaemonInternal::audioInterface(path);
         const auto cardId = qdbus_cast<quint32>(inter.property("Card"));
         for (auto item : m_cards) {
-            if (item->index() == cardId) {
+            if (item->id() == cardId) {
                 card = item.data();
                 break;
             }
@@ -225,7 +241,7 @@ void DDaemonAudioManager::updateOutputDevice()
         auto inter = DDaemonInternal::audioInterface(path);
         const auto cardId = qdbus_cast<quint32>(inter.property("Card"));
         for (auto item : m_cards) {
-            if (item->index() == cardId) {
+            if (item->id() == cardId) {
                 card = item.data();
                 break;
             }

@@ -31,6 +31,7 @@ public:
 
     QList<DAudioPortPtr> ports() const;
     QString name() const;
+    quint32 id() const;
     virtual Type type() const;
 
     bool enabled() const;

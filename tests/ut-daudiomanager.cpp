@@ -48,6 +48,7 @@ TEST_F(ut_DAudioManager, cards)
     auto port1 = new TestAudioPort(card1);
     auto port2 = new TestAudioPort(card1, "test port2");
     auto card2  = new TestAudioCard("test card2");
+    card2->setId(TestAudioCardId + 1);
     m_impl->addCard(card1);
     m_impl->addCard(card2);
 
@@ -56,7 +57,7 @@ TEST_F(ut_DAudioManager, cards)
     auto targetCards = m_target->cards();
     EXPECT_EQ(targetCards.size(), 2);
 
-    auto targetCard1 = m_target->card(TestAudioCardName);
+    auto targetCard1 = m_target->card(TestAudioCardId);
     EXPECT_EQ(targetCard1->name(), card1->name());
     EXPECT_EQ(targetCard1->ports().size(), 2);
 }

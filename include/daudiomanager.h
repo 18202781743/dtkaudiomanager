@@ -30,7 +30,7 @@ public:
     virtual ~DAudioManager() override;
 
     QList<DAudioCardPtr> cards() const;
-    DAudioCardPtr card(const QString &cardName) const;
+    DAudioCardPtr card(const quint32 cardId) const;
     QList<DAudioCardPtr> availableCards() const;
     QList<DAudioInputDevicePtr> inputDevices() const;
     QList<DAudioOutputDevicePtr> outputDevices() const;
@@ -41,8 +41,8 @@ public:
 
     void reset();
     void setReConnectionEnabled(const bool enable);
-    void setPort(const QString& cardName, const QString &portName);
-    void setPortEnabled(const QString& cardName, const QString &portName, bool enabled);
+    void setPort(const quint32 cardId, const QString &portName);
+    void setPortEnabled(const quint32 cardId, const QString &portName, bool enabled);
 
     bool increaseVolume() const;
     bool reduceNoise() const;

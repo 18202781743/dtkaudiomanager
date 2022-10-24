@@ -32,34 +32,17 @@ class TestAudioPort : public DPlatformAudioPort
 public:
     explicit TestAudioPort(DPlatformAudioCard *card = nullptr, const QString &name = TestAudioPortName)
         : DPlatformAudioPort(card)
-        , m_name(name)
     {
+        setName(name);
+        setDescription(TestAudioPortDescription);
     }
     inline virtual ~TestAudioPort() override;
-    virtual void setEnabled(const bool enabled) override
-    {
-        m_enabled = enabled;
-    }
-    virtual bool isEnabled() const override
-    {
-        return m_enabled;
-    }
-    virtual QString name() const override
-    {
-        return m_name;
-    }
-    virtual QString description() const override
-    {
-        return TestAudioPortDescription;
-    }
-
-    QString m_name;
-    bool m_enabled = false;
 };
 
 TestAudioPort::~TestAudioPort() {}
 
 static const QString TestAudioCardName("test card");
+static const quint32 TestAudioCardId(0);
 class TestAudioCard : public DPlatformAudioCard
 {
 public:
@@ -67,6 +50,7 @@ public:
         : DPlatformAudioCard()
     {
         setName(name);
+        setId(TestAudioCardId);
     }
     inline virtual ~TestAudioCard() override;
 };

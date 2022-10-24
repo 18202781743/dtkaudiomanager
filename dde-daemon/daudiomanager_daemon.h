@@ -46,7 +46,8 @@ Q_SIGNALS:
     void SinksChanged(const QList<QDBusObjectPath> &paths);
     void SourcesChanged(const QList<QDBusObjectPath> &paths);
 
-    void PortEnableChanged(quint32 cardIndex, const QString &portName, bool enabled);
+private Q_SLOTS:
+    void onPortEnableChanged(quint32 cardIndex, const QString &portName, bool enabled);
 private:
     void updateCards();
     void updateInputDevice();

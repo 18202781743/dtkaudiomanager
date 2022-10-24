@@ -18,6 +18,7 @@ class LIBDTKAUDIOMANAGERSHARED_EXPORT DAudioPort : public QObject
     Q_PROPERTY(int direction READ direction NOTIFY directionChanged)
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
+    Q_PROPERTY(bool isEnabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
 
 public:
     explicit DAudioPort(DPlatformAudioPort *d);
@@ -35,6 +36,7 @@ Q_SIGNALS:
     void directionChanged(int direction);
     void nameChanged(QString name);
     void descriptionChanged(QString description);
+    void enabledChanged(bool isEnabled);
 
 public:
     Q_DISABLE_COPY(DAudioPort)

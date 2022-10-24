@@ -8,6 +8,8 @@
 
 #include <QDebug>
 #include <QDBusAbstractInterface>
+#include <QDBusArgument>
+#include <QDBusReply>
 
 DAUDIOMANAGER_BEGIN_NAMESPACE
 
@@ -25,30 +27,21 @@ DDaemonAudioPort::~DDaemonAudioPort()
 void DDaemonAudioPort::setEnabled(const bool enabled)
 {
     auto inter = DDaemonInternal::audioInterface();
-    inter.call("SetPortEnabled", m_card->name(), m_name, enabled);
+    inter.call("SetPortEnabled", m_card->id(), m_name, enabled);
+    DPlatformAudioPort::setEnabled(enabled);
 }
 
 bool DDaemonAudioPort::isEnabled() const
 {
-    return false;
+    auto inter = DDaemonInternal::audioInterface();
+    QDBusReply<bool> reply = inter.call("IsPortEnabled", m_card->id(), m_name);
+    return reply.value();
 }
 
 void DDaemonAudioPort::setActive(const int active)
 {
     auto inter = DDaemonInternal::audioInterface();
-    inter.call("SetPort", m_card->name(), m_name, m_direction);
+    inter.call("SetPort", m_card->id(), m_name, m_direction);
     DPlatformAudioPort::setActive(active);
 }
-
-QString DDaemonAudioPort::name() const
-{
-    return m_name;
-}
-
-QString DDaemonAudioPort::description() const
-{
-    return m_description;
-}
-
-
 DAUDIOMANAGER_END_NAMESPACE

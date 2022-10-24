@@ -22,7 +22,8 @@ public:
     explicit DPlatformAudioCard(QObject *parent = nullptr);
     virtual ~DPlatformAudioCard();
 
-    virtual quint32 index() const;
+    quint32 id() const;
+    void setId(const quint32 id);
     QString name() const;
     void setName(const QString &name);
 
@@ -42,6 +43,7 @@ Q_SIGNALS:
 public:
     QList<QExplicitlySharedDataPointer<DPlatformAudioPort>> m_ports;
     QString m_name;
+    quint32 m_id;
     bool m_enabled;
 };
 

@@ -31,8 +31,8 @@ public:
     virtual double maxVolume() const = 0;
 
     void addCard(DPlatformAudioCard *card);
-    void removeCard(const QString &cardName);
-    DPlatformAudioCard *cardByName(const QString &cardName) const;
+    void removeCard(const quint32 cardId);
+    DPlatformAudioCard *cardById(const quint32 cardId) const;
     void addInputDevice(DPlatformAudioInputDevice *device);
     void removeInputDevice(const QString &deviceName);
     void addOutputDevice(DPlatformAudioOutputDevice *device);

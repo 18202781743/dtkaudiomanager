@@ -22,12 +22,5 @@ public:
     bool isEnabled() const override;
 
     virtual void setActive(const int active) override;
-
-    QString name() const override;
-    QString description() const override;
-
-public:
-    QString m_name;
-    QString m_description;
 };
 DAUDIOMANAGER_END_NAMESPACE

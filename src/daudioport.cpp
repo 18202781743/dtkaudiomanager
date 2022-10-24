@@ -19,6 +19,7 @@ DAudioPort::DAudioPort(DPlatformAudioPort *d)
 
     connect(d, &DPlatformAudioPort::nameChanged, this, &DAudioPort::nameChanged);
     connect(d, &DPlatformAudioPort::descriptionChanged, this, &DAudioPort::descriptionChanged);
+    connect(d, &DPlatformAudioPort::enabledChanged, this, &DAudioPort::enabledChanged);
 }
 
 DAudioPort::~DAudioPort()
@@ -63,6 +64,19 @@ DPlatformAudioPort::~DPlatformAudioPort()
 {
 }
 
+bool DPlatformAudioPort::isEnabled() const
+{
+    return m_isEnabled;
+}
+
+void DPlatformAudioPort::setEnabled(const bool enabled)
+{
+    if (m_isEnabled == enabled)
+        return;
+    m_isEnabled = enabled;
+    Q_EMIT enabledChanged(m_isEnabled);
+}
+
 bool DPlatformAudioPort::isActive() const
 {
     return m_isActive;
@@ -81,6 +95,32 @@ int DPlatformAudioPort::direction() const
 void DPlatformAudioPort::setDirection(const int direction)
 {
     m_direction = direction;
+}
+
+QString DPlatformAudioPort::name() const
+{
+    return m_name;
+}
+
+void DPlatformAudioPort::setName(const QString &name)
+{
+    if (m_name == name)
+        return;
+    m_name = name;
+    Q_EMIT nameChanged(m_name);
+}
+
+QString DPlatformAudioPort::description() const
+{
+    return m_description;
+}
+
+void DPlatformAudioPort::setDescription(const QString &description)
+{
+    if (m_description == description)
+        return;
+    m_description = description;
+    Q_EMIT descriptionChanged(m_description);
 }
 
 DAUDIOMANAGER_END_NAMESPACE

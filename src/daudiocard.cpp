@@ -38,6 +38,11 @@ QString DAudioCard::name() const
     return d->name();
 }
 
+quint32 DAudioCard::id() const
+{
+    return d->id();
+}
+
 DAudioCard::Type DAudioCard::type() const
 {
     return DAudioCard::Normal;
@@ -89,9 +94,14 @@ DPlatformAudioCard::~DPlatformAudioCard()
 {
 }
 
-quint32 DPlatformAudioCard::index() const
+quint32 DPlatformAudioCard::id() const
 {
-    return 0;
+    return m_id;
+}
+
+void DPlatformAudioCard::setId(const quint32 id)
+{
+    m_id = id;
 }
 
 QString DPlatformAudioCard::name() const
