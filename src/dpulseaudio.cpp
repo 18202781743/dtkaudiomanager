@@ -146,7 +146,7 @@ int DAudioManagerPrivate::mainLoop()
     pa_context_set_state_callback(context, &DAudioManagerPrivate::onContextStateChange, this);
 
     if (pa_context_connect(context, server, PA_CONTEXT_NOFLAGS, nullptr) < 0) {
-        qWarning() << QString("pa_context_connect() failed: %s").arg(pa_strerror(pa_context_errno(context)));
+        qWarning() << QString("pa_context_connect() failed: %1").arg(pa_strerror(pa_context_errno(context)));
         return -1;
     }
 
